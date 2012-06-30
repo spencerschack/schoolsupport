@@ -7,8 +7,6 @@ gem 'thin'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
-  gem 'compass'
-  gem 'compass-rails'
   
   gem 'coffee-rails', '~> 3.2.1'
 
@@ -25,6 +23,8 @@ gem 'declarative_authorization'
 	gem 'ruby_parser'
 
 gem 'haml'
+gem 'compass'
+gem 'compass-rails'
 
 gem 'formtastic'
 gem 'rails_autolink'
