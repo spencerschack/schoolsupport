@@ -80,12 +80,12 @@ class User < ActiveRecord::Base
   
   # For principals that cannot edit school_id, add school for them.
   def presence_of_school
-    school_id = Authorization.current_user.school_id unless school_id
+    # school_id = Authorization.current_user.school_id unless school_id
   end
   
   # If no role was set, add teacher.
   def presence_of_role
-    #role = Role.find_by_name('Teacher') unless role
+    role = Role.find_by_name('Teacher') unless role
   end
   
   # If the periods are not in the specified school, then add an error.
