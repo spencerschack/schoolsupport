@@ -1,0 +1,3 @@
+window.MEDIUM_DURATION  = 500
+window.SHORT_DURATION   = 250
+window.TINY_DURATION    = 125

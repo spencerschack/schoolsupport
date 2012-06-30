@@ -1,0 +1,19 @@
+.title
+	%h2 Import
+	%h1= controller_name.titleize
+	= link_for :cancel, controller_model
+	= link_for :upload, controller_model
+	
+.scroller
+	= semantic_form_for @import, url: parent_path(controller_model, action: :import) do |f|
+		= f.semantic_errors
+		.errors
+			- @import.row.errors.each do |attribute, error|
+				%p.show_content
+					%b= attribute.to_s.titleize
+					= error
+		= f.inputs do
+			= f.input :file, as: :hidden, input_html: { value: '' }
+			= f.input :file, as: :file
+		= f.actions do
+			= f.action :submit, label: 'Upload'

@@ -1,0 +1,190 @@
+.page
+	width: 200px
+	height: 100%
+	position: relative
+	float: right
+	background: #FFF
+	+box-shadow(rgba(0, 0, 0, .5) 0 0 15px)
+	overflow: hidden
+	z-index: 1
+
+	.loading_message
+		width: 24px
+		height: 24px
+		position: absolute
+		top: 50%
+		left: 50%
+		margin: -12px 0 0 -12px
+		background: url(/assets/loading.gif) no-repeat
+		text-indent: -9999px
+	
+	.title
+		height: 35px
+		position: relative
+		padding: $spacing
+		background: $blue
+		color: #FFF
+		z-index: 1
+		
+		h1, h2
+			position: absolute
+			font-weight: bold
+	
+		h1
+			height: 21px
+			margin-top: 15px
+			font-size: 21px
+			line-height: 21px
+		
+		h2
+			font-size: 12px
+			text-transform: uppercase
+			color: $blue-hover
+			line-height: 10px
+	
+		a
+			height: 35px
+			display: block
+			position: relative
+			float: right
+			margin-left: $spacing
+			padding: 0 10px
+			background: $blue-medium
+			+border-radius($radius)
+			font-weight: bold
+			color: #FFF
+			line-height: 35px
+			text-decoration: none
+			z-index: 1
+			
+			&:hover
+				background: $blue-hover
+			
+			&:active
+				background: $blue-active
+			
+			&.selected, &:hover.selected, &:active.selected
+				background: #FFF
+				color: $blue
+			
+			&.confirm
+				background: $red
+
+				&:hover
+					background: $red-hover
+					
+				&:active
+					background: $blue-active
+		
+		input.search
+			height: 35px
+			float: right
+			margin-left: $spacing
+			padding: 0 35px 0 10px
+			border: 0
+			+border-radius($radius)
+			font-size: 14px
+			outline: none
+		
+		i.clear
+			width: 20px
+			height: 20px
+			position: absolute
+			top: 27px
+			right: 27px
+			background: url(/assets/icons.png) no-repeat 4px -625px
+			cursor: pointer
+			
+			&:hover
+				background-position: 4px -655px
+	
+	div.wrapper
+		height: 100%
+		position: relative
+	
+	div.index
+		width: 700px
+	
+	div.new, div.edit, div.show, div.create, div.update
+		width: 500px
+	
+	p.show_content
+		min-height: 21px
+		padding: 7px $spacing
+		text-align: right
+
+		&:nth-child(odd)
+			background: $gray-stripe
+
+		b
+			float: left
+
+	a.collection_link, .record_link
+		height: 35px
+		display: block
+		padding: 0 $spacing
+		line-height: 35px
+		font-weight: bold
+		text-decoration: none
+		color: #000
+	
+		&:nth-child(odd)
+			background: $gray-stripe
+	
+	a.collection_link, a.record_link
+	
+		&:hover
+			background: $gray-hover
+	
+		&:active
+			background: $gray-active
+			color: #FFF
+	
+		&.selected
+			background: $blue
+			color: #FFF
+	
+	.record_link
+		span
+			float: right
+			font-weight: normal
+		
+	a.record_link
+		span
+			padding-right: 16px
+			background: url(/assets/icons.png) no-repeat 100% -708px
+		
+		&:hover
+			span
+				background-position: 100% -738px
+			
+		&:active, &.selected
+			span
+				background-position: 100% -768px
+	
+	a.collection_link
+		&.selected, &.selected:hover, &.selected:active
+			span
+				background: #FFF
+				color: $blue
+		
+		&:hover
+			span
+				background: $gray-text
+		
+		&:active
+			span
+				background: #FFF
+				color: $gray-active
+	
+		span
+			height: 15px
+			margin-top: 10px
+			padding: 0 5px
+			background: $gray-active
+			+border-radius($radius)
+			float: right
+			line-height: 15px
+			text-align: center
+			font-size: 12px
+			color: #FFF

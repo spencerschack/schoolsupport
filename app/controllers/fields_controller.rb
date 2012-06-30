@@ -1,0 +1,3 @@
+class FieldsController < ApplicationController
+
+end

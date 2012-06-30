@@ -1,0 +1,6 @@
+.title
+	%h2= "Edit #{resource.class}"
+	%h1= resource.name
+	= link_for :cancel, resource
+	= link_for :update, resource
+.scroller= render 'form'

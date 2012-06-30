@@ -1,0 +1,76 @@
+.table
+	width: 100%
+	display: table
+	position: relative
+	
+	div, a
+		height: 35px
+		display: table-row
+	
+	div
+		span
+			background: url(/assets/icons.png) no-repeat 100% -798px
+			font-weight: bold
+			cursor: pointer
+			
+			&:hover
+				background-position: 100% -828px
+				
+			&:active
+				background-position: 100% -858px
+			
+			&.sorted
+				background-position: 100% -888px
+				color: $blue
+				
+				&.reverse:active, &:active
+					background-position: 100% -858px
+				
+				&.reverse
+					background-position: 100% -918px
+			
+			&.spacer, &.select
+				width: $spacing
+				background: none
+				border: 0
+				cursor: default
+	
+	a
+		color: #000
+		text-decoration: none
+		
+		&:nth-child(even)
+			span
+				background: $gray-stripe
+				border-color: $gray-stripe
+		
+		&.selected, &:hover.selected, &:active.selected
+			span
+				background: $blue
+				border-color: $blue
+				color: #FFF
+		
+		&:hover
+			span
+				background: $gray-hover
+				border-color: $gray-hover
+				color: #000
+		
+		&:active
+			span
+				background: $gray-active
+				border-color: $gray-active
+				color: #FFF
+	
+	span
+		display: table-cell
+		border-left: 10px #FFF solid
+		line-height: 35px
+		
+		&.select
+			border: 0
+		
+		input
+			margin: 0
+			padding: 0
+			cursor: default

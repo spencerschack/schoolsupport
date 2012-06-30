@@ -1,0 +1,39 @@
+%ul#navigation.scroller
+
+	%li.group People and Groups
+
+	- if permitted_to? :index, :users
+		%li.users= link_to 'Users', users_path
+
+	%li.districts
+		- if permitted_to? :index, :districts
+			= link_to 'Districts', districts_path
+		- else
+			= link_to 'District', current_user.district
+	
+	%li.schools
+		- if permitted_to? :index, :schools
+			= link_to 'Schools', schools_path
+		- else
+			= link_to 'School', current_user.school
+
+	%li.periods= link_to 'Periods', periods_path
+
+	%li.students= link_to 'Students', students_path
+
+	%li.group Tools
+	
+	- if permitted_to? :index, :templates
+		%li.templates= link_to 'Templates', templates_path
+
+	- if permitted_to? :index, :fonts
+		%li.fonts= link_to 'Fonts', fonts_path
+
+	- if current_user.school.templates.any?
+		%li.print= link_to 'Print Jobs', new_print_job_path
+
+	%li.account= link_to 'Account', current_user
+	
+	%li.help= link_to 'Help', help_path
+	
+	%li.logout= link_to 'Logout', logout_path

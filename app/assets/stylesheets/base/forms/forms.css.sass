@@ -1,0 +1,83 @@
+@import multiple
+
+form
+	
+	ul.errors li
+		height: auto
+		
+		li
+			margin-top: 0
+			margin-bottom: 0
+
+	label
+		height: 55px
+		display: block
+		font-size: 14px
+		font-weight: bold
+		line-height: 14px
+		
+		abbr
+			font-weight: normal
+			color: $gray-text
+	
+	li
+		position: relative
+		margin: $spacing
+		
+		fieldset
+			margin-top: 10px
+			
+			.choice input
+				width: auto
+		
+		&.error
+			input, select
+				border-color: $red
+		
+		&.file
+			label
+				height: 40px
+		
+			input
+				height: auto
+				padding: 0
+				border: 0
+	
+	.actions
+		li
+			height: 35px
+			margin-bottom: 0
+			padding-bottom: $spacing
+	
+		input
+			height: 35px
+			top: 0
+			background: $blue
+			border: 0
+			font-weight: bold
+			color: #FFF
+			cursor: pointer
+			
+			&:hover
+				background: $blue-hover
+			
+			&:active
+				background: $blue-active
+		
+	input, select
+		height: 33px
+		position: absolute
+		top: 20px
+		left: 0
+		right: 0
+		margin: 0
+		padding: 0 10px
+		background: #FFF
+		border: 1px $gray-text solid
+		+border-radius($radius)
+		font-size: 14px
+		font-family: inherit
+		outline: none
+		
+	select
+		height: 35px

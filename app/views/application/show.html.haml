@@ -1,0 +1,10 @@
+.title
+	%h2= resource.class
+	%h1= resource.name
+	= link_for :edit, resource
+	= link_for :destroy, resource
+	= link_for :print, resource
+
+.scroller
+	- fields(:show).each do |field|
+		= show_content resource, field

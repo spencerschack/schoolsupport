@@ -1,0 +1,14 @@
+= semantic_form_for resource_with_parents(resource) do |f|
+	= f.semantic_errors
+	= f.inputs do
+		= f.input :column, collection: Student.template_columns
+		= f.input :x, hint: 'from the left'
+		= f.input :y, hint: 'from the bottom'
+		= f.input :width
+		= f.input :height
+		= f.input :font
+		= f.input :text_size
+		= f.input :align, collection: Field.align_options
+		= f.input :template
+	= f.actions do
+		= f.action :submit
