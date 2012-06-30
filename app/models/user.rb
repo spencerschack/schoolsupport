@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
   
   # For principals that cannot edit school_id, add school for them.
   def presence_of_school
-    # school_id = Authorization.current_user.school_id unless school_id
+    school_id = Authorization.current_user.school_id unless school_id
   end
   
   # If no role was set, add teacher.
