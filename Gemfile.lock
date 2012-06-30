@@ -155,6 +155,7 @@ DEPENDENCIES
   authlogic
   bcrypt-ruby
   coffee-rails (~> 3.2.1)
+  compass
   compass-rails
   declarative_authorization
   formtastic
