@@ -7,11 +7,10 @@ class Font < ActiveRecord::Base
   has_many :fields
   
   has_attached_file :file, path: ':rails_root/public:url',
-    url: '/fonts/:id/:basename.ttf',
-    styles: { original: { processors: [:ttf] } }
+    url: '/fonts/:id/:basename.ttf'
   
   validates_presence_of :name
-  validates_attachment_presence :file
+  validates_attachment :file, presence: true
   
   before_destroy :ensure_no_fields
   
