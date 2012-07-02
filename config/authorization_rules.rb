@@ -124,6 +124,11 @@ authorization do
   # Access to print jobs.
   role :print_jobs do
     has_permission_on :print_jobs, to: [:new, :create]
+    has_permission_on :districts, to: :print
+    has_permission_on :schools, to: :print
+    has_permission_on :periods, to: :print
+    has_permission_on :students, to: :print
+    has_permission_on :users, to: :print
   end
 
 end
@@ -132,7 +137,7 @@ privileges do
 
 	# Includes every action.
 	privilege :manage do
-		includes :index, :import, :print, :show, :edit, :update, :new, :create, :destroy
+		includes :index, :print, :show, :edit, :update, :new, :create, :destroy
 	end
 
 end

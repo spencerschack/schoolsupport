@@ -8,4 +8,10 @@ module PeriodsHelper
     form: [:name, :school, :students, :users]
   }
   
+  TYPES[:periods] = {
+    students: :token,
+    users: :token,
+    school: :school
+  }
+  
 end

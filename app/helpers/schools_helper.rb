@@ -5,7 +5,7 @@ module SchoolsHelper
   FIELDS[:schools] = {
     index: [:name, :district],
     show: [:name, :district, :users, :periods, :students],
-    form: [:name, :district]
+    form: [:name, :district, :mascot_image]
   }
   
 end

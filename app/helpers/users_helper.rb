@@ -9,5 +9,10 @@ module UsersHelper
     form: [:first_name, :last_name, :email, :password, :password_confirmation,
       :school, :periods, :role]
   }
+  
+  TYPES[:users] = {
+    periods: :token,
+    school: :school
+  }
 
 end

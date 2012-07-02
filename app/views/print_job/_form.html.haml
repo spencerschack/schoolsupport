@@ -2,7 +2,7 @@
 	html: { target: '_blank' } do |f|
 	= f.semantic_errors
 	= f.inputs do
-		= f.input :students
+		= f.input :students, as: :token
 		= f.input :template
 	= f.actions do
 		= f.action :submit

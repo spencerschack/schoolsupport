@@ -4,13 +4,13 @@ module LinkHelper
 	def collection_link_for record, method
 	  link_to parent_path(method), class: 'collection_link' do
 	    method.to_s.titleize.html_safe <<
-	    content_tag(:span, record.send(method).count)
+	    content_tag(:span, record.try(method).try(:count) || 0)
     end if permitted_to?(:index, method)
 	end
 	
 	# Creates a link to the given method with the passed record.
 	def record_link_for record, field
-	  record = record.send(field)
+	  record = record.try(field)
 	  path = parent_path(record) rescue nil
 	  if path && permitted_to?(:show, record)
 	    link_to path, class: 'record_link' do
@@ -20,7 +20,7 @@ module LinkHelper
     else
       content_tag :div, class: 'record_link' do
         field.to_s.titleize.html_safe <<
-        content_tag(:span, record.name)
+        content_tag(:span, record.try(:name) || none)
       end
     end
 	end
@@ -68,7 +68,7 @@ module LinkHelper
     when :destroy
       return unless permitted_to? action, model_or_record
       link_to 'Delete', js_link, options.merge(data: {
-        path: polymorphic_path(model_or_record)})
+        path: parent_path(model_or_record)})
       
     when :cancel
       link_to 'Cancel', js_link, options
@@ -77,7 +77,7 @@ module LinkHelper
       link_to 'Search', js_link, options
       
     when :print
-      return unless permitted_to? :print, model_or_record
+      return unless permitted_to? action, model_or_record
       if model_or_record.is_a?(Class) && (model_or_record == Student ||
         model_or_record.reflect_on_association(:students))
           link_to 'Print', js_link, options

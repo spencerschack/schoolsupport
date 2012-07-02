@@ -1,5 +1,9 @@
 class PrintJob < Tableless
   
+  def self.image_columns
+    %w(image school_mascot_image)
+  end
+  
   column :template_id, :integer
   
   attr_accessible :student_ids, :template_id, :period_ids, :user_ids,
@@ -14,7 +18,11 @@ class PrintJob < Tableless
   validates_presence_of :template
   validate :template_in_scope
   validate :students_in_scope
-  validate :students_have_images
+  validate :image_presence
+  
+  def columns
+    template.fields.map(&:column)
+  end
   
   # Necessary for the default show.html.haml view.
   def name
@@ -69,11 +77,19 @@ class PrintJob < Tableless
     end
   end
   
-  def students_have_images
-    if template.fields.map(&:column).include?('image')
+  # If columns includes image or school mascot image, ensure each student has
+  # an image and their school has a mascot image.
+  def image_presence
+    if (columns | PrintJob.image_columns).present?
+      image_present = columns.include?('image')
+      mascot_present = columns.include?('school_mascot_image')
+      
       students.each do |student|
-        unless student.image?
+        if image_present && !student.image?
           errors.add :students, 'must each have an image'
+          break
+        elsif mascot_present && !student.school.mascot_image?
+          errors.add :schools, 'must have a mascot image'
           break
         end
       end

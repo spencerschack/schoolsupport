@@ -5,3 +5,9 @@ en:
       update: 'Save'
       reset: 'Reset'
       cancel: 'Cancel'
+    forbidden_hints:
+      field:
+        x: 'from the left'
+        y: 'from the right'
+      font:
+        file: 'must be TrueType (.ttf)'

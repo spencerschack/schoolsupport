@@ -27,11 +27,8 @@ module Resources
   # are present in params.
   def new_resource model = controller_model
     resource || set_resource(model.new.tap do |record|
-      if param = params[model.name.underscore]
-        attributes = params_with_parents(model, param)
-      else
-        attributes = {}
-      end
+      settings = params[model.name.underscore] || {}
+      attributes = params_with_parents(model).merge(settings)
       record.assign_attributes attributes, as: current_role
     end)
   end

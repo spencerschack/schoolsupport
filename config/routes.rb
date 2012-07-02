@@ -1,5 +1,9 @@
 Schoolsupport::Application.routes.draw do
 
+  resources :bus_stops
+
+  resources :bus_routes
+
   # Error pages.
   get 'errors/not_found'
   get 'errors/forbidden'
@@ -23,19 +27,24 @@ Schoolsupport::Application.routes.draw do
   schools   = proc { importable :periods,  &periods
                      importable :users,    &users
                      importable :students, &students }
+  districts = proc { resources :bus_stops
+                     resources :bus_routes }
 
-  importable :districts
-  importable :schools,  &schools
-  importable :periods,  &periods
-  importable :students, &students
-  importable :users,    &users
+  importable :districts, &districts
+  importable :schools,   &schools
+  importable :periods,   &periods
+  importable :students,  &students
+  importable :users,     &users
+  
+  # Bus Routes and Stops
+  resources :bus_stops
+  resources :bus_routes
   
   # Templates, Fields, Fonts
   resources :templates do
     resources :fields
     resources :schools
   end
-  resources :fields
   resources :fonts
   
   # Print Job

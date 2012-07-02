@@ -7,6 +7,8 @@ class District < ActiveRecord::Base
   has_many :schools
   has_many :users, through: :schools
   has_many :students, through: :schools
+  has_many :bus_stops
+  has_many :bus_routes
   
   has_import identify_with: { name: nil }, format: :csv
   

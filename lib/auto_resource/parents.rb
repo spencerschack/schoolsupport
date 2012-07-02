@@ -14,9 +14,9 @@ module Parents
       parents.each do |parent|
         if id = params[id_attr(parent)]
 
-          if model.reflect_on_association id_attr(parent)
+          if model.reflect_on_association type_of(parent, false)
             attributes[id_attr(parent)] = id
-          elsif model.reflect_on_association ids_attr(parent)
+          elsif model.reflect_on_association type_of(parent)
             attributes[ids_attr(parent)] = id
           end
         end
@@ -42,10 +42,7 @@ module Parents
   
   # Add parents to record and call polymorphic_path for those records.
   def parent_path record, options = {}
-    first = Array.wrap(record).first
-    if first.respond_to?(:new_record?) && first.new_record?
-      options.merge!(action: :new)
-    end
+    options.merge!(action: :new) if new_record?(Array(record).first)
     polymorphic_path(resource_with_parents(record), options)
   end
   
@@ -63,11 +60,11 @@ module Parents
             array.unshift model.find(id)
           else
             
-            if first.respond_to?(ids_attr(model))
+            if first.class.reflect_on_association type_of(model)
               if first.send(ids_attr(model)).include?(id.to_i)
                 array.unshift model.find(id)
               end
-            else
+            elsif first.class.reflect_on_association type_of(model, false)
               array.unshift first.send(model.name.underscore)
             end
           end
@@ -82,6 +79,10 @@ module Parents
   
   private
   
+  def new_record? record
+    record.respond_to?(:new_record?) && record.new_record?
+  end
+  
   # Return the symbol representing the key for the model in params.
   def id_key model
     model == controller_model ? :id : :"#{model.name.underscore}_id"
@@ -89,10 +90,12 @@ module Parents
   
   # Return the underscored, pluralized symbol representing the class of the
   # record.
-  def type_of record
+  def type_of record, pluralize = true
     return record if record.is_a? Symbol
     record = record.class unless record.is_a?(Class)
-    record.model_name.pluralize.underscore.to_sym
+    record = record.model_name
+    record = record.pluralize if pluralize
+    record.underscore.to_sym
   end
   
   # Returns the id attribute for the given model and optionally an appended

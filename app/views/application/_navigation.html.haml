@@ -23,13 +23,19 @@
 
 	%li.group Tools
 	
+	- if permitted_to? :index, :bus_routes
+		%li.bus_routes= link_to 'Bus Routes', bus_routes_path
+	
+	- if permitted_to? :index, :bus_stops
+		%li.bus_stops= link_to 'Bus Stops', bus_stops_path
+	
 	- if permitted_to? :index, :templates
 		%li.templates= link_to 'Templates', templates_path
 
 	- if permitted_to? :index, :fonts
 		%li.fonts= link_to 'Fonts', fonts_path
 
-	- if current_user.school.templates.any?
+	- if current_user.school.templates.any? || permitted_to?(:new, :template)
 		%li.print= link_to 'Print Jobs', new_print_job_path
 
 	%li.account= link_to 'Account', current_user

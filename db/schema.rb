@@ -11,7 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120627220735) do
+ActiveRecord::Schema.define(:version => 20120701203800) do
+
+  create_table "bus_routes", :force => true do |t|
+    t.string   "name"
+    t.integer  "district_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "bus_stops", :force => true do |t|
+    t.string   "name"
+    t.integer  "district_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "districts", :force => true do |t|
     t.string   "name"
@@ -71,8 +85,13 @@ ActiveRecord::Schema.define(:version => 20120627220735) do
   create_table "schools", :force => true do |t|
     t.string   "name"
     t.integer  "district_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.string   "mascot_image_file_name"
+    t.string   "mascot_image_content_type"
+    t.integer  "mascot_image_file_size"
+    t.datetime "mascot_image_updated_at"
+    t.string   "identifier"
   end
 
   create_table "schools_templates", :id => false, :force => true do |t|
@@ -84,9 +103,6 @@ ActiveRecord::Schema.define(:version => 20120627220735) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "grade"
-    t.string   "am_bus_stop"
-    t.string   "pm_bus_stop"
-    t.string   "bus_pass_number"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.string   "image_file_name"
@@ -95,6 +111,9 @@ ActiveRecord::Schema.define(:version => 20120627220735) do
     t.datetime "image_updated_at"
     t.integer  "school_id"
     t.string   "identifier"
+    t.integer  "bus_stop_id"
+    t.integer  "bus_route_id"
+    t.string   "bus_rfid"
   end
 
   create_table "templates", :force => true do |t|

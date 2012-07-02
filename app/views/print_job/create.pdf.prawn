@@ -25,10 +25,10 @@ else
     @print_job.template.fields.each do |field|
     
       # Handle image inserts.
-      if field.column == 'image'
+      if PrintJob.image_columns.include? field.column
       
-        pdf.image student.image.path(:template), at: [field.x, field.y],
-          width: field.width, height: field.height
+        pdf.image student.send(field.column).path(:template),
+          at: [field.x, field.y], width: field.width, height: field.height
     
       # Handle text inserts.
       else
