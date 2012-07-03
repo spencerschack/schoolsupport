@@ -3,8 +3,12 @@
 	%h1= resource.name
 	= link_for :edit, resource
 	= link_for :destroy, resource
-	= link_for :print, resource
+	= link_for :export, resource
 
 .scroller
+	- if resource.errors.any?
+		%ul.errors
+			- resource.errors.messages[:base].each do |message|
+				%li= message
 	- fields(:show).each do |field|
 		= show_content resource, field

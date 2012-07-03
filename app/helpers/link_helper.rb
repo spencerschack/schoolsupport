@@ -76,24 +76,14 @@ module LinkHelper
     when :search
       link_to 'Search', js_link, options
       
-    when :print
-      return unless permitted_to? action, model_or_record
-      if model_or_record.is_a?(Class) && (model_or_record == Student ||
-        model_or_record.reflect_on_association(:students))
-          link_to 'Print', js_link, options
-          
-      elsif model_or_record.is_a?(Student) ||
-        model_or_record.respond_to?(:students)
-          options.merge!(
-            name: "print_job[#{model_or_record.class.name.underscore}_ids][]",
-            value: model_or_record.id
-          )
-          link_to 'Print', js_link, options
-      end
-      
     when :import
       if permitted_to?(action, model_or_record) && Import.for?(model_or_record)
         link_to 'Import', js_link, options
+      end
+    
+    when :export
+      if permitted_to?(action, model_or_record) && Export.for?(model_or_record)
+        link_to 'Export', js_link, options
       end
       
     when :upload

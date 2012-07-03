@@ -4,7 +4,7 @@ class Import
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
-  attr_accessor :model, :file, :processor, :role
+  attr_accessor :model, :file, :defaults, :role
   
   validate :model_import
   validate :file_type
@@ -17,7 +17,7 @@ class Import
   end
   
   def initialize options = nil
-    [:model, :file, :processor, :role].each do |option|
+    [:model, :file, :defaults, :role].each do |option|
       send("#{option}=", options[option])
     end if options
   end
@@ -44,7 +44,7 @@ class Import
     index = 1
     parser.read(path) do |hash|
       begin
-        process(hash)
+        process(hash = hash.with_indifferent_access)
         record = new_record(hash)
         record.assign_attributes hash, as: role
         record.save!
@@ -57,12 +57,16 @@ class Import
   end
   
   def process hash
-    hash.reverse_merge!(options[:defaults]) if options[:defaults]
-    options[:associate].each do |record, field|
+    hash.reverse_merge!(defaults) if defaults
+    options[:associate].each do |record, (field, method)|
       if value = hash.delete(record)
         finder = record.to_s.camelize.constantize
         attempted = finder.send("find_by_#{field}!", value)
-        hash[:"#{record}_id"] = attempted.id
+        if method.is_a?(Symbol) && model.respond_to?(method)
+          model.send(method, hash, attempted, role)
+        else
+          hash[:"#{record}_id"] = attempted.id
+        end
       end
     end if options[:associate].present?
   end
@@ -82,13 +86,13 @@ class Import
   private
   
   def new_record hash
-    Array(options[:identify_with]).each do |identifier, scope|
+    options[:identify_with].each do |identifier, scope|
       if hash[identifier]
         finder = model
         if scope
           unless hash[scope]
-            raise ArgumentError, "To find a #{model} by #{identifier}, you" <<
-              " must also enter a #{scope.humanize}"
+            raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
+              " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"
           else
             finder = finder.where(scope.to_sym => hash[scope])
           end

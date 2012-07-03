@@ -1,7 +1,7 @@
 module HasImport
   
   def self.extended base
-    base.cattr_accessor :has_import_options
+    base.class_attribute :has_import_options
   end
   
   def has_import options

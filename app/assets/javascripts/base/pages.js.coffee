@@ -12,7 +12,7 @@ window.create_page = (path) ->
 		page.find('.wrapper').trigger('loaded')
 		select_path(page)
 		width = page.children().width()
-		page.stop().animate {
+		page.stop(false, true).animate {
 			width: width,
 			marginLeft: 0
 		}, {

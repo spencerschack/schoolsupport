@@ -46,15 +46,17 @@ handle_form_submit = (event) ->
 						insert_row(index.find('.table'), data.row)
 						select_path(index)
 					index.find('.table_container').scrollTo('.selected')
-					wrapper.next('.show.wrapper').remove()
-					wrapper.after(data.page).animate {
+					wrapper.next('.show.wrapper').trigger('unloaded').remove()
+					$(data.page).insertAfter(wrapper).trigger('loaded')
+					wrapper.animate {
 						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 							$(this).remove()
+							
 			else
 				page = $(data.page)
 				errors = page.find('.inline-errors, .errors').hide()
 				page.insertBefore(wrapper).trigger('loaded')
-				wrapper.remove()
+				wrapper.trigger('unloaded').remove()
 				errors.slideDown(SHORT_DURATION)
 	
 	event.preventDefault()

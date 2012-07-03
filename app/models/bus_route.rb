@@ -1,6 +1,6 @@
 class BusRoute < ActiveRecord::Base
   
-  attr_accessible :district_id, :name, as: [:developer, :designer]
+  attr_accessible :district_id, :color, :name, as: [:developer, :designer]
   
   belongs_to :district
   

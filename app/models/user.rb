@@ -18,15 +18,16 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :periods
   has_many :students, through: :periods
   
-  has_import format: :csv, identify_with: { email: nil, name: :school_id },
+  has_import identify_with: { email: nil, name: :school_id },
     associate: { school: :name, role: :name }
+  
+  before_validation :set_school
 
   validates_presence_of :email, :school, :first_name, :last_name
   validates_confirmation_of :password, if: :password_changed?
   validates_uniqueness_of :first_name, scope: [:last_name, :school_id],
     message: 'is the same as another user with the same last name in the same school, add a middle initial'
   validate :presence_of_role
-  validate :presence_of_school
   validate :periods_in_school
   validate :school_in_district
   
@@ -36,11 +37,7 @@ class User < ActiveRecord::Base
   end
   
   def self.find_by_name! name
-    record = find_by_name(name)
-    unless record
-      raise RecordNotFound, "Couldn't find User with name = #{name}"
-    end
-    record
+    find_by_name(name) || raise(RecordNotFound, "Couldn't find User with name = #{name}")
   end
   
   def self.find_or_initialize_by_name name
@@ -52,7 +49,7 @@ class User < ActiveRecord::Base
   end
   
   def name= value
-    first_name, last_name = extract_name_parts(name)
+    first_name, last_name = self.extract_name_parts(name)
   end
 
   # Returns an array of the symbol of the role of the user.
@@ -68,24 +65,25 @@ class User < ActiveRecord::Base
   private
   
   # Return the first and last name from the given string.
-  def extract_name_parts name
+  def self.extract_name_parts name
     if name =~ /,/
-      parts = name.split(',')
-      [parts.last, parts.first].map(&:strip)
+      last, *first = name.split(',')
     else
-      parts = name.split
-      [parts[0..-2].join(' '), parts.last].map(&:strip)
+      *first, last = name.split(' ')
     end
+    [first.join(' '), last].map(&:strip)
   end
   
   # For principals that cannot edit school_id, add school for them.
-  def presence_of_school
-    school_id = Authorization.current_user.school_id unless school_id
+  def set_school
+    if !school_id && Authorization.current_user.respond_to?(:school_id)
+      school_id = Authorization.current_user.school_id
+    end
   end
   
   # If no role was set, add teacher.
   def presence_of_role
-    role = Role.find_by_name('Teacher') unless role
+    role ||= Role.find_by_name('Teacher')
   end
   
   # If the periods are not in the specified school, then add an error.
@@ -98,7 +96,7 @@ class User < ActiveRecord::Base
   # If the given school is not in the current user's scope of districts, then
   # add an error.
   def school_in_district
-    unless permitted_to? :show, object: school.district
+    if district && !permitted_to?(:show, object: district)
       errors.add(:school, 'must be in your district')
     end
   end

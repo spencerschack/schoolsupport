@@ -36,8 +36,8 @@ authorization do
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
-    # Access to templates, print_jobs, and user_sessions.
-    includes :print_jobs
+    # Access to export.
+    includes :export
     
 	end
 
@@ -72,8 +72,8 @@ authorization do
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
-    # Access to templates, print_jobs, and user_sessions.
-    includes :print_jobs
+    # Access to export.
+    includes :export
     
 	end
 
@@ -108,8 +108,8 @@ authorization do
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
-    # Access to templates, print_jobs, and user_sessions.
-    includes :print_jobs
+    # Access to export.
+    includes :export
     
 	end
 
@@ -122,13 +122,12 @@ authorization do
 	end
   
   # Access to print jobs.
-  role :print_jobs do
-    has_permission_on :print_jobs, to: [:new, :create]
-    has_permission_on :districts, to: :print
-    has_permission_on :schools, to: :print
-    has_permission_on :periods, to: :print
-    has_permission_on :students, to: :print
-    has_permission_on :users, to: :print
+  role :export do
+    has_permission_on :districts, to: :export
+    has_permission_on :schools, to: :export
+    has_permission_on :periods, to: :export
+    has_permission_on :students, to: :export
+    has_permission_on :users, to: :export
   end
 
 end

@@ -17,6 +17,7 @@ handle_search_click = (event) ->
 		).bind 'blur.unsearch', ->
 			unless $(this).val()
 				table.find('a').show()
+				update_select_all(table)
 				$(this).siblings('.clear').fadeOut TINY_DURATION, ->
 					$(this).remove()
 				$(this).animate { width: width, opacity: 0 }, TINY_DURATION, ->
@@ -30,6 +31,8 @@ search_table = (table, term) ->
 	$(table).find('a').each ->
 		content = $(this).find('span').slice(1, -1).text()
 		if regexp.test(content)
+			unless $(this).find('input').prop('checked')
+				$(table).find('div span input').prop('checked', false)
 			$(this).show()
 		else
 			$(this).hide()

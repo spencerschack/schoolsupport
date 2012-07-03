@@ -21,8 +21,8 @@ class Student < ActiveRecord::Base
     path: ':rails_root/student_images/:id/:basename_:style.:extension',
     styles: { thumbnail: '35x35^', template: ['', :png] }
   
-  has_import identify_with: { identifier: nil }, associate: { school: :name },
-    format: :csv
+  has_import identify_with: { identifier: nil }, associate: { school: :name,
+    bus_route: :name, bus_stop: :name, user: [:name, :associate_period] }
   
   before_validation :set_school
   
@@ -59,6 +59,18 @@ class Student < ActiveRecord::Base
   # Column for print jobs.
   def school_mascot_image
     school.mascot_image
+  end
+  
+  def self.associate_period hash, user, role
+    unless period = user.periods.first
+      period = user.periods.build
+      period.assign_attribtues({
+        name: "#{user.name(true)}'s Period",
+        school_id: hash[:school_id]
+      }, as: role)
+      period.save!
+    end
+    hash[:period_ids] = [period.id]
   end
   
   # Which columns are available for templates.

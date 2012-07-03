@@ -1,10 +1,10 @@
 .title
 	%h2 All
 	%h1= controller_name.titleize
-	= link_for :search, controller_model
 	= link_for :new, new_resource
 	= link_for :import, controller_model
-	= link_for :print, controller_model
+	= link_for :export, controller_model
+	= link_for :search, controller_model
 
 .scroller
 	.table
@@ -13,7 +13,7 @@
 			%span.select
 				= check_box_tag(nil, true)
 			- fields(:index).each do |field|
-				%span= field.to_s.titleize
+				%span= header_content(field)
 			%span.spacer
 		- collection.each do |row|
 			= render 'row', row: row

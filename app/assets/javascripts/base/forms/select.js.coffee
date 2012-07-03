@@ -26,12 +26,12 @@ prepare_multiple = ->
 		list.find('[data-depends-on]').each ->
 			dependent = $(this)
 			dependent_id = dependent.attr('data-depends-id')
-			depends_on = dependent.attr('data-depends-on').replace('_', '-')
-			independent = $("[data-#{depends_on}]").closest('select')
+			depends_on = "data-#{dependent.attr('data-depends-on').replace('_', '-')}"
+			independent = $("[#{depends_on}]").closest('select')
 			independent.change ->
 				results.hide()
 				list.removeClass('searching')
-				if $(this).val() == dependent_id
+				if $(this).find(':selected').attr(depends_on) == dependent_id
 					dependent.insertBefore(search_input.parent())
 				else
 					hidden.add(dependent.detach())
@@ -110,19 +110,6 @@ prepare_multiple = ->
 				$.contains(results.get(0), event.target)
 					results.hide()
 					list.removeClass('searching')
-	
-	$('select [data-depends-on]').each ->
-		dependent = $(this)
-		parent = dependent.closest('select')
-		dependent_id = dependent.attr('data-depends-id')
-		depends_on = dependent.attr('data-depends-on').replace('_', '-')
-		independent = $("[data-#{depends_on}]").closest('select')
-		independent.change ->
-			if $(this).val() == dependent_id
-				dependent.appendTo(parent)
-			else
-				dependent.detach()
-		independent.trigger('change')
 
 $ ->
 	

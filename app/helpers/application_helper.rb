@@ -8,23 +8,6 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
   
-  # Initialize collections constant for storing which collections to show for
-  # certain select inputs.
-  ::COLLECTIONS = {}
-  
-  # Initialize types constant for storing what type of input.
-  ::TYPES = {}
-  
-  def field_options resource, field
-    symbol = resource.class.name.underscore.pluralize.to_sym
-    collection = COLLECTIONS[symbol] && COLLECTIONS[symbol][field]
-    type = TYPES[symbol] && TYPES[symbol][field]
-    options = {}
-    options.merge!(collection: collection) if collection
-    options.merge!(as: type) if type
-    [field, options]
-  end
-  
   def print_job_attr resource
     "print_job[#{resource.class.name.underscore}_ids][]"
   end
@@ -49,6 +32,12 @@ module ApplicationHelper
 	# If there is nothing, this is what is displayed.
 	def none
 		'&mdash;'.html_safe
+	end
+	
+	# Method for table headers.
+	def header_content field
+	 field = field.first if field.is_a?(Array)
+	 field.to_s.titleize
 	end
 	
 	# For the given field on the given record, return the value or the value of

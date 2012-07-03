@@ -11,13 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120701203800) do
+ActiveRecord::Schema.define(:version => 20120703040940) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
     t.integer  "district_id"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "color"
   end
 
   create_table "bus_stops", :force => true do |t|
@@ -63,6 +64,7 @@ ActiveRecord::Schema.define(:version => 20120701203800) do
     t.integer  "school_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "identifier"
   end
 
   create_table "periods_students", :id => false, :force => true do |t|
@@ -92,6 +94,7 @@ ActiveRecord::Schema.define(:version => 20120701203800) do
     t.integer  "mascot_image_file_size"
     t.datetime "mascot_image_updated_at"
     t.string   "identifier"
+    t.string   "city"
   end
 
   create_table "schools_templates", :id => false, :force => true do |t|

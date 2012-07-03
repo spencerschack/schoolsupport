@@ -6,18 +6,9 @@ module FieldsHelper
     index: [:column, :template],
     show: [:column, :x, :y, :width, :height, :font, :text_size, :align,
       :template],
-    form: [:column, :x, :y, :width, :height, :font, :text_size, :align,
+    form: [[:column, collection: Student.template_columns], :x, :y, :width,
+      :height, :font, :text_size, [:align, collection: Field.align_options],
       :template]
-  }
-  
-  COLLECTIONS[:fields] = {
-    column: Student.template_columns,
-    align: Field.align_options
-  }
-  
-  TYPES[:fields] = {
-    column: :select,
-    align: :select
   }
   
 end

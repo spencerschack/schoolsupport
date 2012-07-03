@@ -6,8 +6,8 @@ class Font < ActiveRecord::Base
   
   has_many :fields
   
-  has_attached_file :file, path: ':rails_root/public:url',
-    url: '/fonts/:id/:basename.ttf'
+  has_attached_file :file, path: ':rails_root/public/fonts/:id/:filename',
+    url: '/assets/font.png', default_url: '/assets/font.png'
   
   validates_presence_of :name
   validates_attachment :file, presence: true
@@ -20,5 +20,6 @@ class Font < ActiveRecord::Base
     if fields.any?
       errors.add :base, 'Cannot be deleted. There are fields that use this font.'
     end
+    false
   end
 end

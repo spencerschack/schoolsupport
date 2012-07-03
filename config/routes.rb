@@ -1,8 +1,15 @@
 Schoolsupport::Application.routes.draw do
-
-  resources :bus_stops
-
-  resources :bus_routes
+  
+  # Helper function that adds 'import' and 'export' actions in addition to
+  # resources.
+  def helper *args
+    resources *args do
+      match 'import', on: :collection
+      match 'export', on: :collection
+      match 'export', on: :member
+      yield if block_given?
+    end
+  end
 
   # Error pages.
   get 'errors/not_found'
@@ -11,34 +18,30 @@ Schoolsupport::Application.routes.draw do
   
   # Districts, Schools, Periods, Students, Users
   
-  def importable *args
-    resources *args do
-      yield if block_given?
-      match 'import', on: :collection
-    end
-  end
-  
-  students  = proc { importable :periods  do; importable :users    end
-                     importable :users }
-  periods   = proc { importable :students do; importable :users    end
-                     importable :users }
-  users     = proc { importable :periods  do; importable :students end
-                     importable :students do; importable :periods  end }
-  schools   = proc { importable :periods,  &periods
-                     importable :users,    &users
-                     importable :students, &students }
-  districts = proc { resources :bus_stops
-                     resources :bus_routes }
+  students  = proc { helper :periods  do; helper :users    end
+                     helper :users }
+  periods   = proc { helper :students do; helper :users    end
+                     helper :users }
+  users     = proc { helper :periods  do; helper :students end
+                     helper :students do; helper :periods  end }
+  schools   = proc { helper :periods,  &periods
+                     helper :users,    &users
+                     helper :students, &students }
+  districts = proc { helper :bus_stops
+                     helper :bus_routes
+                     helper :schools
+                     helper :users
+                     helper :students }
 
-  importable :districts, &districts
-  importable :schools,   &schools
-  importable :periods,   &periods
-  importable :students,  &students
-  importable :users,     &users
+  helper :districts, &districts
+  helper :schools,   &schools
+  helper :periods,   &periods
+  helper :students,  &students
+  helper :users,     &users
   
   # Bus Routes and Stops
-  resources :bus_stops
-  resources :bus_routes
+  helper :bus_stops
+  helper :bus_routes
   
   # Templates, Fields, Fonts
   resources :templates do
@@ -46,12 +49,6 @@ Schoolsupport::Application.routes.draw do
     resources :schools
   end
   resources :fonts
-  
-  # Print Job
-  match 'print_job/new' => 'print_job#new', via: [:get, :post],
-    as: 'new_print_job'
-  match 'print_job' => 'print_job#create', via: :post
-  match 'print_job' => redirect('print_job/new'), via: :get
   
   # Help
   match 'help' => 'help#index'

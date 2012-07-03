@@ -1,6 +1,6 @@
 module SchoolsHelper
   
-  PARENTS[:schools] = [Template]
+  PARENTS[:schools] = [Template, District]
   
   FIELDS[:schools] = {
     index: [:name, :district],

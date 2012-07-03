@@ -19,7 +19,11 @@ module Response
         render json: success_hash(record)
       end
     when 'destroy'
-      render nothing: true
+      if record.errors.any?
+        render json: destroy_failure_hash(record)
+      else
+        render json: destroy_success_hash(record)
+      end
     else
       super
     end
@@ -30,7 +34,7 @@ module Response
     {}.tap do |hash|
       hash[:page] = render_to_string(view_for(true))
       hash[:success] = true
-      unless action_name == 'import'
+      if action_name == 'update' || action_name == 'create'
         hash[:row] = render_to_string('_row', layout: false)
         hash[:path] = parent_path(record)
       end
@@ -43,6 +47,22 @@ module Response
       page: render_to_string(view_for(false)),
       success: false,
       errors: record.errors
+    }
+  end
+  
+  # Success object for destroy.
+  def destroy_success_hash record
+    {
+      success: true,
+      id: record.id
+    }
+  end
+  
+  # Failure object for destroy.
+  def destroy_failure_hash record
+    {
+      success: false,
+      page: render_to_string('show')
     }
   end
   

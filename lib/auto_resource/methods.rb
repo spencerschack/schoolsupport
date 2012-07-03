@@ -7,6 +7,7 @@ module Methods
     respond_with collection
   end
   
+  # Import action.
   def import
     if params[:import]
       @import = Import.new(params[:import].merge({
@@ -19,6 +20,11 @@ module Methods
     else
       @import = Import.new
     end
+  end
+  
+  # Export action.
+  def export
+    
   end
 
   # Show action.
@@ -39,7 +45,10 @@ module Methods
   # Create action. Save the resource created by declarative_authorization and
   # call respond_with.
   def create
-    resource.save
+    if resource.save
+      # Set for resource_with_parents.
+      params[:id] = resource.id
+    end
     respond_with resource
   end
 

@@ -1,6 +1,6 @@
 # Select all check boxes.
 handle_select_all_click = (event) ->
-	$(this).closest('.table').find('[type="checkbox"]')
+	$(this).closest('.table').find('[type="checkbox"]:visible')
 		.prop('checked', $(this).prop('checked'))
 
 # If the check box was unchecked, uncheck the select all box.
@@ -17,9 +17,9 @@ handle_select_click = (event) ->
 	update_select_all(table)
 
 # Ensure the select all input represents the current state.
-update_select_all = (table) ->
-	check_box = table.find('input[name="all"]')
-	check_box.prop('checked', !table.find('a input:not(:checked)').length)
+window.update_select_all = (table) ->
+	table.find('div span input')
+		.prop('checked', !table.find('a input:not(:checked)').length)
 
 $ ->
 	

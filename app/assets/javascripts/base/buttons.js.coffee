@@ -35,15 +35,29 @@ handle_destroy_click = (event) ->
 	self = $(this)
 	self.text('Are you sure?').addClass('confirm')
 	self.bind 'click.confirm', (event) ->
+		
 		event.stopImmediatePropagation()
 		self.unbind('click.confirm').display_loading_message('Deleting')
+		$(this).find('.inline-errors, .errors').slideUp(SHORT_DURATION)
+		
 		$('body').unbind('click.unconfirm')
 		path = self.attr('data-path')
-		index = self.closest('.page').next('.page')
-		id = path.match(/(\d+)$/)[0]
-		destroy_path path, ->
-			push_state index.attr('data-path')
-			remove_row(index.find('.table'), id)
+		
+		destroy_path path, (data) ->
+			
+			if data.success
+				index = self.closest('.page').next('.page')
+				push_state index.attr('data-path')
+				remove_row(index.find('.table'), data.id)
+				
+			else
+				page = $(data.page)
+				page.find('.inline-errors, .errors').hide()
+				wrapper = self.closest('.wrapper')
+				wrapper.replaceWith(page)
+				page.trigger('loaded').find('.inline-errors, .errors')
+					.slideDown(SHORT_DURATION)
+					
 	$('body').bind 'click.unconfirm', (event) ->
 		unless $(event.target).is(self)
 			self.unbind('click.confirm').removeClass('confirm').text('Delete')
@@ -56,8 +70,8 @@ destroy_path = (path, callback = null) ->
 	csrf_token = $('head meta[name=csrf-token]').attr('content')
 	form_data = _method: 'delete'
 	form_data[csrf_param] = csrf_token
-	$.post path, form_data, ->
-		callback() if $.isFunction(callback)
+	$.post path, form_data, (data) ->
+		callback(data) if $.isFunction(callback)
 
 # Handle create and update button clicks.
 handle_submit_click = (event) ->
