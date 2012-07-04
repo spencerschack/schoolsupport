@@ -31,4 +31,5 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
+/config/s3.yml
 >>>>>>> 6f128c6c914b8e8c7588d8bb263fe3f3a1b1175f

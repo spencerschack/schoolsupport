@@ -17,8 +17,8 @@ class Student < ActiveRecord::Base
   has_and_belongs_to_many :periods
   has_many :users, through: :periods
   
-  has_attached_file :image, url: '', 
-    path: ':rails_root/student_images/:id/:basename_:style.:extension',
+  has_attached_file :image,
+    path: '/student_images/:id/:basename_:style.:extension',
     styles: { thumbnail: '35x35^', template: ['', :png] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :name,

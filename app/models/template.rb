@@ -9,8 +9,7 @@ class Template < ActiveRecord::Base
   has_many :fonts, through: :fields
   has_and_belongs_to_many :schools
   
-  has_attached_file :file, path: ':rails_root/public:url',
-    url: '/templates/:id/:basename_:style.:extension',
+  has_attached_file :file, path: '/templates/:id/:basename_:style.:extension',
     styles: { thumbnail: ['35x35^', :png], small: ['70x70^', :png] }
   
   validates_presence_of :name

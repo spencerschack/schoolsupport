@@ -83,7 +83,7 @@ module LinkHelper
     
     when :export
       if permitted_to?(action, model_or_record) && Export.for?(model_or_record)
-        link_to 'Export', js_link, options
+        link_to 'Export All', js_link, options
       end
       
     when :upload

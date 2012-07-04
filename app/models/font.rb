@@ -6,7 +6,7 @@ class Font < ActiveRecord::Base
   
   has_many :fields
   
-  has_attached_file :file, path: ':rails_root/public/fonts/:id/:filename',
+  has_attached_file :file, path: '/fonts/:id/:filename',
     url: '/assets/font.png', default_url: '/assets/font.png'
   
   validates_presence_of :name

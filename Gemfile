@@ -31,7 +31,7 @@ gem 'formtastic'
 gem 'rails_autolink'
 
 gem 'paperclip'
-gem 'aws-s3'
+gem 'aws-sdk'
 
 gem 'prawn'
 gem 'prawnto'

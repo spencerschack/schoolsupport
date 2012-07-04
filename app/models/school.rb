@@ -13,8 +13,7 @@ class School < ActiveRecord::Base
   has_many :students, dependent: :destroy
   has_and_belongs_to_many :templates
   
-  has_attached_file :mascot_image, path: ':rails_root/public:url',
-    url: '/school_mascots/:id/:basename_:style.:extension',
+  has_attached_file :mascot_image, path: '/school_mascots/:id/:basename_:style.:extension',
     styles: { thumbnail: '35x35^', template: ['', :png] }
   
   has_import identify_with: { identifier: :district_id, name: :district_id },
