@@ -73,7 +73,7 @@ module Schoolsupport
         secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
       },
       s3_protocol: 'https',
-      s3_host_name: 's3-website-us-west-1.amazonaws.com'
+      s3_host_name: 's3-us-west-1.amazonaws.com'
     }
   end
 end
