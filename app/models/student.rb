@@ -18,7 +18,8 @@ class Student < ActiveRecord::Base
   has_many :users, through: :periods
   
   has_attached_file :image,
-    path: '/student_images/:id/:basename_:style.:extension',
+    path: '/student_images/:hash.:extension',
+    hash_secret: ENV['PAPERCLIP_HASH_SECRET'],
     styles: { original: ['', :png] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :name,
