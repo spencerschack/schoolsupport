@@ -3,24 +3,28 @@
 # form succeeded, update the index and scroll the form up to reveal the show
 # wrapper. If the type was create, update the url and wrapper data-path.
 handle_form_submit = (event) ->
-	return if $(this).attr('target') == '_blank'
+	form = $(this)
+	return if form.attr('target') == '_blank'
 	
-	wrapper = $(this).closest('.wrapper')
+	wrapper = form.closest('.wrapper')
 	if wrapper.is('.edit, .update')
 		message = 'Saving'
 	else if wrapper.is('.import')
 		message = 'Uploading'
+	else if wrapper.is('.export')
+		message = 'Exporting'
 	else
 		message = 'Creating'
 		
-	wrapper.find(":submit, a.create, a.update").display_loading_message(message)
-	$(this).find('.inline-errors, .errors').slideUp(SHORT_DURATION)
+	wrapper.find('a.create, a.update').display_loading_message(message)
+	form.find(':submit').display_loading_message(message)
+	form.find('.inline-errors, .errors').slideUp(SHORT_DURATION)
 	
-	file_inputs = $(this).find(':file')
+	file_inputs = form.find(':file')
 	has_file = false
 	file_inputs.each ->
 		has_file = true if $(this).val()
-	data = if has_file then $(this).serializeArray() else $(this).serialize()
+	data = if has_file then form.serializeArray() else form.serialize()
 	
 	$.ajax this.action,
 		data: data,
@@ -45,9 +49,16 @@ handle_form_submit = (event) ->
 					if data.row
 						insert_row(index.find('.table'), data.row)
 						select_path(index)
-					index.find('.table_container').scrollTo('.selected')
-					wrapper.next('.show.wrapper').trigger('unloaded').remove()
-					$(data.page).insertAfter(wrapper).trigger('loaded')
+						index.find('.scroller').scrollTo('.selected')
+						
+					if data.page
+						wrapper.next('.show.wrapper').trigger('unloaded').remove()
+						$(data.page).insertAfter(wrapper).trigger('loaded')
+					else
+						form.attr('target', '_blank')
+						form.attr('action', "#{form.attr('action')}.#{data.format}")
+						form.trigger('submit')
+					
 					wrapper.animate {
 						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 							$(this).remove()

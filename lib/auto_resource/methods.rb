@@ -24,7 +24,19 @@ module Methods
   
   # Export action.
   def export
-    
+    @export = Export.new
+    if params[:export]
+      @export.assign_attributes(params[:export], as: current_role)
+      @export.valid?
+      respond_with @export
+    else
+      unless params[:selected]
+        ids_key = :"#{controller_name.singularize}_ids"
+        implicit = params[:id] ? controller_model.find([params[:id]]) : find_collection
+        params[:selected] ||= { ids_key => implicit.map(&:id) }
+      end
+      @export.assign_attributes(params[:selected], as: current_role)
+    end
   end
 
   # Show action.
@@ -45,10 +57,7 @@ module Methods
   # Create action. Save the resource created by declarative_authorization and
   # call respond_with.
   def create
-    if resource.save
-      # Set for resource_with_parents.
-      params[:id] = resource.id
-    end
+    params[:id] = resource.id if resource.save
     respond_with resource
   end
 

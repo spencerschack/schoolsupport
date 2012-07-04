@@ -63,5 +63,15 @@ module Schoolsupport
     
     # For Heroku push
     config.assets.initialize_on_precompile = false
+    
+    # Paperclip defaults.
+    config.paperclip_defaults = {
+      storage: ENV['S3_BUCKET_NAME'] ? :s3 : :filesystem,
+      bucket: ENV['S3_BUCKET_NAME'],
+      s3_credentials: {
+        access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+      }
+    }
   end
 end

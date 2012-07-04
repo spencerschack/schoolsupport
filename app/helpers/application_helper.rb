@@ -8,8 +8,8 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
   
-  def print_job_attr resource
-    "print_job[#{resource.class.name.underscore}_ids][]"
+  def export_attr resource
+    "selected[#{resource.class.name.underscore}_ids][]"
   end
 	
 	# What to use for buttons that act on javascript events, not anchors.

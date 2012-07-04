@@ -23,15 +23,15 @@ window.update_select_all = (table) ->
 
 $ ->
 	
-	$('body').delegate '.table div span input', 'click.select_all',
+	$('#container').delegate '.table div span input', 'click.select_all',
 		handle_select_all_click
 	
-	$('body').delegate '.wrapper.index', 'loaded.select', (event) ->
+	$('#container').delegate '.wrapper.index', 'loaded.select', (event) ->
 		table = $(this).find('.table')
 		table.data('shifted', false)
 		table.data('last_selected', null)
 	
-		table.find('a span.select').on 'click.select', (event) ->
+		table.delegate 'a span.select', 'click.select', (event) ->
 			event.stopImmediatePropagation()
 			if $(event.target).is('input')
 				handle_select_click.apply(event.target, event)

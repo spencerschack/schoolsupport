@@ -4,7 +4,7 @@ handle_cancel_click = (event) ->
 	if $(this).closest('.wrapper').is('.new, .create')
 		push_state $(this).closest('.page').next('.page').attr('data-path')
 	else
-		$(this).closest('.wrapper.edit, .wrapper.import').trigger('unloaded')
+		$(this).closest('.wrapper').trigger('unloaded')
 			.animate { marginTop: "-#{$('#container').height()}px" },
 				SHORT_DURATION, -> $(this).remove()
 
@@ -66,10 +66,8 @@ handle_destroy_click = (event) ->
 # Generate the necessary form data to destroy a resource and post that to
 # the given path and callback.
 destroy_path = (path, callback = null) ->
-	csrf_param = $('head meta[name=csrf-param]').attr('content')
-	csrf_token = $('head meta[name=csrf-token]').attr('content')
-	form_data = _method: 'delete'
-	form_data[csrf_param] = csrf_token
+	form_data = csrf_param()
+	form_data['_method'] = 'delete'
 	$.post path, form_data, (data) ->
 		callback(data) if $.isFunction(callback)
 

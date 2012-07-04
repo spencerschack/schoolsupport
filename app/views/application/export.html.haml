@@ -1,1 +1,17 @@
-EXPORT
+.title
+	%h2 Export
+	%h1= resource ? resource.class : controller_name.titleize
+	= link_for :cancel, controller_model
+
+.scroller
+	- Export.types.each do |type|
+		= semantic_form_for @export, url: parent_path(resource || controller_model, action: :export) do |f|
+			= f.semantic_errors if @export.send("is_#{type}?")
+			= hidden_field_tag 'export[type]', type
+			- @export.student_ids.each do |student_id|
+				= hidden_field_tag 'export[student_ids][]', student_id
+			- if type == 'print'
+				= f.inputs do
+					= f.input :template
+			= f.actions do
+				= f.action :submit, label: type.titleize

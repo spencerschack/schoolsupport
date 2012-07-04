@@ -3,9 +3,14 @@ handle_export_click = ->
 	unless button.is('.loading')
 		button.display_loading_message()
 		page = button.closest('.page')
+		wrapper = page.children('.wrapper')
 		url = [page.attr('data-path'), 'export'].join('/')
 		
-		$.get url, (data) ->
+		data = $.param(csrf_param())
+		if input_data = wrapper.find('.table a span input').serialize()
+			data = [data, input_data].join('&')
+		
+		$.post url, data, (data) ->
 			button.hide_loading_message()
 			data = $(data)
 			data.css(marginTop: "-#{$('#container').height()}px")

@@ -6,7 +6,8 @@ module FieldsHelper
     index: [:column, :template],
     show: [:column, :x, :y, :width, :height, :font, :text_size, :align,
       :template],
-    form: [[:column, collection: Student.template_columns], :x, :y, :width,
+    form: [[:column, collection: Student.template_columns],
+      [:x, hint: 'from the left'], [:y, hint: 'from the bottom'], :width,
       :height, :font, :text_size, [:align, collection: Field.align_options],
       :template]
   }

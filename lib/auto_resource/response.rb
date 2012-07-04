@@ -3,7 +3,8 @@ module Response
   # When included, have the controller respond to the following methods.
   # Necessary for respond_with to work.
   def self.included base
-    base.respond_to :html, :json
+    base.respond_to :html
+    base.prawn_options = { skip_page_creation: true }
   end
   
   private
@@ -12,9 +13,18 @@ module Response
   # respond with the appropriate json.
   def respond_with record
     case action_name
-    when 'create', 'update', 'import'
+    when 'create', 'update', 'import', 'export'
       if record.errors.any?
         render json: failure_hash(record)
+      elsif action_name == 'export'
+        if request.xhr?
+          render json: { success: true, format: record.format }
+        else
+          render "exports/#{record.type}",
+            formats: [record.format],
+            content_type: record.content_type,
+            layout: false
+        end
       else
         render json: success_hash(record)
       end
@@ -32,8 +42,8 @@ module Response
   # The object to return in case of a success.
   def success_hash record
     {}.tap do |hash|
-      hash[:page] = render_to_string(view_for(true))
       hash[:success] = true
+      hash[:page] = render_to_string(view_for(true))
       if action_name == 'update' || action_name == 'create'
         hash[:row] = render_to_string('_row', layout: false)
         hash[:path] = parent_path(record)

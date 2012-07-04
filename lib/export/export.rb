@@ -1,7 +1,122 @@
-class Export
+class Export < Tableless
   
+  # Return whether the given model or record is capable of having an export.
   def self.for? model_or_record
-    true
+    model_or_record = model_or_record.class unless model_or_record.is_a?(Class)
+    model_or_record == Student || !!model_or_record.reflect_on_association(:students)
+  end
+  
+  # What types are accepted.
+  def self.types
+    %w(print bus_file)
+  end
+  
+  # What template columns are images.
+  def self.image_columns
+    %w(image school_mascot_image)
+  end
+  
+  column :template_id, :integer
+  
+  attr_accessor :type
+  
+  attr_accessible :student_ids, :template_id, :period_ids, :user_ids, :type,
+    as: [:developer, :designer, :superintendent, :principal, :teacher]
+  attr_accessible :school_ids, as: [:developer, :designer, :superintendent,
+    :principal]
+  attr_accessible :district_ids, as: [:developer, :designer, :superintendent]
+  
+  belongs_to :template
+  
+  validates_presence_of :type
+  validates_presence_of :template, if: :is_print?
+  validates_inclusion_of :type, in: Export.types
+  validate :students_in_scope
+  validate :template_in_scope, :image_presence, if: :is_print?
+  
+  # Create methods to see if the export is a certain type.
+  types.each do |t|
+    define_method "is_#{t}?" do
+      type == t
+    end
+  end
+  
+  # Return the format for the given export.
+  def format
+    { 'print' => :pdf, 'bus_file' => :csv }[type]
+  end
+  
+  def content_type
+    { 'print' => 'application/pdf', 'bus_file' => 'text/plain' }[type]
+  end
+  
+  # Return all students associated with this print job.
+  def students
+    @students ||= Student.find(student_ids)
+  end
+  
+  # Store student ids and initialize when nil.
+  def student_ids
+    @student_ids ||= []
+  end
+  
+  # Student ids setter method and initialize when nil.
+  # - Dumps @students cache.
+  # - Keeps ids unique with the union operator (|).
+  # - Converts all ids to integers and gets rid of 0.
+  def student_ids= ids
+    @student_ids ||= []
+    @students = nil
+    @student_ids |= Array(ids).map(&:to_i) - [0]
+  end
+  
+  # Setter method for district ids. When called, adds all student ids from the
+  # corresponding model.
+  [District, School, Period, User].each do |model|
+    define_method "#{model.name.underscore}_ids=" do |ids|
+      send :student_ids=, model.find(Array(ids)).map(&:student_ids).reduce(:+)
+    end
+  end
+  
+  # Returns all columns in the template.
+  def columns
+    template.fields.map(&:column) if template
+  end
+  
+  private
+  
+  # Ensure the current user is authorized to use the template.
+  def template_in_scope
+    unless Template.with_permissions_to(:show).map(&:id).include?(template_id)
+      errors.add :template, 'must be viewable by you'
+    end
+  end
+  
+  # Ensure the current user is authorized to print the current students.
+  def students_in_scope
+    common = student_ids & Student.with_permissions_to(:show).map(&:id)
+    if common.length < student_ids.length
+      errors.add :base, 'Exported students must be viewable by you'
+    end
+  end
+  
+  # If columns includes image or school mascot image, ensure each student has
+  # an image and their school has a mascot image.
+  def image_presence
+    if (columns | Export.image_columns).present?
+      image_present = columns.include?('image')
+      mascot_present = columns.include?('school_mascot_image')
+      
+      students.each do |student|
+        if image_present && !student.image?
+          errors.add :base, 'Exported students must each have an image'
+          break
+        elsif mascot_present && !student.school.mascot_image?
+          errors.add :base, 'Exported students\' schools must have a mascot image'
+          break
+        end
+      end
+    end
   end
   
 end
