@@ -38,6 +38,7 @@ window.insert_row = (table, row) ->
 		table.append(row)
 	sort(table)
 	update_count(table)
+	table.find('input.search').trigger('keyup.search')
 
 # Update the count of rows in the previous page.
 update_count = (table) ->

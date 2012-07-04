@@ -30,6 +30,10 @@ module Methods
       @export.valid?
       respond_with @export
     else
+      if params[:id]
+        params[:selected] = {
+          :"#{controller_name.singularize}_ids" => [params[:id]] }
+      end
       @export.assign_attributes(params[:selected], as: current_role)
     end
   end

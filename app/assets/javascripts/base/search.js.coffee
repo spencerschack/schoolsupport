@@ -26,18 +26,11 @@ handle_search_click = (event) ->
 					$(this).appendTo(table)
 				else
 					$(this).detach()
-			
-			export_button = $(this).parent().siblings('.export').addClass('searching')
-			if $(this).val()
-				unless export_button.hasClass('selecting')
-					export_button.text('Export Search')
-			else
-				export_button.removeClass('searching')
-				unless export_button.hasClass('selecting')
-					export_button.text('Export All')
+			update_export_button($(this))
 				
 		).bind 'blur.unsearch', ->
 			unless $(this).val()
+				update_export_button($(this))
 				rows.appendTo(table)
 				update_select_all(table)
 				$(this).siblings('.clear').fadeOut TINY_DURATION, ->
@@ -45,6 +38,16 @@ handle_search_click = (event) ->
 				$(this).animate { width: width, opacity: 0 }, TINY_DURATION, ->
 					$(this).remove()
 					self.show()
+
+update_export_button = (search_field) ->
+	export_button = search_field.parent().siblings('.export').addClass('searching')
+	if search_field.val()
+		unless export_button.hasClass('selecting')
+			export_button.text('Export Search')
+	else
+		export_button.removeClass('searching')
+		unless export_button.hasClass('selecting')
+			export_button.text('Export All')
 
 $ ->
 
