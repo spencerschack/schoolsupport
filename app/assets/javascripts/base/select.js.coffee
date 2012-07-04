@@ -26,8 +26,7 @@ window.update_select_all = (table) ->
 
 window.update_export_button = (table) ->
 	export_button = $(table).closest('.wrapper').find('a.export')
-	if $(table).find('a span input:checked')
-		console.log 'something checked'
+	if $(table).find('a span input:checked').length
 		export_button.text('Export Selected')
 	else
 		export_button.text('Export All')

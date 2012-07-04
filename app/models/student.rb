@@ -19,7 +19,7 @@ class Student < ActiveRecord::Base
   
   has_attached_file :image,
     path: '/student_images/:id/:basename_:style.:extension',
-    styles: { thumbnail: '35x35^', template: ['', :png] }
+    styles: { original: ['', :png] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :name,
     bus_route: :name, bus_stop: :name, user: [:name, :associate_period] }

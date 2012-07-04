@@ -10,7 +10,7 @@ class Template < ActiveRecord::Base
   has_and_belongs_to_many :schools
   
   has_attached_file :file, path: '/templates/:id/:basename_:style.:extension',
-    styles: { thumbnail: ['35x35^', :png], small: ['70x70^', :png] }
+    styles: { thumbnail: ['35x35^', :png] }
   
   validates_presence_of :name
   validates_attachment :file, presence: true, content_type: {
