@@ -10,8 +10,8 @@ class District < ActiveRecord::Base
   has_many :bus_stops, dependent: :destroy
   has_many :bus_routes, dependent: :destroy
   
-  has_import identify_with: { name: nil }
+  has_import identify_with: { identifier: nil }
   
   validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :identifier
 end

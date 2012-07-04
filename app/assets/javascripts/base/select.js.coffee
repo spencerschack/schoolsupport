@@ -27,9 +27,13 @@ window.update_select_all = (table) ->
 window.update_export_button = (table) ->
 	export_button = $(table).closest('.wrapper').find('a.export')
 	if $(table).find('a span input:checked').length
-		export_button.text('Export Selected')
+		export_button.text('Export Selected').addClass('selecting')
 	else
-		export_button.text('Export All')
+		export_button.removeClass('selecting')
+		if export_button.hasClass('searching')
+			export_button.text('Export Search')
+		else
+			export_button.text('Export All')
 
 $ ->
 	

@@ -76,27 +76,31 @@
 				&:active
 					background: $blue-active
 		
-		input.search
-			height: 35px
+		.search_container
+			position: relative
 			float: right
-			margin-left: $spacing
-			padding: 0 35px 0 10px
-			border: 0
-			+border-radius($radius)
-			font-size: 14px
-			outline: none
 		
-		i.clear
-			width: 20px
-			height: 20px
-			position: absolute
-			top: 27px
-			right: 27px
-			background: url(/assets/icons.png) no-repeat 4px -625px
-			cursor: pointer
+			input.search
+				height: 35px
+				float: right
+				margin-left: $spacing
+				padding: 0 35px 0 10px
+				border: 0
+				+border-radius($radius)
+				font-size: 14px
+				outline: none
+		
+			i.clear
+				width: 20px
+				height: 20px
+				position: absolute
+				top: 7px
+				right: 7px
+				background: url(/assets/icons.png) no-repeat 4px -625px
+				cursor: pointer
 			
-			&:hover
-				background-position: 4px -655px
+				&:hover
+					background-position: 4px -655px
 	
 	div.wrapper
 		height: 100%

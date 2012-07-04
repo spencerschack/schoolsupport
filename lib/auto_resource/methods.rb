@@ -30,11 +30,6 @@ module Methods
       @export.valid?
       respond_with @export
     else
-      unless params[:selected]
-        ids_key = :"#{controller_name.singularize}_ids"
-        implicit = params[:id] ? controller_model.find([params[:id]]) : find_collection
-        params[:selected] ||= { ids_key => implicit.map(&:id) }
-      end
       @export.assign_attributes(params[:selected], as: current_role)
     end
   end

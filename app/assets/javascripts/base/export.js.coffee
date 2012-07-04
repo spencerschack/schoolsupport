@@ -6,9 +6,12 @@ handle_export_click = ->
 		wrapper = page.children('.wrapper')
 		url = [page.attr('data-path'), 'export'].join('/')
 		
-		data = $.param(csrf_param())
-		if input_data = wrapper.find('.table a span input').serialize()
-			data = [data, input_data].join('&')
+		visible_inputs = wrapper.find('.table a span input:visible')
+		unless input_data = visible_inputs.serialize()
+			visible_inputs.prop('checked', true)
+			input_data = visible_inputs.serialize()
+			visible_inputs.prop('checked', false)
+		data = [$.param(csrf_param()), input_data].join('&')
 		
 		$.post url, data, (data) ->
 			button.hide_loading_message()

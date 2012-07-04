@@ -1,4 +1,4 @@
-= link_to resource_with_parents(row ||= resource), data: { id: row.id } do
+= link_to resource_with_parents(row ||= resource), class: 'visible', data: { id: row.id } do
 	%span.spacer
 	%span.select= check_box_tag(export_attr(resource), row.id)
 	- fields(:index).each do |field|
