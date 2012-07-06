@@ -1,5 +1,5 @@
 Schoolsupport::Application.routes.draw do
-  
+
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
   def helper *args
@@ -52,6 +52,7 @@ Schoolsupport::Application.routes.draw do
   
   # Help
   match 'help' => 'help#index'
+  match 'help/*path' => 'help#page'
 
   # Friendly user session names.
   match 'login' => 'user_sessions#new', via: :get

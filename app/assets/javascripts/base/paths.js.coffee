@@ -12,17 +12,12 @@ window.load_initial_path = ->
 	initial_path = $('head meta[name="initial_path"]').attr('content')
 	push_state(initial_path)
 
-# Return whether the path represents a file.
-is_file = (path) ->
-	/(\.pdf|\.otf|\.ttf)/.test(path)
-
 # Replace the current state with the href of the link that was clicked and
 # ensure that the default behavior does not occur.
 handle_link_click = (event) ->
-	unless is_file this.href
-		push_state(this.href)
-		event.preventDefault()
-		return false
+	push_state(this.href)
+	event.preventDefault()
+	return false
 
 # When a page is clicked, not an anchor or submit button, focus that page.
 handle_page_click = (event) ->

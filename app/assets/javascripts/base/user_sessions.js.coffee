@@ -7,7 +7,7 @@ handle_login_form_submit = (event) ->
 		
 	$.post this.action, $(this).serialize(), (data) ->
 		data = $(data)
-		if data.find('#navigation').length # Form success.
+		if data.is('#navigation') # Form success.
 			$('#header').append(data).animate({width: '200px'}, SHORT_DURATION)
 			animate_container_width_to(200, true)
 			navigation_height = $('#header #navigation').outerHeight()
@@ -21,7 +21,7 @@ handle_login_form_submit = (event) ->
 		else # Form failure.
 			form = $(data)
 			errors = form.find('.inline_errors, .errors').hide()
-			$('#header > :not(h1)').remove()
+			$('#header .wrapper').remove()
 			$('#header').append(form)
 			errors.slideDown(SHORT_DURATION)
 
@@ -30,14 +30,16 @@ handle_login_form_submit = (event) ->
 
 # Load login form.
 window.load_login_form = ->
+	$('#header').append($('<div />').addClass('loading_message').text('Loading'))
 	$.get '/login', (data) ->
+		$('#header .loading_message').remove()
 		animate_container_width_to(300, true)
 		$('#header').append(data).animate({width: '300px'}, SHORT_DURATION)
 
 # Request the logout page and hard refresh the page.
 window.handle_logout = ->
-	$.get '/logout', ->
-		location.href = '/'
+	$('#navigation .logout a').display_loading_message('Logging Out')
+	$.get '/logout', -> location.href = '/'
 
 $ ->
 	

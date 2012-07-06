@@ -12,7 +12,7 @@ class UserSessionsController < ApplicationController
   	  @current_role = @current_user.role_symbol
   	  
   	  # Render the navigation menu so it can be inserted into the page.
-  		render 'application/_navigation'
+  		render 'application/_navigation', layout: false
   	else
   		render 'new'
   	end

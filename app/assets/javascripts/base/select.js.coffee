@@ -2,7 +2,7 @@
 handle_select_all_click = (event) ->
 	table = $(this).closest('.table')
 	table.find('[type="checkbox"]:visible').prop('checked', $(this).prop('checked'))
-	update_export_button(table)
+	update_io_buttons(table)
 
 # Selects all check boxes in between the one clicked and the last one clicked
 # if shift is being held down.
@@ -17,19 +17,23 @@ handle_select_click = (event) ->
 			!check_box.is(last) # Break each block.
 	table.data('last_selected', $(this))
 	update_select_all(table)
-	update_export_button(table)
+	update_io_buttons(table)
 
 # Ensure the select all input represents the current state.
 window.update_select_all = (table) ->
 	not_checked = table.find('a input:not(:checked)').length
 	table.find('div span input').prop('checked', !not_checked)
 
-window.update_export_button = (table) ->
-	export_button = $(table).closest('.wrapper').find('a.export')
+window.update_io_buttons = (table) ->
+	wrapper = $(table).closest('.wrapper')
+	export_button = wrapper.find('a.export')
+	import_button = wrapper.find('a.import')
 	if $(table).find('a span input:checked').length
 		export_button.text('Export Selected').addClass('selecting')
+		import_button.text('Update').addClass('selecting')
 	else
 		export_button.removeClass('selecting')
+		import_button.text('Import').removeClass('selecting')
 		if export_button.hasClass('searching')
 			export_button.text('Export Search')
 		else

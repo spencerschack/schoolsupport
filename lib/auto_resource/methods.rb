@@ -18,7 +18,7 @@ module Methods
       @import.save
       respond_with @import
     else
-      @import = Import.new
+      @import = Import.new(update_ids: params[:selected].try(:first).try(:last))
     end
   end
   
@@ -30,10 +30,7 @@ module Methods
       @export.valid?
       respond_with @export
     else
-      if params[:id]
-        params[:selected] = {
-          :"#{controller_name.singularize}_ids" => [params[:id]] }
-      end
+      params[:selected] ||= { :"#{controller_name.singularize}_ids" => [params[:id]] }
       @export.assign_attributes(params[:selected], as: current_role)
     end
   end

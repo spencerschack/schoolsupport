@@ -16,10 +16,7 @@ handle_edit_click = (event) ->
 	unless button.is('.loading')
 		button.display_loading_message()
 		page = button.closest('.page')
-		
-		action = 'edit' if button.hasClass('edit')
-		action = 'import' if button.hasClass('import')
-		url = [page.attr('data-path'), action].join('/')
+		url = [page.attr('data-path'), 'edit'].join('/')
 		
 		$.get url, (data) ->
 			button.hide_loading_message()
@@ -81,7 +78,7 @@ $ ->
 	$('#container').delegate 'a.cancel', 'click.cancel', handle_cancel_click
 	
 	# Handle edit button clicks.
-	$('#container').delegate 'a.edit, a.import', 'click.edit', handle_edit_click
+	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
 	
 	# Handle create and update button clicks.
 	$('#container').delegate 'a.update, a.create', 'click.submit',

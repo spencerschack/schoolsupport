@@ -4,7 +4,7 @@ class Import
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
-  attr_accessor :model, :file, :defaults, :role
+  attr_accessor :model, :file, :defaults, :role, :update_ids
   
   validate :model_import
   validate :file_type
@@ -17,9 +17,15 @@ class Import
   end
   
   def initialize options = nil
-    [:model, :file, :defaults, :role].each do |option|
+    [:model, :file, :defaults, :role, :update_ids].each do |option|
       send("#{option}=", options[option])
     end if options
+  end
+  
+  def dropped_ids
+    @dropped_ids ||= Set.new.tap do |set|
+      update_ids.each { |id| set.add(id.to_i) }
+    end
   end
   
   def row
@@ -31,8 +37,10 @@ class Import
       model.transaction do
         create_records(file.path)
         if row.errors.any?
-          errors.add :base, 'Import failure. No records were saved.'
+          errors.add :base, 'Import failure. No records were affected.'
           raise ActiveRecord::Rollback
+        else
+          # TODO: marked dropped_ids as unenrolled.
         end
       end
     end
@@ -48,7 +56,8 @@ class Import
         record = new_record(hash)
         record.assign_attributes hash, as: role
         record.save!
-      rescue StandardError => error
+        dropped_ids.delete(record.id)
+      rescue => error
         row.errors.add :"row_#{index}", error.message
       ensure
         index += 1

@@ -4,7 +4,7 @@
 # wrapper. If the type was create, update the url and wrapper data-path.
 handle_form_submit = (event) ->
 	form = $(this)
-	return if form.attr('target') == '_blank'
+	return if form.attr('data-xhr') == 'false'
 	
 	wrapper = form.closest('.wrapper')
 	if wrapper.is('.edit, .update')
@@ -54,14 +54,14 @@ handle_form_submit = (event) ->
 					if data.page
 						wrapper.next('.show.wrapper').trigger('unloaded').remove()
 						$(data.page).insertAfter(wrapper).trigger('loaded')
+						wrapper.animate {
+							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+								$(this).remove()
+								
 					else
-						form.attr('target', '_blank')
+						form.attr('data-xhr', 'false')
 						form.attr('action', "#{form.attr('action')}.#{data.format}")
 						form.trigger('submit')
-					
-					wrapper.animate {
-						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
-							$(this).remove()
 							
 			else
 				page = $(data.page)

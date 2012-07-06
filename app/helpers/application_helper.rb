@@ -8,8 +8,18 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
   
+  # The field name for the check boxes next to table rows on index pages.
   def export_attr resource
     "selected[#{resource.class.name.underscore}_ids][]"
+  end
+  
+  # The title to display under 'EXPORT'.
+  def export_title
+    if params[:id]
+      controller_name.singularize
+    else
+      controller_name
+    end.titleize
   end
 	
 	# What to use for buttons that act on javascript events, not anchors.
@@ -52,9 +62,8 @@ module ApplicationHelper
 	def show_content record, field
 	  case record.class.reflect_on_association(field).try(:macro)
     when nil
-      content = if field == :image || field == :file
-        file = record.try(field)
-        link_to image_tag(file.url(:thumbnail)), file.url
+      content = if [:image, :file, :mascot_image].include?(field)
+        link_to record.send(field).original_filename, record.send(field).url
       else
         auto_link(field_content(record, field))
       end
