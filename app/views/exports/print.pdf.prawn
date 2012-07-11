@@ -8,12 +8,7 @@ end
 require 'open-uri'
 
 # Cache template.
-require 'benchmark'
-Benchmark.bm do |x|
-  x.report('pdf') do
-    @template = open(@export.template.file.url)
-  end
-end
+@template = open(@export.template.file.url)
 
 @export.students.each do |student|
 
@@ -23,12 +18,8 @@ end
   
     # Handle image inserts.
     if Export.image_columns.include? field.column
-      
-      Benchmark.bm do |x|
-        file = nil
-        x.report('image') { file = open(student.send(field.column).url) }
-        pdf.image file, at: [field.x, field.y], width: field.width, height: field.height
-      end
+      pdf.image open(student.send(field.column).url), at: [field.x, field.y],
+        width: field.width, height: field.height
     
     # Handle colors.
     elsif Export.color_columns.include? field.column
