@@ -18,7 +18,7 @@ module Formtastic
     alias_method :input_super, :input
     # Return nothing if not allowed to edit.
     def input method, options = {}
-      input_super(method, options) if allowed_to_edit(method)
+      input_super(method, options)# if allowed_to_edit(method)
     end
   
     alias_method :default_input_type_super, :default_input_type
