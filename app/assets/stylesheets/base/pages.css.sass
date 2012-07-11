@@ -7,6 +7,14 @@
 	+box-shadow(rgba(0, 0, 0, .5) 0 0 15px)
 	overflow: hidden
 	z-index: 1
+	
+	.export .title
+		h1, h2
+			right: 90px
+	
+	.index .title
+		h1, h2
+			right: 350px
 
 	.loading_message
 		width: 24px
@@ -28,7 +36,10 @@
 		
 		h1, h2
 			position: absolute
+			left: $spacing
+			right: 240px
 			font-weight: bold
+			+ellipsis
 	
 		h1
 			height: 21px
