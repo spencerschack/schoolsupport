@@ -36,6 +36,9 @@ module Parents
         parent_path(controller_model.find(params[:id]))
       elsif action_name == 'new'
         parent_path(new_resource)
+      elsif action_name == 'export'
+        context = params[:id] ? controller_model.find(params[:id]) : controller_model
+        parent_path(context, action: 'export')
       end
     end
   end

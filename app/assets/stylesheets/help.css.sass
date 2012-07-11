@@ -11,27 +11,7 @@ div.help.index.wrapper
 			color: #FFF
 		
 		a
-			height: 35px
-			display: block
-			padding: 0 20px
-			font-weight: bold
-			color: #000
-			line-height: 35px
-			text-decoration: none
-			
-			&:nth-child(even)
-				background: $gray-stripe
-			
-			&:hover
-				background: $gray-hover
-			
-			&:active
-				background: $gray-active
-				color: #FFF
-			
-			&.selected
-				background: $blue
-				color: #FFF
+			+traverse_link
 
 div.help.page.wrapper
 	width: 400px

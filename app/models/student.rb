@@ -99,16 +99,25 @@ class Student < ActiveRecord::Base
   end
   
   # Which columns are available for templates.
+  def self.template_column_options
+    [
+      ['Text', (column_names + %w(last_name_first_name first_name_last_name
+        school_name bus_stop_name bus_route_name)).reduce([]) do |prev, curr|
+        case curr
+        when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/
+          prev
+        else
+          prev << [curr.titleize, curr]
+        end
+      end ],
+      ['Image', [['Image', 'image'], ['School Mascot Image', 'school_mascot_image']]],
+      ['Other', [['Bus Route Color Value', 'bus_route_color_value'], ['Prompt', 'prompt']]]
+    ]
+  end
+  
   def self.template_columns
-    additional = %w(bus_route_name bus_route_color_value bus_stop_name image
-      last_name_first_name first_name_last_name school_name school_mascot_image)
-    (column_names + additional).reduce({}) do |prev, curr|
-      case curr
-      when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/
-        prev
-      else
-        prev.merge curr.titleize => curr
-      end
+    template_column_options.reduce([]) do |prev, curr|
+      prev + curr.last.map(&:last)
     end
   end
   

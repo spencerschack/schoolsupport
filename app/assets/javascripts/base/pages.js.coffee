@@ -2,13 +2,13 @@
 # selected class to links that match in the previous page.
 # {String} path the path to load.
 # {Function} callback
-window.create_page = (path) ->
+window.create_page = (path, data) ->
 	page = $('<div />').addClass('page').attr('data-path', path)
 	loading_message = $('<div />').addClass('loading_message')
 	page.html loading_message.text('Loading')
 	page.prependTo('#container')
 	page.css(marginLeft: '-200px').animate { marginLeft: 0 }, MEDIUM_DURATION
-	page.load path, ->
+	load_callback = ->
 		page.find('.wrapper').trigger('loaded')
 		select_path(page)
 		width = page.children().width()
@@ -20,6 +20,10 @@ window.create_page = (path) ->
 			step: ensure_visible_header
 		}
 		animate_container_width_to(width) unless page.index()
+	if $.isPlainObject(data) && !$.isEmptyObject(data)
+		page.load path, data, load_callback
+	else
+		page.load path, load_callback
 
 # Animates the page out and removes once completed.
 # {jQuery} page the page to destroy.

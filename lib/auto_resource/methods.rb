@@ -24,14 +24,24 @@ module Methods
   
   # Export action.
   def export
-    @export = Export.new
-    if params[:export]
-      @export.assign_attributes(params[:export], as: current_role)
+    if params[:export_type]
+      params[:selected] ||= {
+        :"#{controller_name.singularize}_ids" => if params[:id]
+          params[:id]
+        else
+          collection.map(&:id)
+        end
+      }
+      
+      @export = Export.new
+      @export.assign_attributes(
+        params[:selected].merge(params[:export] || {}).merge({
+          type: params[:export_type],
+          template_id: params[:export_id]
+      }), as: current_role)
       @export.valid?
-      respond_with @export
-    else
-      params[:selected] ||= { :"#{controller_name.singularize}_ids" => [params[:id]] }
-      @export.assign_attributes(params[:selected], as: current_role)
+      
+      respond_with @export if params[:commit]
     end
   end
 

@@ -7,20 +7,6 @@ module ApplicationHelper
   # Initialize fields constant for storing which fields to show for types of
   # records.
   ::FIELDS = {}
-  
-  # The field name for the check boxes next to table rows on index pages.
-  def export_attr resource
-    "selected[#{resource.class.name.underscore}_ids][]"
-  end
-  
-  # The title to display under 'EXPORT'.
-  def export_title
-    if params[:id]
-      controller_name.singularize
-    else
-      controller_name
-    end.titleize
-  end
 	
 	# What to use for buttons that act on javascript events, not anchors.
 	def js_link

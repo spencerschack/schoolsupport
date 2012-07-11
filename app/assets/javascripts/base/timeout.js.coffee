@@ -2,7 +2,7 @@
 reload_page = ->
 	window.location.reload()
 
-login_timeout = setTimeout(reload_page, 600000)
+window.login_timeout = setTimeout(reload_page, 600000)
 reset_timeout = ->
 	clearTimeout(login_timeout)
 	login_timeout = setTimeout(reload_page, 600000)

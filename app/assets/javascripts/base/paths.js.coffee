@@ -1,6 +1,6 @@
 # Curry the push state method.
-window.push_state = (url) ->
-	History.pushState(null, null, url)
+window.push_state = (url, data) ->
+	History.pushState(data, null, url)
 
 # Return url without the protocol or host.
 window.url_to_path = (url) ->
@@ -21,23 +21,24 @@ handle_link_click = (event) ->
 
 # When a page is clicked, not an anchor or submit button, focus that page.
 handle_page_click = (event) ->
-	if $(event.target).is(':not(a:urlInternal, :submit, a[href="javascript:;"])')
+	if $(event.target).is(':not(a:urlInternal, :submit, .cancel)')
 		push_state $(this).attr('data-path')
 
 # Retrieve the current path, handle special cases for certain paths,
 # otherwise load the path.
 handle_state_change = ->
 	url = History.getState().url
+	data = History.getState().data
 	path = url_to_path(url)
 	switch path
 		when '/login' then push_state('/')
 		when '/logout' then handle_logout()
-		else load_path(path)
+		else load_path(path, data)
 
 # Find the most matching page for the given path, remove unnecessary pages,
 # and create the necessary pages.
 # @param {String} path the path to load.
-load_path = (path) ->
+load_path = (path, data) ->
 	$('.page').stop(true, true)
 	index = path == '/'
 	parts = if index then [''] else path.split('/')
@@ -47,8 +48,8 @@ load_path = (path) ->
 		page = $(".page[data-path='#{current}']")
 		if page.length
 			
-			# Handle resource links in the navigation menu.
-			if parts.length > 2 && page.is('#header')
+			# Handle two part links.
+			if parts.length - section > 2
 				one_more_path = "/#{parts[1..(section + 2)].join('/')}"
 				one_more_link = page.find("a:urlInternal[href$='#{one_more_path}']")
 				section++ if one_more_link.length
@@ -56,7 +57,7 @@ load_path = (path) ->
 			animate_container_width_to(page.width(), index)
 			page.prevAll('.page').each -> destroy_page($(this))
 			while ++section < parts.length
-				create_page "/#{parts[1..section].join('/')}"
+				create_page "/#{parts[1..section].join('/')}", data
 			select_path(page)
 			break
 

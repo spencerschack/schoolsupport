@@ -15,5 +15,9 @@ class Template < ActiveRecord::Base
   validates_presence_of :name
   validates_attachment :file, presence: true, content_type: {
     content_type: 'application/pdf' }
+  
+  def prompts
+    fields.where(column: 'prompt')
+  end
     
 end

@@ -13,20 +13,20 @@ module Response
   # respond with the appropriate json.
   def respond_with record
     case action_name
-    when 'create', 'update', 'import', 'export'
+    when 'create', 'update', 'import'
       if record.errors.any?
         render json: failure_hash(record)
-      elsif action_name == 'export'
-        if request.xhr?
-          render json: { success: true, format: record.format }
-        else
-          render "exports/#{record.type}",
-            formats: [record.format],
-            content_type: record.content_type,
-            layout: false
-        end
       else
         render json: success_hash(record)
+      end
+    when 'export'
+      if record.errors.any?
+        render text: record.errors.full_messages.join("\n")
+      else
+        render "exports/#{record.type}",
+          formats: [record.format],
+          content_type: record.content_type,
+          layout: false
       end
     when 'destroy'
       if record.errors.any?

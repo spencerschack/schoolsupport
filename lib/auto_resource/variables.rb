@@ -20,7 +20,7 @@ module Variables
   
   # Return the record associated with the current controller.
   def resource
-    instance_variable_get(resource_name)
+    instance_variable_get(resource_name) || params[:id] && set_resource(controller_model.find(params[:id]))
   end
   
   # Set the record variable equal to value.

@@ -28,7 +28,7 @@ window.update_io_buttons = (table) ->
 	wrapper = $(table).closest('.wrapper')
 	export_button = wrapper.find('a.export')
 	import_button = wrapper.find('a.import')
-	if $(table).find('a span input:checked').length
+	if $(table).find('a span input:checked:visible').length
 		export_button.text('Export Selected').addClass('selecting')
 		import_button.text('Update').addClass('selecting')
 	else

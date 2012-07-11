@@ -26,11 +26,11 @@ handle_search_click = (event) ->
 					$(this).appendTo(table)
 				else
 					$(this).detach()
-			update_export_button($(this))
+			update_export_button($(this), table)
 				
 		).bind 'blur.unsearch', ->
 			unless $(this).val()
-				update_export_button($(this))
+				update_export_button($(this), table)
 				rows.appendTo(table)
 				update_select_all(table)
 				$(this).siblings('.clear').fadeOut TINY_DURATION, ->
@@ -39,15 +39,11 @@ handle_search_click = (event) ->
 					$(this).remove()
 					self.show()
 
-update_export_button = (search_field) ->
+update_export_button = (search_field, table) ->
 	export_button = search_field.parent().siblings('.export').addClass('searching')
-	if search_field.val()
-		unless export_button.hasClass('selecting')
-			export_button.text('Export Search')
-	else
+	unless search_field.val()
 		export_button.removeClass('searching')
-		unless export_button.hasClass('selecting')
-			export_button.text('Export All')
+	update_io_buttons(table)
 
 $ ->
 

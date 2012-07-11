@@ -114,5 +114,5 @@ prepare_multiple = ->
 $ ->
 	
 	# When the wrapper loads that may contain check boxes.
-	$('body').delegate '.wrapper.edit, .wrapper.new, .wrapper.update, .wrapper.create',
+	$('body').delegate '.wrapper.edit, .wrapper.new, .wrapper.update, .wrapper.create, .wrapper.export',
 		'loaded.multiple', prepare_multiple

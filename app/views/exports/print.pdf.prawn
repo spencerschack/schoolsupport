@@ -1,5 +1,3 @@
-return if @export.errors.any?
-
 # Register fonts.
 @export.template.fonts.each do |font|
   pdf.font_families.update(font.name => {
@@ -10,7 +8,12 @@ end
 require 'open-uri'
 
 # Cache template.
-@template = open(@export.template.file.url)
+require 'benchmark'
+Benchmark.bm do |x|
+  x.report('pdf') do
+    @template = open(@export.template.file.url)
+  end
+end
 
 @export.students.each do |student|
 
@@ -21,8 +24,11 @@ require 'open-uri'
     # Handle image inserts.
     if Export.image_columns.include? field.column
       
-      pdf.image open(student.send(field.column).url),
-        at: [field.x, field.y], width: field.width, height: field.height
+      Benchmark.bm do |x|
+        file = nil
+        x.report('image') { file = open(student.send(field.column).url) }
+        pdf.image file, at: [field.x, field.y], width: field.width, height: field.height
+      end
     
     # Handle colors.
     elsif Export.color_columns.include? field.column
@@ -31,12 +37,18 @@ require 'open-uri'
     
     # Handle text inserts.
     else
+      
+      text = if field.column == 'prompt'
+        @export.prompt_values[field.name] || ""
+      else
+        student.send(field.column)
+      end
     
       pdf.font field.font.name
       pdf.fill_color field.color
-      pdf.text_box student.send(field.column), at: [field.x, field.y],
-        width: field.width, height: field.height, align: field.align.to_sym,
-        overflow: :shrink_to_fit
+      pdf.text_box text, at: [field.x, field.y], width: field.width,
+        height: field.height, align: field.align.to_sym,
+        overflow: :shrink_to_fit, character_spacing: field.spacing
     end
   
   end

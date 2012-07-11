@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120708225015) do
+ActiveRecord::Schema.define(:version => 20120711033831) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -50,6 +50,8 @@ ActiveRecord::Schema.define(:version => 20120708225015) do
     t.integer  "font_id"
     t.decimal  "text_size",   :default => 12.0
     t.string   "color",       :default => "#000000"
+    t.decimal  "spacing",     :default => 0.0
+    t.string   "name"
   end
 
   create_table "fonts", :force => true do |t|

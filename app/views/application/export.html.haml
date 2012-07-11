@@ -4,15 +4,32 @@
 	= link_for :cancel, controller_model
 
 .scroller
-	- Export.types.each do |type|
-		%h6= type.titleize
-		= semantic_form_for @export, url: parent_path(resource || controller_model, action: :export) do |f|
-			= f.semantic_errors if @export.send("is_#{type}?")
-			= hidden_field_tag 'export[type]', type
-			- @export.student_ids.each do |student_id|
-				= hidden_field_tag 'export[student_ids][]', student_id
-			- if type == 'print'
+
+	- if params[:export_type]
+		= semantic_form_for @export, url: export_path,
+			html: { target: '_blank' } do |f|
+			- if @export.errors.any?
+				%p The export could not be completed:
+				= f.semantic_errors
+			
+			- else
+				
 				= f.inputs do
-					= f.input :template
-			= f.actions do
-				= f.action :submit, label: type.titleize
+					= f.input :students, as: :token
+					
+				- if @export.template.try(:prompts)
+					%p Please fill in the appropriate values for the following fields.
+					= f.inputs do
+						- @export.template.prompts.each do |field|
+							= f.input :prompt_values, label: field.name,
+								input_html: { name: "export[prompt_values][#{field.name}]" }
+
+				= f.actions do
+					= f.action :submit, label: 'Export'
+				
+	- else
+		%h6 Print
+		- available_templates.each do |template|
+			= link_to template.name, export_path(type: 'print', id: template.id)
+		%h6 Zpass
+		= link_to 'Zpass', export_path(type: 'zpass')

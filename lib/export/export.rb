@@ -8,7 +8,7 @@ class Export < Tableless
   
   # What types are accepted.
   def self.types
-    %w(print bus_file)
+    %w(print zpass)
   end
   
   # What template columns are images.
@@ -23,15 +23,17 @@ class Export < Tableless
   
   column :template_id, :integer
   
-  attr_accessor :type
+  attr_accessor :type, :prompt_values
   
-  attr_accessible :student_ids, :template_id, :period_ids, :user_ids, :type,
-    as: [:developer, :designer, :superintendent, :principal, :teacher]
+  attr_accessible :students, :student_ids, :template_id, :period_ids,
+    :user_ids, :type, :prompt_values, as: [:developer, :designer,
+    :superintendent, :principal, :teacher]
   attr_accessible :school_ids, as: [:developer, :designer, :superintendent,
     :principal]
   attr_accessible :district_ids, as: [:developer, :designer, :superintendent]
   
   belongs_to :template
+  has_many :students
   
   validates_presence_of :type
   validates_presence_of :template, if: :is_print?
@@ -48,11 +50,11 @@ class Export < Tableless
   
   # Return the format for the given export.
   def format
-    { 'print' => :pdf, 'bus_file' => :csv }[type]
+    { 'print' => :pdf, 'zpass' => :csv }[type]
   end
   
   def content_type
-    { 'print' => 'application/pdf', 'bus_file' => 'text/plain' }[type]
+    { 'print' => 'application/pdf', 'zpass' => 'text/plain' }[type]
   end
   
   # Return all students associated with this print job.
@@ -85,7 +87,7 @@ class Export < Tableless
   
   # Returns all columns in the template.
   def columns
-    template.fields.map(&:column) if template
+    template ? template.fields.map(&:column) : []
   end
   
   private
@@ -93,7 +95,7 @@ class Export < Tableless
   # Ensure the current user is authorized to use the template.
   def template_in_scope
     unless Template.with_permissions_to(:show).map(&:id).include?(template_id)
-      errors.add :template, 'must be viewable by you'
+      errors.add :base, 'The template must be viewable by you'
     end
   end
   
@@ -114,10 +116,10 @@ class Export < Tableless
       
       students.each do |student|
         if image_present && !student.image?
-          errors.add :base, 'Exported students must each have an image'
+          errors.add :base, 'Exported students must each have an image for this template'
           break
         elsif mascot_present && !student.school.mascot_image?
-          errors.add :base, 'Exported students\' schools must have a mascot image'
+          errors.add :base, 'Exported students\' schools must have a mascot image for this template'
           break
         end
       end

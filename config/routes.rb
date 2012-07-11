@@ -5,8 +5,10 @@ Schoolsupport::Application.routes.draw do
   def helper *args
     resources *args do
       match 'import', on: :collection
-      match 'export', on: :collection
-      match 'export', on: :member
+      match 'export(/:export_type(/:export_id))', action: 'export',
+        on: :collection, as: 'export'
+      match 'export(/:export_type(/:export_id))', action: 'export',
+        on: :member, as: 'export'
       yield if block_given?
     end
   end
