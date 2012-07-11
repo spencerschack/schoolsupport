@@ -3,5 +3,6 @@
 	= f.inputs do
 		- fields(:form).each do |field|
 			= f.input *field
+			= debug field
 	= f.actions do
 		= f.action :submit
