@@ -23,11 +23,17 @@ require 'open-uri'
       
       pdf.image open(student.send(field.column).url),
         at: [field.x, field.y], width: field.width, height: field.height
-  
+    
+    # Handle colors.
+    elsif Export.color_columns.include? field.column
+      pdf.fill_color student.send(field.column)
+      pdf.fill_rectangle [field.x, field.y], field.width, field.height
+    
     # Handle text inserts.
     else
     
       pdf.font field.font.name
+      pdf.fill_color field.color
       pdf.text_box student.send(field.column), at: [field.x, field.y],
         width: field.width, height: field.height, align: field.align.to_sym,
         overflow: :shrink_to_fit

@@ -17,9 +17,12 @@ class Import
   end
   
   def initialize options = nil
-    [:model, :file, :defaults, :role, :update_ids].each do |option|
-      send("#{option}=", options[option])
-    end if options
+    if options
+      options[:update_ids] ||= []
+      [:model, :file, :defaults, :role, :update_ids].each do |option|
+        send("#{option}=", options[option])
+      end
+    end
   end
   
   def dropped_ids
@@ -28,24 +31,32 @@ class Import
     end
   end
   
+  class Errors
+    include ActiveModel::Validations
+    extend ActiveModel::Naming
+  end
+  
   def row
-    @row_instance ||= Row.new.tap { |row| row.valid? }
+    @row_instance ||= Errors.new.tap { |row| row.valid? }
+  end
+  
+  def dropped
+    @dropped_instance ||= Errors.new.tap { |dropped| dropped.valid? }
   end
   
   def save
     if valid?
       model.transaction do
         create_records(file.path)
+        drop_records
         if row.errors.any?
           errors.add :base, 'Import failure. No records were affected.'
           raise ActiveRecord::Rollback
-        else
-          # TODO: marked dropped_ids as unenrolled.
         end
       end
     end
-  rescue
-    errors.add :base, 'File could not be read.'
+  rescue => error
+    errors.add :base, "File error: #{error.message}"
   end
   
   def create_records path
@@ -61,6 +72,15 @@ class Import
         row.errors.add :"row_#{index}", error.message
       ensure
         index += 1
+      end
+    end
+  end
+  
+  def drop_records
+    if options[:drop_with] && options[:drop_with].respond_to?(:call)
+      model.find(dropped_ids).each do |record|
+        options[:drop_with].call(record)
+        record.save!
       end
     end
   end
@@ -125,9 +145,4 @@ class Import
     end
   end
 
-end
-  
-class Row
-  include ActiveModel::Validations
-  extend ActiveModel::Naming
 end

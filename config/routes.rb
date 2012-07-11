@@ -10,11 +10,6 @@ Schoolsupport::Application.routes.draw do
       yield if block_given?
     end
   end
-
-  # Error pages.
-  get 'errors/not_found'
-  get 'errors/forbidden'
-  get 'errors/server_error'
   
   # Districts, Schools, Periods, Students, Users
   
@@ -29,9 +24,9 @@ Schoolsupport::Application.routes.draw do
                      helper :students, &students }
   districts = proc { helper :bus_stops
                      helper :bus_routes
-                     helper :schools
-                     helper :users
-                     helper :students }
+                     helper :schools,  &schools
+                     helper :users,    &users
+                     helper :students, &students }
 
   helper :districts, &districts
   helper :schools,   &schools

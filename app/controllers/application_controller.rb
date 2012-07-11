@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   include Resources
   include Response
   include Auth
+  include Errors
 
   private
   

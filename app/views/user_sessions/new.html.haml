@@ -1,5 +1,6 @@
-= semantic_form_for @user_session, url: login_path,
-	html: { class: 'scroller' } do |f|
+= semantic_form_for @user_session, url: login_path, html: { class: 'scroller' } do |f|
+	- if current_user_session.try(:stale?)
+		%p You have been logged out due to 10 minutes of inactivity.
 	= f.semantic_errors
 	= f.inputs do
 		= f.input :email

@@ -5,4 +5,5 @@
 //= require jquery.scrollto
 //= require jquery.autoinputwidth
 //= require jquery.iframetransport
+//= require jquery.colorpicker
 //= require_tree .

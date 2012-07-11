@@ -11,13 +11,14 @@ class Field < ActiveRecord::Base
   using_access_control
   
   attr_accessible :align, :column, :height, :template_id, :width, :x, :y,
-    :font_id, :text_size, as: [:developer, :designer]
+    :font_id, :text_size, :color, as: [:developer, :designer]
   
   belongs_to :template
   belongs_to :font
   
   validates_presence_of :column, :x, :y, :width, :height, :template, :font,
-    :text_size
+    :text_size, :color
+  validates_format_of :color, with: /#[0-9a-fA-F]{6}/
   validates_inclusion_of :column, in: Student.template_columns.values,
     message: 'is not a valid column'
   validates_inclusion_of :align, in: Field.align_options.values,

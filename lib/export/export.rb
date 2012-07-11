@@ -16,6 +16,11 @@ class Export < Tableless
     %w(image school_mascot_image)
   end
   
+  # What template columns are colors.
+  def self.color_columns
+    %w(bus_route_color_value)
+  end
+  
   column :template_id, :integer
   
   attr_accessor :type
@@ -32,7 +37,7 @@ class Export < Tableless
   validates_presence_of :template, if: :is_print?
   validates_inclusion_of :type, in: Export.types
   validate :students_in_scope
-  validate :template_in_scope, :image_presence, if: :is_print?
+  validate :template_in_scope, :image_presence, :color_presence, if: :is_print?
   
   # Create methods to see if the export is a certain type.
   types.each do |t|
@@ -113,6 +118,21 @@ class Export < Tableless
           break
         elsif mascot_present && !student.school.mascot_image?
           errors.add :base, 'Exported students\' schools must have a mascot image'
+          break
+        end
+      end
+    end
+  end
+  
+  # If color columns are present in the template, ensure all students have a
+  # bus route with a color value.
+  def color_presence
+    if (columns | Export.color_columns).present?
+      bus_route_present = columns.include?('bus_route_color_value')
+      
+      students.each do |student|
+        if bus_route_present && student.bus_route_color_value.blank?
+          errors.add :base, 'Exported students must each have a bus route with a color'
           break
         end
       end

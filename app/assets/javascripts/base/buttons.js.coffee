@@ -81,7 +81,7 @@ $ ->
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
 	
 	# Handle create and update button clicks.
-	$('#container').delegate 'a.update, a.create', 'click.submit',
+	$('#container').delegate 'a.update, a.create, a.upload', 'click.submit',
 		handle_submit_click
 	
 	# Handle destroy button clicks.

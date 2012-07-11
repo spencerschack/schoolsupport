@@ -46,7 +46,6 @@ module ApplicationHelper
 	
 	# Method for table headers.
 	def header_content field
-	 field = field.first if field.is_a?(Array)
 	 field.to_s.titleize
 	end
 	
@@ -55,8 +54,8 @@ module ApplicationHelper
 	# return the default representation of none.
 	def field_content record, field
 	  content = record.try(field)
-	  content = content.name if record.class.reflect_on_association(field)
-	  content.present? ? content.to_s : none
+	  content = content.try(:name) if record.class.reflect_on_association(field)
+	  content.nil? || content == '' ? none : content.to_s
 	end
 	
 	def show_content record, field

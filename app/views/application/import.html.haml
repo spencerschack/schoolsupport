@@ -12,10 +12,13 @@
 				%p.show_content
 					%b= attribute.to_s.titleize
 					= error
-		- @import.update_ids.each do |update_id|
-			= hidden_field_tag 'import[update_ids][]', update_id
 		= f.inputs do
-			= f.input :file, as: :hidden, input_html: { value: '' }
+			- if @import.update_ids.any?
+				%li
+					Records that were selected on the previous page but are not present
+					in the import file will be marked as dropped.
+				- @import.update_ids.each do |update_id|
+					= hidden_field_tag 'import[update_ids][]', update_id
 			= f.input :file, as: :file
 		= f.actions do
 			= f.action :submit, label: 'Upload'

@@ -4,7 +4,7 @@ module Auth
   # Add filter resource access for declarative authorization.
   # Add before filter to call set_authorization.
   def self.included base
-    base.helper_method :current_user, :current_role
+    base.helper_method :current_user, :current_user_session, :current_role
     base.before_filter :set_authorization
     base.filter_resource_access additional_collection: [:import, :export]
   end
@@ -14,11 +14,6 @@ module Auth
   # Used by declarative authorization to check permissions for new objects.
   def new_controller_object_from_params context, parent
     new_resource
-  end
-  
-  # Called when declarative_authorization denies access to the requested page.
-  def permission_denied
-    redirect_to errors_forbidden_url
   end
   
   # Executes the given block without access control. In other words, turns off

@@ -11,14 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120704203634) do
+ActiveRecord::Schema.define(:version => 20120708225015) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
     t.integer  "district_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-    t.string   "color"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.string   "color_name"
+    t.string   "color_value", :default => "#000000"
   end
 
   create_table "bus_stops", :force => true do |t|
@@ -43,11 +44,12 @@ ActiveRecord::Schema.define(:version => 20120704203634) do
     t.string   "align"
     t.string   "column"
     t.integer  "template_id"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.string   "font"
     t.integer  "font_id"
     t.decimal  "text_size",   :default => 12.0
+    t.string   "color",       :default => "#000000"
   end
 
   create_table "fonts", :force => true do |t|
@@ -118,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20120704203634) do
     t.integer  "bus_stop_id"
     t.integer  "bus_route_id"
     t.string   "bus_rfid"
+    t.boolean  "dropped"
   end
 
   create_table "templates", :force => true do |t|

@@ -53,7 +53,8 @@ handle_form_submit = (event) ->
 						
 					if data.page
 						wrapper.next('.show.wrapper').trigger('unloaded').remove()
-						$(data.page).insertAfter(wrapper).trigger('loaded')
+						table = $(data.page).insertAfter(wrapper).trigger('loaded').find('.table')
+						update_count(table) unless data.row
 						wrapper.animate {
 							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 								$(this).remove()

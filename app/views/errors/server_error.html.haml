@@ -1,5 +1,10 @@
-.title
-	%h1 Server Error
-
-%p
-	There was a server error.
+.error
+	.title
+		%h2= @exception.class.to_s.titleize
+		%h1= @exception.message
+	
+	.scroller
+		%p.backtrace
+			- @exception.backtrace.each do |line|
+				= line
+				%br/

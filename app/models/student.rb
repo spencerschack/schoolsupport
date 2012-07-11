@@ -1,11 +1,13 @@
 class Student < ActiveRecord::Base
 
   using_access_control
+  
+  default_scope where(dropped: false)
 
   attr_accessible :first_name, :grade, :last_name, as: [:developer,
     :superintendent, :principal, :teacher]
-  attr_accessible :period_ids, :identifier, as: [:developer, :superintendent,
-    :principal]
+  attr_accessible :period_ids, :identifier, :dropped, as: [:developer,
+    :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :image, :bus_stop_id, :bus_route_id, :bus_rfid,
     as: [:developer, :designer]
@@ -23,7 +25,8 @@ class Student < ActiveRecord::Base
     styles: { original: ['', :png] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :name,
-    bus_route: :name, bus_stop: :name, user: [:name, :associate_period] }
+    bus_route: :name, bus_stop: :name, user: [:name, :associate_period] },
+    drop_with: proc { |student| student.dropped = true }
   
   before_validation :set_school
   
@@ -62,6 +65,22 @@ class Student < ActiveRecord::Base
     school.mascot_image
   end
   
+  # Column for print jobs.
+  def bus_stop_name
+    bus_stop.try(:name)
+  end
+  
+  # Column for print jobs.
+  def bus_route_name
+    bus_route.try(:name)
+  end
+  
+  # Column for print jobs.
+  def bus_route_color_value
+    bus_route.try(:color_value)
+  end
+  
+  # Used by Import to create a period to associate a user with a student.
   def self.associate_period hash, user, role
     unless period = user.periods.first
       period = user.periods.build
@@ -74,10 +93,15 @@ class Student < ActiveRecord::Base
     hash[:period_ids] = [period.id]
   end
   
+  # Method for students index.html
+  def bus
+    [bus_route, bus_stop].map{|r| r.try(:name)}.compact.join(' / ')
+  end
+  
   # Which columns are available for templates.
   def self.template_columns
-    additional = %w(image last_name_first_name first_name_last_name
-      school_name school_mascot_image)
+    additional = %w(bus_route_name bus_route_color_value bus_stop_name image
+      last_name_first_name first_name_last_name school_name school_mascot_image)
     (column_names + additional).reduce({}) do |prev, curr|
       case curr
       when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/

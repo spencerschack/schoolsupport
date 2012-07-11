@@ -41,7 +41,7 @@ window.insert_row = (table, row) ->
 	table.find('input.search').trigger('keyup.search')
 
 # Update the count of rows in the previous page.
-update_count = (table) ->
+window.update_count = (table) ->
 	table = $(table)
 	count = table.children('a').length
 	page = $(table).closest('.page')
