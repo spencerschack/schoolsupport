@@ -92,6 +92,7 @@ GEM
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
+    peach (0.5.1)
     pg (0.14.0)
     polyglot (0.3.3)
     prawn (0.12.0)
@@ -173,6 +174,7 @@ DEPENDENCIES
   haml
   jquery-rails
   paperclip
+  peach
   pg
   prawn
   prawnto
