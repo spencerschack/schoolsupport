@@ -4,7 +4,7 @@ class Import
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
-  attr_accessor :model, :file, :defaults, :role, :update_ids
+  attr_accessor :model, :file, :defaults, :update_ids
   
   validate :model_import
   validate :file_type
@@ -19,7 +19,7 @@ class Import
   def initialize options = nil
     if options
       options[:update_ids] ||= []
-      [:model, :file, :defaults, :role, :update_ids].each do |option|
+      [:model, :file, :defaults, :update_ids].each do |option|
         send("#{option}=", options[option])
       end
     end
@@ -31,17 +31,13 @@ class Import
     end
   end
   
-  class Errors
+  class Row
     include ActiveModel::Validations
     extend ActiveModel::Naming
   end
   
   def row
-    @row_instance ||= Errors.new.tap { |row| row.valid? }
-  end
-  
-  def dropped
-    @dropped_instance ||= Errors.new.tap { |dropped| dropped.valid? }
+    @row_instance ||= Row.new.tap { |row| row.valid? }
   end
   
   def save
@@ -61,41 +57,38 @@ class Import
   
   def create_records path
     index = 1
+    current_user = Authorization.current_user
     parser.read(path) do |hash|
       begin
+        Thread.current[:current_user] = current_user
         process(hash = hash.with_indifferent_access)
         record = new_record(hash)
-        record.assign_attributes hash, as: role
+        record.assign_attributes(hash, as: current_user.role_symbols.first)
         record.save!
         dropped_ids.delete(record.id)
       rescue => error
         row.errors.add :"row_#{index}", error.message
       ensure
+        ActiveRecord::Base.connection.close
         index += 1
       end
     end
   end
   
   def drop_records
-    if options[:drop_with] && options[:drop_with].respond_to?(:call)
-      model.find(dropped_ids).each do |record|
-        options[:drop_with].call(record)
-        record.save!
-      end
+    if dropped_ids.any? && model.respond_to?(:drop_ids)
+      model.drop_ids(dropped_ids, as:
+        Authorization.current_user.role_symbols.first)
     end
   end
   
   def process hash
     hash.reverse_merge!(defaults) if defaults
-    options[:associate].each do |record, (field, method)|
+    options[:associate].each do |record, field|
       if value = hash.delete(record)
         finder = record.to_s.camelize.constantize
         attempted = finder.send("find_by_#{field}!", value)
-        if method.is_a?(Symbol) && model.respond_to?(method)
-          model.send(method, hash, attempted, role)
-        else
-          hash[:"#{record}_id"] = attempted.id
-        end
+        hash[:"#{record}_id"] = attempted.id
       end
     end if options[:associate].present?
   end

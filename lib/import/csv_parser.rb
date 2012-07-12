@@ -3,9 +3,9 @@ module CsvParser
   def self.read path, &block
     require 'csv'
     options = { headers: true, header_converters: :symbol }
-    CSV.foreach(path, options) do |row|
-      block.call(row.to_hash)
-    end
+    array = []
+    CSV.foreach(path, options) { |row| array << row.to_hash }
+    array.peach(&block)
   end
   
 end

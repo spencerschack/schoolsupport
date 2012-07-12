@@ -3,6 +3,7 @@ development:
   database: development
   username: postgres
   password: Kjera6738
+  pool: 10
 
 test:
   adapter: postgresql
@@ -15,3 +16,4 @@ production:
   database: production
   username: postgres
   password: Kjera6738
+  pool: 10

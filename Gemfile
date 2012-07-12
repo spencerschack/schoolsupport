@@ -34,6 +34,7 @@ gem 'paperclip'
   gem 'aws-sdk'
 
 gem 'peach'
+gem 'activerecord-import'
 
 gem 'prawn'
 gem 'prawnto'

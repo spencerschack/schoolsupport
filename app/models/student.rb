@@ -6,7 +6,7 @@ class Student < ActiveRecord::Base
 
   attr_accessible :first_name, :grade, :last_name, as: [:developer,
     :superintendent, :principal, :teacher]
-  attr_accessible :period_ids, :identifier, :dropped, as: [:developer,
+  attr_accessible :period_ids, :teacher, :identifier, :dropped, as: [:developer,
     :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :image, :bus_stop_id, :bus_route_id, :bus_rfid,
@@ -24,9 +24,8 @@ class Student < ActiveRecord::Base
     hash_secret: ENV['PAPERCLIP_HASH_SECRET'],
     styles: { original: ['', :png] }
   
-  has_import identify_with: { identifier: nil }, associate: { school: :name,
-    bus_route: :name, bus_stop: :name, user: [:name, :associate_period] },
-    drop_with: proc { |student| student.dropped = true }
+  has_import identify_with: { identifier: nil }, associate: { school: :identifier,
+    bus_route: :name, bus_stop: :name }
   
   before_validation :set_school
   
@@ -81,16 +80,18 @@ class Student < ActiveRecord::Base
   end
   
   # Used by Import to create a period to associate a user with a student.
-  def self.associate_period hash, user, role
+  # All actions are taken with bangs to stop the import if unsuccessful.
+  def teacher= name
+    user = User.find_by_name!(name)
     unless period = user.periods.first
       period = user.periods.build
-      period.assign_attribtues({
-        name: "#{user.name(true)}'s Period",
-        school_id: hash[:school_id]
-      }, as: role)
+      period.assign_attributes({
+        name: Period.default_name_for(user),
+        school_id: school_id
+      }, as: mass_assignment_role)
       period.save!
     end
-    hash[:period_ids] = [period.id]
+    periods << period
   end
   
   # Method for students index.html
@@ -115,9 +116,17 @@ class Student < ActiveRecord::Base
     ]
   end
   
+  # The values of template_column_options.
   def self.template_columns
     template_column_options.reduce([]) do |prev, curr|
       prev + curr.last.map(&:last)
+    end
+  end
+  
+  # Drop the given ids.
+  def self.drop_ids ids, options = {}
+    find(ids).each do |record|
+      record.update_attributes({ dropped: true }, as: options[:as])
     end
   end
   

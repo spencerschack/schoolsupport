@@ -13,10 +13,9 @@ module Parents
     if parents = PARENTS[type_of(model)]
       parents.each do |parent|
         if id = params[id_attr(parent)]
-          association = model.reflect_on_association(type_of(parent, false))
-          if association && association.macro != :has_one
-              attributes[id_attr(parent)] = id
-          elsif model.reflect_on_association type_of(parent)
+          if has_valid_association(model, type_of(parent, false))
+            attributes[id_attr(parent)] = id
+          elsif has_valid_association(model, type_of(parent))
             attributes[ids_attr(parent)] = id
           end
         end
@@ -79,6 +78,15 @@ module Parents
   
   private
   
+  # Whether the given record and field has an association that is valid to set
+  # through attributes.
+  def has_valid_association model, field
+    (association = model.reflect_on_association(field)) &&
+    association &&
+    !association.options.has_key?(:through)
+  end
+  
+  # Return whether the record is new.
   def new_record? record
     record.respond_to?(:new_record?) && record.new_record?
   end

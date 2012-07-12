@@ -4,8 +4,8 @@ reload_page = ->
 
 window.login_timeout = setTimeout(reload_page, 600000)
 reset_timeout = ->
-	clearTimeout(login_timeout)
-	login_timeout = setTimeout(reload_page, 600000)
+	clearTimeout(window.login_timeout)
+	window.login_timeout = setTimeout(reload_page, 600000)
 
 $ ->
 

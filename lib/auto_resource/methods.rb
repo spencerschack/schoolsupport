@@ -12,7 +12,6 @@ module Methods
     if params[:import]
       @import = Import.new(params[:import].merge({
         model: controller_model,
-        role: current_role,
         defaults: params_with_parents(controller_model)
       }))
       @import.save

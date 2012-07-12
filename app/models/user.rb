@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   has_many :students, through: :periods
   
   has_import identify_with: { email: nil, name: :school_id },
-    associate: { school: :name, role: :name }
+    associate: { school: :identifier, role: :name }
   
   before_validation :set_school
 
@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   end
   
   def self.find_by_name! name
-    find_by_name(name) || raise(RecordNotFound, "Couldn't find User with name = #{name}")
+    find_by_name(name) || raise(::ActiveRecord::RecordNotFound, "Couldn't find User with name = #{name}")
   end
   
   def self.find_or_initialize_by_name name

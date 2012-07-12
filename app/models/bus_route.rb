@@ -10,5 +10,5 @@ class BusRoute < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :district_id
   
   has_import identify_with: { name: :district_id },
-    associate: { district: :name }
+    associate: { district: :identifier }
 end

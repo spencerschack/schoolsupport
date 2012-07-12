@@ -12,8 +12,8 @@ class Period < ActiveRecord::Base
   has_and_belongs_to_many :students
   has_and_belongs_to_many :users
   
-  has_import identify_with: { identifier: :school_id,name: :school_id },
-    associate: { school: :name }
+  has_import identify_with: { identifier: :school_id, name: :school_id },
+    associate: { school: :identifier }
     
   before_validation :set_school
   
@@ -24,6 +24,11 @@ class Period < ActiveRecord::Base
   validate :students_in_school
   validate :users_in_school
   validate :school_in_district
+  
+  # Returns a generic name for a user's period.
+  def self.default_name_for user
+    "#{user.name(true)}'s Period"
+  end
   
   private
   
