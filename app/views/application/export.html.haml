@@ -13,11 +13,8 @@
 				= f.semantic_errors
 			
 			- else
-				
-				= f.inputs do
-					= f.input :students, as: :token
 					
-				- if @export.template.try(:prompts)
+				- if @export.template && @export.template.prompts.any?
 					%p Please fill in the appropriate values for the following fields.
 					= f.inputs do
 						- @export.template.prompts.each do |field|

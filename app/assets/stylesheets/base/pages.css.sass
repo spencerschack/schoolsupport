@@ -15,6 +15,10 @@
 	.index .title
 		h1, h2
 			right: 350px
+	
+	.error .title
+		h1, h2
+			right: $spacing
 
 	.loading_message
 		width: 24px
@@ -42,7 +46,7 @@
 			+ellipsis
 	
 		h1
-			height: 21px
+			height: 24px
 			margin-top: 15px
 			font-size: 21px
 			line-height: 21px
@@ -141,14 +145,14 @@
 	a.collection_link, .record_link
 		height: 35px
 		display: block
-		padding: 0 $spacing
+		margin: $spacing $spacing 0 $spacing
+		padding: 0 10px
+		background: $gray-stripe
+		+border-radius($radius)
 		line-height: 35px
 		font-weight: bold
 		text-decoration: none
 		color: #000
-	
-		&:nth-child(odd)
-			background: $gray-stripe
 	
 	a.collection_link, a.record_link
 	
