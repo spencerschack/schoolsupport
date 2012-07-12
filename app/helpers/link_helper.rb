@@ -1,29 +1,4 @@
 module LinkHelper
-  
-  # Creates a link to the given method with the passed.
-	def collection_link_for record, method
-	  link_to parent_path(method), class: 'collection_link' do
-	    method.to_s.titleize.html_safe <<
-	    content_tag(:span, record.try(method).try(:count) || 0)
-    end if permitted_to?(:index, method)
-	end
-	
-	# Creates a link to the given method with the passed record.
-	def record_link_for record, field
-	  record = record.try(field)
-	  path = parent_path(record) rescue nil
-	  if path && permitted_to?(:show, record)
-	    link_to path, class: 'record_link' do
-	      field.to_s.titleize.html_safe <<
-	      content_tag(:span, record.name)
-      end
-    else
-      content_tag :div, class: 'record_link' do
-        field.to_s.titleize.html_safe <<
-        content_tag(:span, record.try(:name) || none)
-      end
-    end
-	end
 	
 	# Generates a link for the given action and model_or_record and returns it
 	# only if the current user is allowed to visit that link.

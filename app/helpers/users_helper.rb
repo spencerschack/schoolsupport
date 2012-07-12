@@ -4,9 +4,11 @@ module UsersHelper
   
   FIELDS[:users] = {
     index: [:name, :district, :school, :role],
-    show: [:email, :district, :school, :periods, :students, :role],
-    form: [:first_name, :last_name, :email, :password, :password_confirmation,
-      [:school, as: :school], [:periods, as: :token], :role]
+    show: { fields: [:email, :role],
+      relations: [:district, :school, :periods, :students]},
+    form: { fields: [:first_name, :last_name, :email, :password,
+      :password_confirmation], relations: [[:school, as: :school],
+      [:periods, as: :token], :role] }
   }
 
 end

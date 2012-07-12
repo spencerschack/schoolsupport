@@ -13,9 +13,9 @@ module Parents
     if parents = PARENTS[type_of(model)]
       parents.each do |parent|
         if id = params[id_attr(parent)]
-
-          if model.reflect_on_association type_of(parent, false)
-            attributes[id_attr(parent)] = id
+          association = model.reflect_on_association(type_of(parent, false))
+          if association && association.macro != :has_one
+              attributes[id_attr(parent)] = id
           elsif model.reflect_on_association type_of(parent)
             attributes[ids_attr(parent)] = id
           end
@@ -55,19 +55,16 @@ module Parents
     if parents = PARENTS[type_of(record)]
       array = Array(record)
       first = array.first
-      
       parents.each do |model|
         if id = params[id_key(model)]
-          
           if first.is_a?(Symbol) || first.is_a?(Class)
             array.unshift model.find(id)
           else
-            
-            if first.class.reflect_on_association type_of(model)
+            if first.class.reflect_on_association(type_of(model))
               if first.send(ids_attr(model)).include?(id.to_i)
                 array.unshift model.find(id)
               end
-            elsif first.class.reflect_on_association type_of(model, false)
+            elsif first.class.reflect_on_association(type_of(model, false))
               array.unshift first.send(model.name.underscore)
             end
           end

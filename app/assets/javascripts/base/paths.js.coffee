@@ -10,6 +10,8 @@ window.url_to_path = (url) ->
 # history.
 window.load_initial_path = ->
 	initial_path = $('head meta[name="initial_path"]').attr('content')
+	if initial_path == '/'
+		initial_path = $('#navigation li.account a').attr('href')
 	push_state(initial_path)
 
 # Replace the current state with the href of the link that was clicked and

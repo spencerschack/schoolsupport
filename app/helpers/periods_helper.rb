@@ -4,9 +4,9 @@ module PeriodsHelper
   
   FIELDS[:periods] = {
     index: [:name, :school],
-    show: [:name, :school, :students, :users],
-    form: [:name, [:school, as: :token], [:students, as: :token],
-      [:users, as: :token]]
+    show: { fields: [:name], relations: [:school, :students, :users]},
+    form: { fields: [:name], relations: [[:school, as: :school],
+      [:students, as: :token], [:users, as: :token]] }
   }
   
 end

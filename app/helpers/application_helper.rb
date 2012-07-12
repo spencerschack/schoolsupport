@@ -38,29 +38,37 @@ module ApplicationHelper
 	# For the given field on the given record, return the value or the value of
 	# calling name if it can be called. If nil or a blank string was retrieved,
 	# return the default representation of none.
-	def field_content record, field
+	def cell_content record, field
 	  content = record.try(field)
-	  content = content.try(:name) if record.class.reflect_on_association(field)
-	  content.nil? || content == '' ? none : content.to_s
+	  content = content.url if content.respond_to?(:url)
+	  content = content.name if content.respond_to?(:name)
+	  content.nil? || content == '' ? none : auto_link(content.to_s)
 	end
 	
-	def show_content record, field
+	# Wrap cell_content in a paragraph with a bold title of the field.
+	def field_content record, field
+	  content = cell_content(record, field)
+	  content_tag(:p, content_tag(:b, field.to_s.titleize) << content)
+	end
+	
+	# Create an appropriate link for the relation.
+	def relation_content record, field
 	  case record.class.reflect_on_association(field).try(:macro)
-    when nil
-      content = if [:image, :file, :mascot_image].include?(field)
-        link_to record.send(field).original_filename, record.send(field).url
-      else
-        auto_link(field_content(record, field))
-      end
-      content_tag(:p,
-        content_tag(:b, field.to_s.titleize) <<
-        content,
-        class: 'show_content'
-      )
     when :has_many, :has_and_belongs_to_many
-      collection_link_for record, field
+      content = content_tag(:span, record.send(field).count)
+      path = parent_path(field)
     when :belongs_to, :has_one
-      record_link_for record, field
+      value = record.send(field)
+      if name = value.try(:name)
+        content, path = name, parent_path(value)
+      else
+        content, path = none, nil
+      end
+    end
+   
+    link_to path do
+      content_tag(:b, field.to_s.titleize) <<
+      content_tag(:span, content)
     end
 	end
 end

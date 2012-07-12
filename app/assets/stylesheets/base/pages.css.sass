@@ -121,93 +121,79 @@
 		height: 100%
 		position: relative
 	
-	div.index
+	div.index, div.new, div.edit, div.show, div.create, div.update
 		width: 700px
 	
-	div.new, div.edit, div.show, div.create, div.update
-		width: 500px
-	
 	div.export
-		width: 300px
+		width: 350px
 	
-	p.show_content
-		min-height: 21px
-		margin: 0
-		padding: 7px $spacing
-		text-align: right
-
-		&:nth-child(odd)
-			background: $gray-stripe
-
-		b
-			float: left
-
-	a.collection_link, .record_link
-		height: 35px
-		display: block
-		margin: $spacing $spacing 0 $spacing
-		padding: 0 10px
-		background: $gray-stripe
-		+border-radius($radius)
-		line-height: 35px
-		font-weight: bold
-		text-decoration: none
-		color: #000
+	.fields
+		width: 50%
+		float: left
 	
-	a.collection_link, a.record_link
-	
-		&:hover
-			background: $gray-hover
-	
-		&:active
-			background: $gray-active
-			color: #FFF
-	
-		&.selected
-			background: $blue
-			color: #FFF
-	
-	.record_link
-		span
-			float: right
-			font-weight: normal
+		p
+			margin-right: $spacing/2
 		
-	a.record_link
-		span
-			padding-right: 16px
-			background: url(/assets/icons.png) no-repeat 100% -708px
-		
-		&:hover
-			span
-				background-position: 100% -738px
+			b
+				display: block
+				margin-bottom: 5px
+				line-height: 14px
 			
-		&:active, &.selected
-			span
-				background-position: 100% -768px
+			a
+				+force-wrap
 	
-	a.collection_link
-		&.selected, &.selected:hover, &.selected:active
+	.relations
+		width: 50%
+		float: right
+	
+		a
+			display: block
+			margin: $spacing $spacing 0 $spacing/2
+			padding: 0 10px
+			background: $gray-stripe
+			+border-radius(3px)
+			line-height: 35px
+			text-decoration: none
+			
 			span
-				background: #FFF
-				color: $blue
-		
-		&:hover
-			span
-				background: $gray-text
-		
-		&:active
-			span
-				background: #FFF
+				float: right
+				
+				span
+					height: 15px
+					margin-top: 10px
+					padding: 0 5px
+					background: $gray-active
+					+border-radius($radius)
+					line-height: 15px
+					text-align: center
+					font-size: 12px
+					font-weight: bold
+					color: #FFF
+			
+			b, span
+				color: #000
+			
+			&:hover
+				background: $gray-hover
+				
+				span span
+					background: $gray-text
+			
+			&:active
+				background: $gray-active
+			
+			&.selected
+				background: $blue
+			
+			&.selected, &:active
+				b, span
+					color: #FFF
+					
+					span
+						background: #FFF
+			
+			&:active span span
 				color: $gray-active
-	
-		span
-			height: 15px
-			margin-top: 10px
-			padding: 0 5px
-			background: $gray-active
-			+border-radius($radius)
-			float: right
-			line-height: 15px
-			text-align: center
-			font-size: 12px
-			color: #FFF
+			
+			&.selected span span
+				color: $blue

@@ -21,6 +21,12 @@ form
 			font-weight: normal
 			color: $gray-text
 	
+	.relations li
+		margin-left: $spacing/2
+	
+	.fields li
+		margin-right: $spacing/2
+	
 	li
 		position: relative
 		margin: $spacing
@@ -46,8 +52,27 @@ form
 				height: auto
 				padding: 0
 				border: 0
+		
+		&.radio
+			label
+				height: auto
+			
+			li
+				position: static
+				margin: 10px $spacing 0 0
+				float: left
+				
+				label
+					font-weight: normal
+				
+				input
+					height: auto
+					position: static
+					margin-right: 5px
 	
 	.actions
+		clear: both
+	
 		li
 			height: 35px
 			margin-bottom: 0

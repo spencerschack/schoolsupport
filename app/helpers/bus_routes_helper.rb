@@ -4,8 +4,8 @@ module BusRoutesHelper
   
   FIELDS[:bus_routes] = {
     index: [:name, :color_name, :district],
-    show: [:name, :color_name, :color_value, :district],
-    form: [:name, :color_name, :color_value, :district]
+    show: { fields: [:name, :color_name, :color_value], relations: [:district] },
+    form: { fields: [:name, :color_name, :color_value], relations: [:district] }
   }
 
 end

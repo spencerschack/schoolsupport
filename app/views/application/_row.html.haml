@@ -2,5 +2,5 @@
 	%span.spacer
 	%span.select= check_box_tag(export_attr(resource), row.id)
 	- fields(:index).each do |field|
-		%span= field_content row, field
+		%span= cell_content row, field
 	%span.spacer

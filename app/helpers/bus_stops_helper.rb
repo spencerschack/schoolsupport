@@ -4,8 +4,8 @@ module BusStopsHelper
   
   FIELDS[:bus_stops] = {
     index: [:name, :district],
-    show: [:name, :district],
-    form: [:name, :district]
+    show: { fields: [:name], relations: [:district] },
+    form: { fields: [:name], relations: [:district] }
   }
   
 end
