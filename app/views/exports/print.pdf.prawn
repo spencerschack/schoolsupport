@@ -1,3 +1,6 @@
+# Pre-fetch all fonts, templates, and images.
+@export.fetch_files
+
 # Register fonts.
 @export.template.fonts.each do |font|
   pdf.font_families.update(font.name => {
@@ -8,7 +11,7 @@ end
 require 'open-uri'
 
 # Cache template.
-@template = open(@export.template.file.url)
+@template = Thread.current[:export_files][@export.template.file.url]
 
 @export.students.each do |student|
 
@@ -18,8 +21,8 @@ require 'open-uri'
   
     # Handle image inserts.
     if Export.image_columns.include? field.column
-      pdf.image open(student.send(field.column).url), at: [field.x, field.y],
-        width: field.width, height: field.height
+      pdf.image Thread.current[:export_files][student.send(field.column).url],
+        at: [field.x, field.y], width: field.width, height: field.height
     
     # Handle colors.
     elsif Export.color_columns.include? field.column

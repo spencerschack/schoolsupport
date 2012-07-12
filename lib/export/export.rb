@@ -34,6 +34,7 @@ class Export < Tableless
   
   belongs_to :template
   has_many :students
+  has_many :schools, through: :students
   
   validates_presence_of :type
   validates_presence_of :template, if: :is_print?
@@ -46,6 +47,27 @@ class Export < Tableless
     define_method "is_#{t}?" do
       type == t
     end
+  end
+  
+  # Pre-fetch all files associated with this export in parallel.
+  def fetch_files
+    require 'open-uri'
+    Thread.current[:export_files] = Hash[file_urls.pmap do |url|
+      [url, open(url)]
+    end]
+  end
+  
+  # The urls of each file associated with this export.
+  def file_urls
+    urls = [template.file.url]
+    urls += template.fonts.map { |font| font.file.url }
+    if columns.include? 'image'
+      urls += students.map { |student| student.image.url }
+    end
+    if columns.include? 'school_mascot_image'
+      urls += schools.map { |school| school.mascot_image.url }
+    end
+    urls
   end
   
   # Return the format for the given export.

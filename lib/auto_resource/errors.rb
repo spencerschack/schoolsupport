@@ -1,7 +1,7 @@
 module Errors
   
   def self.included base
-    base.rescue_from StandardError, with: :server_error
+    #base.rescue_from StandardError, with: :server_error
   end
   
   protected
