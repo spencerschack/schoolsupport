@@ -64,6 +64,9 @@ module Schoolsupport
     # For Heroku push
     config.assets.initialize_on_precompile = false
     
+    # For Unicorn
+    config.logger = Logger.new(STDOUT)
+    
     # Paperclip defaults.
     config.paperclip_defaults = {
       storage: :s3,

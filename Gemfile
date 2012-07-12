@@ -5,7 +5,7 @@ ruby '1.9.3'
 gem 'rails', '3.2.6'
 
 gem 'pg'
-gem 'thin'
+gem 'unicorn'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
