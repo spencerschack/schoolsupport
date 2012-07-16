@@ -6,7 +6,6 @@ gem 'rails', '3.2.6'
 
 gem 'pg'
 gem 'unicorn'
-gem 'asset_sync'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
