@@ -8,12 +8,18 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
 	
+	def term_filter
+	  if controller_model == Period || controller_model.reflect_on_association(:periods)
+	    render 'term_filter'
+    end
+	end
+	
 	# What to use for buttons that act on javascript events, not anchors.
 	def js_link
 	 'javascript:;'
 	end
 	
-	# HTML classes to add to the page wrapper in xhr.hmtl.haml.
+	# HTML classes to add to the page wrapper in xhr.html.haml.
 	def page_classes
 		[controller_name, action_name, 'wrapper'].join(' ')
 	end

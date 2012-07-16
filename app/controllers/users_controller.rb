@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
 
   before_filter :set_params_id, only: [:show, :edit, :update, :destroy]
+  
+  def find_collection
+    super.includes(:role, school: [:district])
+  end
     
   # When there is no id passed in, check presence of current user. If
   # there is a current user, set params[:id] to the appropriate id for the

@@ -81,17 +81,28 @@ class Student < ActiveRecord::Base
   
   # Used by Import to create a period to associate a user with a student.
   # All actions are taken with bangs to stop the import if unsuccessful.
-  def teacher= name
+  def set_teacher name, term
     user = User.find_by_name!(name)
     unless period = user.periods.first
       period = user.periods.build
       period.assign_attributes({
         name: Period.default_name_for(user),
+        term: term,
         school_id: school_id
       }, as: mass_assignment_role)
       period.save!
     end
     periods << period
+  end
+  
+  # Set the teacher for the previous term.
+  def teacher_last_year= name
+    set_teacher(name, Period.previous_term)
+  end
+  
+  # Set the teacher for the current term.
+  def teacher= name
+    set_teacher(name, Period.current_term)
   end
   
   # Method for students index.html

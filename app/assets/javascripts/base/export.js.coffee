@@ -4,7 +4,7 @@ prepare_export_click = (event) ->
 	$(this).find('.scroller a').click (event) ->
 		inputs = index.find('.table a span input:visible')
 		
-		if !inputs.filter(':checked').length && index.find('a.export').is('.searching')
+		if !inputs.filter(':checked').length
 			inputs.prop('checked', true)
 			input_data = inputs.serializeObject()
 			inputs.prop('checked', false)

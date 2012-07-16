@@ -3,7 +3,7 @@ module UsersHelper
   PARENTS[:users] = [Student, Period, School, District]
   
   FIELDS[:users] = {
-    index: [:name, :district, :school, :role],
+    index: [:name, :school, :role],
     show: { fields: [:email, :role],
       relations: [:district, :school, :periods, :students]},
     form: { fields: [:first_name, :last_name, :email, :password,

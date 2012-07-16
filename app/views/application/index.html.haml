@@ -1,5 +1,5 @@
 .title
-	%h2 All
+	%h2= term_filter || 'All'
 	%h1= controller_name.titleize
 	= link_for :new, new_resource
 	= link_for :search, controller_model

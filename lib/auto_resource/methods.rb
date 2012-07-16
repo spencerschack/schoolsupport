@@ -24,13 +24,7 @@ module Methods
   # Export action.
   def export
     if params[:export_type]
-      params[:selected] ||= {
-        :"#{controller_name.singularize}_ids" => if params[:id]
-          params[:id]
-        else
-          collection.map(&:id)
-        end
-      }
+      params[:selected] ||= { :"#{controller_name.singularize}_ids" => params[:id] }
       
       @export = Export.new
       @export.assign_attributes(
