@@ -44,8 +44,16 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = render_to_string(view_for(true))
+      
       if action_name == 'update' || action_name == 'create'
-        hash[:row] = render_to_string('_row', layout: false)
+        case record
+        when Period
+          hash[:terms] = [record.term]
+        when Student, User
+          hash[:terms] = record.periods.map(&:term)
+        else
+          hash[:row] = render_to_string('_row', layout: false)
+        end
         hash[:path] = parent_path(record)
       end
     end

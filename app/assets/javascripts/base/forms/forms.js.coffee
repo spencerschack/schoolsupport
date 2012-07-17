@@ -46,7 +46,9 @@ handle_form_submit = (event) ->
 					push_state(data.path)
 				
 				unless index.is('.destroyed')
-					if data.row
+					if data.terms && (select = index.find('select#term')) && select.val() not in data.terms
+						select.val('All').trigger('change')
+					else if data.row
 						insert_row(index.find('.table'), data.row)
 						select_path(index)
 						index.find('.scroller').scrollTo('.selected')

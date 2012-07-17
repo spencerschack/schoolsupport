@@ -10,7 +10,7 @@ module ApplicationHelper
 	
 	# Return a render if applicable.
 	def term_filter
-	  if controller_model == Period || controller_model == Student
+	  if [Period, Student, User].include?(controller_model)
 	    render 'term_filter'
     end
 	end
@@ -20,15 +20,19 @@ module ApplicationHelper
 	  if controller_model == Period
 	    years = find_collection.uniq.pluck(:term)
 	    other_options = ['All']
-    elsif controller_model == Student
-      student_ids = find_collection.pluck('students.id')
-      periods = Period.joins(controller_name).where(controller_name => { id: student_ids })
+	    
+    elsif [Student, User].include?(controller_model)
+      record_ids = find_collection.pluck("#{controller_name}.id")
+      periods = Period.joins(controller_name).where(controller_name => { id: record_ids })
       years = periods.uniq.pluck(:term)
       other_options = ['All', 'With No Period']
     end
-    years = [Period.current_term] unless years.any?
+    
+    selected = params[:term] || Period.current_term
+    (years << selected).sort! unless years.include?(selected)
+    
     options_for_select(other_options) <<
-    grouped_options_for_select([['By year', years]], Period.current_term)
+    grouped_options_for_select([['By year', years]], selected)
 	end
 	
 	# What to use for buttons that act on javascript events, not anchors.

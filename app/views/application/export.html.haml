@@ -9,7 +9,7 @@
 		= semantic_form_for @export, url: export_path,
 			html: { target: '_blank' } do |f|
 			- if @export.errors.any?
-				%p The export could not be completed:
+				%p This export cannot be used:
 				= f.semantic_errors
 			
 			- else

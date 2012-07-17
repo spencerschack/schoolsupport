@@ -16,7 +16,7 @@ class Student < ActiveRecord::Base
   belongs_to :bus_stop
   belongs_to :bus_route
   has_one :district, through: :school
-  has_and_belongs_to_many :periods
+  has_and_belongs_to_many :periods, conditions: proc { ['periods.term = ?', Period.current_term] }
   has_many :users, through: :periods
   
   has_attached_file :image,

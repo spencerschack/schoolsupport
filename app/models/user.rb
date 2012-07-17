@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   belongs_to :school
   has_one :district, through: :school
   belongs_to :role
-  has_and_belongs_to_many :periods
+  has_and_belongs_to_many :periods, conditions: proc { ['periods.term = ?', Period.current_term] }
   has_many :students, through: :periods
   
   has_import identify_with: { email: nil, name: :school_id },

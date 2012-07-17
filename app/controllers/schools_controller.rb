@@ -1,6 +1,6 @@
 class SchoolsController < ApplicationController
   
-  def find_collection
+  def collection
     super.includes(:district)
   end
   

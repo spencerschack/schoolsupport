@@ -2,8 +2,16 @@ class UsersController < ApplicationController
 
   before_filter :set_params_id, only: [:show, :edit, :update, :destroy]
   
-  def find_collection
-    super.includes(:role, school: [:district])
+  def collection
+    default = find_collection.includes(:role, school: [:district])
+    return default if params[:term] == 'All'
+    
+    term_value = case params[:term]
+    when 'With No Period' then nil
+    when nil then Period.current_term
+    else params[:term] end
+
+    default.joins(:periods).where(periods: { term: term_value })
   end
     
   # When there is no id passed in, check presence of current user. If

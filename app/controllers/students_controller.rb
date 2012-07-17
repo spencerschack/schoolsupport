@@ -10,7 +10,6 @@ class StudentsController < ApplicationController
     else params[:term] end
 
     default.joins(:periods).where(periods: { term: term_value })
-    
   end
 
 end

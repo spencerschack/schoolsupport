@@ -19,6 +19,9 @@ prepare_term_filter = ->
 			buttons.fadeTo(TINY_DURATION, 1).off('click.term_disable')
 			
 			scroller.html(table).stop(true, true).animate { top: '75px' }, MEDIUM_DURATION
+			select_path(page)
+			update_count(scroller.find('.table'))
+			scroller.find('.index').scrollTo('.selected')
 
 $ ->
 	$('#container').delegate '.index.wrapper', 'loaded.term_filter', prepare_term_filter
