@@ -8,10 +8,27 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
 	
+	# Return a render if applicable.
 	def term_filter
-	  if controller_model == Period || controller_model.reflect_on_association(:periods)
+	  if controller_model == Period || controller_model == Student
 	    render 'term_filter'
     end
+	end
+	
+	# Which terms can be selected.
+	def term_options
+	  if controller_model == Period
+	    years = find_collection.uniq.pluck(:term)
+	    other_options = ['All']
+    elsif controller_model == Student
+      student_ids = find_collection.pluck('students.id')
+      periods = Period.joins(controller_name).where(controller_name => { id: student_ids })
+      years = periods.uniq.pluck(:term)
+      other_options = ['All', 'With No Period']
+    end
+    years = [Period.current_term] unless years.any?
+    options_for_select(other_options) <<
+    grouped_options_for_select([['By year', years]], Period.current_term)
 	end
 	
 	# What to use for buttons that act on javascript events, not anchors.

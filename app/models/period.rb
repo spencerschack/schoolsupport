@@ -2,8 +2,6 @@ class Period < ActiveRecord::Base
 
   using_access_control
   
-  default_scope { where(term: current_term) }
-  
   attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
     :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
