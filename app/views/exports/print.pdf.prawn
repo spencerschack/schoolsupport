@@ -13,6 +13,8 @@ require 'open-uri'
 # Cache template.
 @template = Thread.current[:export_files][@export.template.file.url]
 
+Rails.logger.debug @export.students
+
 @export.students.each do |student|
 
   pdf.start_new_page template: @template, margin: 0

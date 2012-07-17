@@ -9,12 +9,9 @@ prepare_export_click = (event) ->
 			input_data = inputs.serializeObject()
 			inputs.prop('checked', false)
 
-		if inputs.length
-			input_data ||= inputs.serializeObject()
-			data = $.extend(csrf_param(), input_data)
-		else
-			data = null
-		
+		input_data ||= inputs.serializeObject()
+		console.log input_data
+		data = $.extend(csrf_param(), input_data)
 		push_state(this.href, data)
 		
 		event.stopImmediatePropagation()
