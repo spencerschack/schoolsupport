@@ -9,8 +9,8 @@ class Student < ActiveRecord::Base
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
-  attr_accessible :image, :image_id, :bus_stop_id, :bus_route_id, :bus_rfid,
-    as: [:developer, :designer]
+  attr_accessible :image, :image_file_name, :bus_stop_id, :bus_route_id,
+    :bus_rfid, as: [:developer, :designer]
 
   belongs_to :school
   belongs_to :bus_stop
@@ -20,8 +20,8 @@ class Student < ActiveRecord::Base
   has_many :users, through: :periods
   
   has_attached_file :image,
-    path: '/student_images/:image_id.:extension',
-    styles: { original: ['', :png] }
+    path: '/student_images/:filename',
+    styles: { original: ['', :jpg] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name }
@@ -108,12 +108,6 @@ class Student < ActiveRecord::Base
   # Method for students index.html
   def bus
     [bus_route, bus_stop].map{|r| r.try(:name)}.compact.join(' / ')
-  end
-  
-  # Sets image file name to tell paperclip there is an image.
-  def image_id= value
-    super
-    image_file_name = value
   end
   
   # Which columns are available for templates.
