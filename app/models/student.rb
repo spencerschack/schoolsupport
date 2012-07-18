@@ -110,6 +110,12 @@ class Student < ActiveRecord::Base
     [bus_route, bus_stop].map{|r| r.try(:name)}.compact.join(' / ')
   end
   
+  # Sets image file name to tell paperclip there is an image.
+  def image_id= value
+    super
+    image_file_name = value
+  end
+  
   # Which columns are available for templates.
   def self.template_column_options
     [
