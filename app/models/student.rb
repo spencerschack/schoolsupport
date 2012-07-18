@@ -34,6 +34,7 @@ class Student < ActiveRecord::Base
   validate :school_in_district
   validate :bus_in_district
   
+  # Returns comma separated last name first name.
   def name
     "#{last_name}, #{first_name}"
   end
