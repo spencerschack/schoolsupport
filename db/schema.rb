@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120712223251) do
+ActiveRecord::Schema.define(:version => 20120718001024) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20120712223251) do
     t.integer  "bus_route_id"
     t.string   "bus_rfid"
     t.boolean  "dropped"
+    t.string   "image_id"
   end
 
   create_table "templates", :force => true do |t|

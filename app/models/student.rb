@@ -6,10 +6,10 @@ class Student < ActiveRecord::Base
 
   attr_accessible :first_name, :grade, :last_name, as: [:developer,
     :superintendent, :principal, :teacher]
-  attr_accessible :period_ids, :teacher, :identifier, :dropped, as: [:developer,
-    :superintendent, :principal]
+  attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
+    :dropped, as: [:developer, :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
-  attr_accessible :image, :bus_stop_id, :bus_route_id, :bus_rfid,
+  attr_accessible :image, :image_id, :bus_stop_id, :bus_route_id, :bus_rfid,
     as: [:developer, :designer]
 
   belongs_to :school
@@ -20,8 +20,7 @@ class Student < ActiveRecord::Base
   has_many :users, through: :periods
   
   has_attached_file :image,
-    path: '/student_images/:hash.:extension',
-    hash_secret: ENV['PAPERCLIP_HASH_SECRET'],
+    path: '/student_images/:image_id.:extension',
     styles: { original: ['', :png] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :identifier,
