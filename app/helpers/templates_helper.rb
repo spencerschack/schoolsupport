@@ -3,7 +3,7 @@ module TemplatesHelper
   FIELDS[:templates] = {
     index: [:name],
     show: { fields: [:name], relations: [:fields, :pdfs] },
-    form: { fields: [:name] }
+    form: { fields: [:name], relations: [] }
   }
   
 end
