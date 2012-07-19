@@ -1,28 +1,33 @@
 prepare_term_filter = ->
-	term_filter = $(this).find('.term_filter')
-	term_select = term_filter.find('select')
-	term_label = term_filter.find('span')
-	buttons = term_filter.closest('h2').siblings('a')
-	page = term_filter.closest('.page')
+	page = $(this).closest('.page')
+	wrapper = page.find('.wrapper')
 	scroller = page.find('.scroller')
+	table = scroller.find('.table')
+	buttons = wrapper.find('.title a')
+	loading_message = $('<div class="loading_message">Loading</div>')
 	
-	term_select.change ->
+	$(this).delegate '.term_filter select', 'change.term_filter', ->
 		buttons.fadeTo(TINY_DURATION, 0.5).on 'click.term_disable', (event) ->
 			event.stopImmediatePropagation()
 			event.preventDefault()
-		term_label.text(term_select.val())
+		wrapper.append(loading_message)
+		
+		$(this).siblings('span').text($(this).val())
 		scroller.stop(true, true).animate { top: "-#{$('#container').height()}px" },
 			SHORT_DURATION
 		
-		$.get page.attr('data-path'), { term: term_select.val() }, (data) ->
+		$.get page.attr('data-path'), { term: $(this).val() }, (data) ->
 			table = $(data).find('.table')
 			buttons.fadeTo(TINY_DURATION, 1).off('click.term_disable')
+			loading_message.remove()
+			select_path(page)
+			selected = table.find('.selected')
+			if selected.length
+				scroller.scrollTo(selected)
 			
 			scroller.html(table).stop(true, true).animate { top: '75px' }, MEDIUM_DURATION
 			page.find('.wrapper').trigger('loaded')
-			select_path(page)
-			update_count(scroller.find('.table'))
-			scroller.find('.index').scrollTo('.selected')
+			update_count(table)
 
 $ ->
 	$('#container').delegate '.index.wrapper', 'loaded.term_filter', prepare_term_filter

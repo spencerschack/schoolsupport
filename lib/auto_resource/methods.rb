@@ -30,7 +30,7 @@ module Methods
       @export.assign_attributes(
         params[:selected].merge(params[:export] || {}).merge({
           type: params[:export_type],
-          template_id: params[:export_id]
+          pdf_id: params[:export_id]
       }), as: current_role)
       @export.valid?
       

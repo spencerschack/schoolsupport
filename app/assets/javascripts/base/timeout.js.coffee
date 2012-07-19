@@ -1,6 +1,6 @@
 # Reload the page.
 reload_page = ->
-	window.location = window.location.pathname + '?stale=true'
+	window.location.reload()
 
 window.login_timeout = setTimeout(reload_page, 600000)
 reset_timeout = ->

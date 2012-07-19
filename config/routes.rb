@@ -1,5 +1,7 @@
 Schoolsupport::Application.routes.draw do
 
+  resources :pdfs
+
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
   def helper *args
@@ -42,8 +44,10 @@ Schoolsupport::Application.routes.draw do
   
   # Templates, Fields, Fonts
   resources :templates do
+    resources :pdfs do
+      resources :schools
+    end
     resources :fields
-    resources :schools
   end
   resources :fonts
   

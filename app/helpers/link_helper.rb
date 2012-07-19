@@ -58,7 +58,7 @@ module LinkHelper
     
     when :export
       if permitted_to?(action, model_or_record) && Export.for?(model_or_record)
-        link_to "Export#{' All' if model_or_record.is_a?(Class)}",
+        link_to "Print#{' All' if model_or_record.is_a?(Class)}",
           parent_path(model_or_record, { action: :export }), options
       end
       

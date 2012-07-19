@@ -3,6 +3,17 @@ class Student < ActiveRecord::Base
   using_access_control
   
   default_scope where(dropped: false)
+  
+  scope :with_no_period, {
+    joins:      'LEFT JOIN periods_students ON students.id = periods_students.student_id',
+    conditions: 'periods_students.student_id IS NULL',
+    select:     'DISTINCT students.*'
+  }
+  
+  include PgSearch
+  
+  pg_search_scope :search, :against => [:first_name, :last_name, :identifier],
+    using: { tsearch: { prefix: true} }
 
   attr_accessible :first_name, :grade, :last_name, as: [:developer,
     :superintendent, :principal, :teacher]
@@ -16,7 +27,11 @@ class Student < ActiveRecord::Base
   belongs_to :bus_stop
   belongs_to :bus_route
   has_one :district, through: :school
-  has_and_belongs_to_many :periods, conditions: proc { ['periods.term = ?', Period.current_term] }
+  has_and_belongs_to_many :periods do
+    def with_term term = Period.current_term
+      where(term: term)
+    end
+  end
   has_many :users, through: :periods
   
   has_attached_file :image,
@@ -26,13 +41,17 @@ class Student < ActiveRecord::Base
   has_import identify_with: { identifier: nil }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name }
   
-  before_validation :set_school
+  after_initialize :set_school
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier
   validate :periods_in_school
   validate :school_in_district
   validate :bus_in_district
+  
+  def as_json options = {}
+    { name: to_label, id: id }
+  end
   
   # Returns comma separated last name first name.
   def name
@@ -146,7 +165,7 @@ class Student < ActiveRecord::Base
   # For principals that cannot edit school_id, add school for them.
   def set_school
     if !school_id && Authorization.current_user.respond_to?(:school_id)
-      school_id = Authorization.current_user.school_id
+      write_attribute(:school_id, Authorization.current_user.school_id)
     end
   end
   

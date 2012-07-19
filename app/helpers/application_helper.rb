@@ -23,13 +23,18 @@ module ApplicationHelper
 	    
     elsif [Student, User].include?(controller_model)
       record_ids = find_collection.pluck("#{controller_name}.id")
-      periods = Period.joins(controller_name).where(controller_name => { id: record_ids })
-      years = periods.uniq.pluck(:term)
+      periods = if record_ids.any?
+        Period.joins(controller_name).where(controller_name => { id: record_ids })
+      else
+        []
+      end
+      years = periods.any? ? periods.uniq.pluck(:term) : []
       other_options = ['All', 'With No Period']
     end
     
     selected = params[:term] || Period.current_term
-    (years << selected).sort! unless years.include?(selected)
+    (years << selected) unless years.include?(selected)
+    years.sort!
     
     options_for_select(other_options) <<
     grouped_options_for_select([['By year', years]], selected)
@@ -82,9 +87,13 @@ module ApplicationHelper
 	def relation_content record, field
 	  case record.class.reflect_on_association(field).try(:macro)
     when :has_many, :has_and_belongs_to_many
-      content = content_tag(:span, record.send(field).count)
+      return unless permitted_to?(:index, field)
+      count = record.send(field).count
+      count = count.with_term if count.respond_to?(:with_term)
+      content = content_tag(:span, count)
       path = parent_path(field)
     when :belongs_to, :has_one
+      return unless permitted_to?(:show, field)
       value = record.send(field)
       if name = value.try(:name)
         content, path = name, parent_path(value)

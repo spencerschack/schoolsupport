@@ -47,7 +47,7 @@ window.update_count = (table) ->
 	page = $(table).closest('.page')
 	path = page.attr('data-path')
 	page.next('.page').find("a:urlInternal[href$='#{path}']")
-		.find('span').text(count)
+		.find('span span').text(count)
 
 # Find the row with data-id=id and remove it from the table.
 # @param {jQuery} table

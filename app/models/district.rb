@@ -2,7 +2,7 @@ class District < ActiveRecord::Base
 
   using_access_control
 
-  attr_accessible :school_ids, :name, :identifier, as: :developer
+  attr_accessible :school_ids, :name, :identifier, :zpass, as: :developer
 
   has_many :schools, dependent: :destroy
   has_many :users, through: :schools

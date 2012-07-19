@@ -1,6 +1,6 @@
 module SchoolsHelper
   
-  PARENTS[:schools] = [Template, District]
+  PARENTS[:schools] = [Pdf, Template, District]
   
   FIELDS[:schools] = {
     index: [:identifier, :name, :district],

@@ -2,7 +2,7 @@
 # selected class to links that match in the previous page.
 # {String} path the path to load.
 # {Function} callback
-window.create_page = (path, data) ->
+window.create_page = (path, data, method = 'GET') ->
 	page = $('<div />').addClass('page').attr('data-path', path)
 	loading_message = $('<div />').addClass('loading_message')
 	page.html loading_message.text('Loading')

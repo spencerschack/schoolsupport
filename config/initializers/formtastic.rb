@@ -7,7 +7,8 @@ module Formtastic
   
     # Return whether the current user is allowed to edit the given field.
     def allowed_to_edit method
-      @allowed_to_edit ||= begin
+      @allowed_to_edit ||= {}
+      @allowed_to_edit[method] ||= begin
         return true unless @object.class.respond_to? :accessible_attributes
         field = association_primary_key_for_method(method) || method
         role = Authorization.current_user.role_symbols.first

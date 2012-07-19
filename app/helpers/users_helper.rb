@@ -7,7 +7,7 @@ module UsersHelper
     show: { fields: [:email, :role],
       relations: [:district, :school, :periods, :students]},
     form: { fields: [:first_name, :last_name, :email, :password,
-      :password_confirmation], relations: [[:school, as: :school],
+      :password_confirmation], relations: [[:school, as: :search_select],
       [:periods, as: :token], :role] }
   }
 

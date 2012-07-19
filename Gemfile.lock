@@ -97,6 +97,9 @@ GEM
       ruby-rc4
     peach (0.5.1)
     pg (0.14.0)
+    pg_search (0.5)
+      activerecord (>= 3)
+      activesupport (>= 3)
     polyglot (0.3.3)
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
@@ -180,6 +183,7 @@ DEPENDENCIES
   paperclip
   peach
   pg
+  pg_search
   prawn
   prawnto
   rails (= 3.2.6)

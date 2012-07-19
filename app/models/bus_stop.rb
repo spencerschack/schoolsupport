@@ -1,5 +1,10 @@
 class BusStop < ActiveRecord::Base
   
+  include PgSearch
+  
+  pg_search_scope :search, :against => [:name],
+    using: { tsearch: { prefix: true} }
+  
   attr_accessible :district_id, :name, as: [:developer, :designer]
   
   belongs_to :district

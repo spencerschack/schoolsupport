@@ -1,15 +1,19 @@
 class StudentsController < ApplicationController
   
   def collection
+    if params[:search]
+      find_collection.includes(:school, :bus_route, :bus_stop)
+        .search(params[:search]).limit(30)
+    else
+      termed_collection
+    end
+  end
+  
+  def termed_collection
     default = find_collection.includes(:school, :bus_route, :bus_stop)
     return default if params[:term] == 'All'
-    
-    term_value = case params[:term]
-    when 'With No Period' then nil
-    when nil then Period.current_term
-    else params[:term] end
-
-    default.joins(:periods).where(periods: { term: term_value })
+    return default.with_no_period if params[:term] == 'With No Period'
+    default.joins(:periods).where(periods: { term: params[:term] || Period.current_term })
   end
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120718020048) do
+ActiveRecord::Schema.define(:version => 20120719205734) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -31,9 +31,10 @@ ActiveRecord::Schema.define(:version => 20120718020048) do
 
   create_table "districts", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.string   "identifier"
+    t.boolean  "zpass",      :default => false
   end
 
   create_table "fields", :force => true do |t|
@@ -62,6 +63,22 @@ ActiveRecord::Schema.define(:version => 20120718020048) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+  end
+
+  create_table "pdfs", :force => true do |t|
+    t.string   "name"
+    t.string   "file_file_name"
+    t.integer  "file_file_size"
+    t.string   "file_content_type"
+    t.datetime "file_updated_at"
+    t.integer  "template_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "pdfs_schools", :id => false, :force => true do |t|
+    t.integer "pdf_id"
+    t.integer "school_id"
   end
 
   create_table "periods", :force => true do |t|
@@ -103,11 +120,6 @@ ActiveRecord::Schema.define(:version => 20120718020048) do
     t.string   "city"
   end
 
-  create_table "schools_templates", :id => false, :force => true do |t|
-    t.integer "school_id"
-    t.integer "template_id"
-  end
-
   create_table "students", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -128,12 +140,8 @@ ActiveRecord::Schema.define(:version => 20120718020048) do
 
   create_table "templates", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

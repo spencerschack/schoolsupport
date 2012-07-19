@@ -21,26 +21,26 @@ class Export < Tableless
     %w(bus_route_color_value)
   end
   
-  column :template_id, :integer
+  column :pdf_id, :integer
   
   attr_accessor :type, :prompt_values
   
-  attr_accessible :students, :student_ids, :template_id, :period_ids,
+  attr_accessible :students, :student_ids, :pdf_id, :period_ids,
     :user_ids, :type, :prompt_values, as: [:developer, :designer,
     :superintendent, :principal, :teacher]
   attr_accessible :school_ids, as: [:developer, :designer, :superintendent,
     :principal]
   attr_accessible :district_ids, as: [:developer, :designer, :superintendent]
   
-  belongs_to :template
+  belongs_to :pdf
   has_many :students
   has_many :schools, through: :students
   
   validates_presence_of :type
-  validates_presence_of :template, if: :is_print?
+  validates_presence_of :pdf, if: :is_print?
   validates_inclusion_of :type, in: Export.types
   validate :students_in_scope
-  validate :template_in_scope, :image_presence, :color_presence, if: :is_print?
+  validate :pdf_in_scope, :image_presence, :color_presence, if: :is_print?
   
   # Create methods to see if the export is a certain type.
   types.each do |t|
@@ -59,15 +59,15 @@ class Export < Tableless
   
   # The urls of each file associated with this export.
   def file_urls
-    urls = [template.file.url]
-    urls += template.fonts.map { |font| font.file.url }
+    urls = { pdf.file.url => true }
+    pdf.fonts.map { |font| urls[font.file.url] = true }
     if columns.include? 'image'
-      urls += students.map { |student| student.image.url }
+      students.map { |student| urls[student.image.url] = true }
     end
     if columns.include? 'school_mascot_image'
-      urls += schools.map { |school| school.mascot_image.url }
+      schools.map { |school| urls[school.mascot_image.url] = true }
     end
-    urls
+    urls.keys
   end
   
   # Return the format for the given export.
@@ -107,16 +107,16 @@ class Export < Tableless
     end
   end
   
-  # Returns all columns in the template.
+  # Returns all columns in the pdf.
   def columns
-    template ? template.fields.map(&:column) : []
+    pdf ? pdf.fields.map(&:column) : []
   end
   
   private
   
-  # Ensure the current user is authorized to use the template.
-  def template_in_scope
-    unless Template.with_permissions_to(:show).map(&:id).include?(template_id)
+  # Ensure the current user is authorized to use the pdf.
+  def pdf_in_scope
+    unless (School.with_permissions_to(:show).pluck(:id) | pdf.school_ids).any?
       errors.add :base, 'The template must be viewable by you'
     end
   end

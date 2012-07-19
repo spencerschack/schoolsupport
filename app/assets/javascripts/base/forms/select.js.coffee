@@ -1,41 +1,40 @@
 # Creates a token input that replaces check boxes.
 prepare_multiple = ->
-	
+		
 	# Unbind the blur handler when the form gets destroyed.
 	$(this).closest('.wrapper').on 'unloaded', ->
 		$('body').off 'click.blur_multiple_search'
 	
 	# For each token input.
-	$(this).find('li.token fieldset').each ->
-		list = $(this).children('ol.choices-group')
-		results = $(this).children('ol.results')
-		hidden = $()
+	$(this).find('li.token, li.search_select').each ->
+		list = $(this).find('fieldset ol.choices-group')
+		results = $(this).find('fieldset ol.results')
+		
+		type = $(this).find('legend label').text()
+			.toLowerCase()
+			.replace(' ', '_')
+			.replace('*', '')
+			.replace(/([^s])$/, '$1s')
+			
+		name = $(this).find('input:hidden').attr('name')
+		single = $(this).is('.search_select')
+		depends_on = $(this).attr('data-depends-on')
 		
 		# Clear button handler.
-		$(this).find('label').on 'click.delete', (event) ->
+		$(this).delegate 'label', 'click.delete', (event) ->
 			event.preventDefault()
 			if $(event.target).is('i')
-				$(this).closest('li').hide().find('input').prop('checked', false)
-		
-		# When first loading, hide all tokens not selected.
-		$(this).find('input:not(:checked)').closest('li.choice').hide()
+				$(this).closest('li').remove()
 		
 		# Store the search input.
 		search_input = $(this).find('.search_field input').autoInputWidth()
 		
-		list.find('[data-depends-on]').each ->
-			dependent = $(this)
-			dependent_id = dependent.attr('data-depends-id')
-			depends_on = "data-#{dependent.attr('data-depends-on').replace('_', '-')}"
-			independent = $("[#{depends_on}]").closest('select')
-			independent.change ->
-				results.hide()
-				list.removeClass('searching')
-				if $(this).find(':selected').attr(depends_on) == dependent_id
-					dependent.insertBefore(search_input.parent())
-				else
-					hidden.add(dependent.detach())
-			independent.trigger('change')
+		# Dump current selections when school changes.
+		if depends_on
+			depends_on_path = depends_on.replace(/([^s])$/, '$1s')
+			depends_select_value = ->
+				list.find('li.choice').remove()
+				list.closest('form').find(":input[id$='#{depends_on}_id']").val()
 		
 		# Whenever a key is pressed or focused
 		search_input.on 'keydown focus click', (event) ->
@@ -67,32 +66,55 @@ prepare_multiple = ->
 			# All other keys, mostly interested in content keys.
 			else
 				self = $(this)
-				setTimeout (->
-					regexp = new RegExp(self.val(), 'i')
-					found = false
+				clearTimeout(window.select_search_timeout) if window.select_search_timeout
+				window.select_search_timeout = setTimeout (->
 					results.text('').show()
-					
-					list.find('li:hidden').each ->
-						token = $(this)
-						if regexp.test(token.text())
-							found = true
-							result = $('<li class="result" />').text(token.text())
-							
-							# Set these manually because hover is also handled by the up and
-							# down keys.
-							result.mouseover -> $(this).addClass('hover')
-							result.mouseleave -> $(this).removeClass('hover')
-							result.mousedown -> $(this).addClass('active')
-							result.mouseup -> $(this).removeClass('active')
-
-							result.appendTo(results).click (event) ->
-								token.show().find('input').prop('checked', true)
-								search_input.closest('li.search_field').before(token)
-								search_input.val('').focus()
+					if self.val()
+						result_text = 'Loading.'
+						url = "/#{type}"
+						url = "/#{depends_on_path}/#{depends_select_value()}" + url if depends_on
+						$.getJSON url, { search: self.val() }, (data) ->
+							if data.length
+								results.text('')
+								$.each data, (index, record) ->
+									$("<li class='result' data-id='#{record.id}' />")
+										.text(record.name)
+										.mouseover(-> $(this).addClass('hover'))
+										.mouseleave(-> $(this).removeClass('hover'))
+										.mousedown(-> $(this).addClass('active'))
+										.mouseup(-> $(this).removeClass('active'))
+										.appendTo(results)
+										.click (event) ->
+											inserted = list.find("input[value='#{record.id}']")
+											if !inserted.length || single
+												list.find('li.choice').remove() if single
+												choice = $('<label />')
+													.append("<input type='hidden' name='#{name}' value='#{record.id}' />")
+													.append(record.name)
+												if depends_on == 'district'
+													choice.append("<input type='hidden' id='district_id' value='#{record.district_id}' />")
+												choice.append('<i />') unless single
+												$('<li class="choice" />').html(choice)
+													.insertBefore(search_input.parent())
+											else
+												list.scrollTo(inserted, { onAfter: ->
+													inserted.closest('label')
+														.fadeTo(TINY_DURATION, 0)
+														.fadeTo(TINY_DURATION, 1)
+														.fadeTo(TINY_DURATION, 0)
+														.fadeTo(TINY_DURATION, 1)
+												})
+											
+											search_input.val('').focus()
+										
+							else
+								results.html($('<li class="none" />').text('No results.'))
+					else
+						result_text = 'Type to search.'
 					
 					# No results for found or were left for entering.
-					unless found
-						results.html($('<li class="none" />').text('None found.'))
+					if result_text
+						results.html($('<li class="none" />').text(result_text))
 				), 0
 		
 		# Whenever the token area is clicked on, make it seem like the whole thing

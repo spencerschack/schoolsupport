@@ -1,6 +1,17 @@
 class User < ActiveRecord::Base
 
   using_access_control
+  
+  scope :with_no_period, {
+    joins:      'LEFT JOIN periods_users ON users.id = periods_users.user_id',
+    conditions: 'periods_users.user_id IS NULL',
+    select:     'DISTINCT users.*'
+  }
+  
+  include PgSearch
+  
+  pg_search_scope :search, :against => [:first_name, :last_name],
+    using: { tsearch: { prefix: true} }
 
   attr_accessible :email, :password, :password_confirmation, :first_name,
     :last_name, :name, as: [:developer, :superintendent, :principal, :teacher]
@@ -15,7 +26,11 @@ class User < ActiveRecord::Base
   belongs_to :school
   has_one :district, through: :school
   belongs_to :role
-  has_and_belongs_to_many :periods, conditions: proc { ['periods.term = ?', Period.current_term] }
+  has_and_belongs_to_many :periods do
+    def with_term term = Period.current_term
+      where(term: term)
+    end
+  end
   has_many :students, through: :periods
   
   has_import identify_with: { email: nil, name: :school_id },
@@ -30,6 +45,10 @@ class User < ActiveRecord::Base
   validate :presence_of_role
   validate :periods_in_school
   validate :school_in_district
+  
+  def as_json options = {}
+    { name: name, id: id }
+  end
   
   def self.find_by_name name
     first, last = extract_name_parts(name)

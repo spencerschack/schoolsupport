@@ -1,8 +1,8 @@
-# Pre-fetch all fonts, templates, and images.
+# Pre-fetch all fonts, pdfs, and images.
 @export.fetch_files
 
 # Register fonts.
-@export.template.fonts.each do |font|
+@export.pdf.fonts.each do |font|
   pdf.font_families.update(font.name => {
     normal: font.file.url
   })
@@ -10,16 +10,14 @@ end
 
 require 'open-uri'
 
-# Cache template.
-@template = Thread.current[:export_files][@export.template.file.url]
-
-Rails.logger.debug @export.students
+# Cache pdf.
+@pdf = Thread.current[:export_files][@export.pdf.file.url]
 
 @export.students.each do |student|
 
-  pdf.start_new_page template: @template, margin: 0
+  pdf.start_new_page template: @pdf, margin: 0
 
-  @export.template.fields.each do |field|
+  @export.pdf.fields.each do |field|
   
     # Handle image inserts.
     if Export.image_columns.include? field.column

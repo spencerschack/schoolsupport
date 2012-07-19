@@ -6,7 +6,7 @@ module PeriodsHelper
     index: [:name, :school],
     show: { fields: [:name, :term], relations: [:school, :students, :users]},
     form: { fields: [:name, [:term, collection: Period.term_choices]],
-      relations: [[:school, as: :school], [:students, as: :token],
+      relations: [[:school, as: :search_select], [:students, as: :token],
       [:users, as: :token]] }
   }
   

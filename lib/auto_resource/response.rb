@@ -3,7 +3,7 @@ module Response
   # When included, have the controller respond to the following methods.
   # Necessary for respond_with to work.
   def self.included base
-    base.respond_to :html
+    base.respond_to :html, :json
     base.prawn_options = { skip_page_creation: true }
   end
   
@@ -44,17 +44,19 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = render_to_string(view_for(true))
+      hash[:path] = parent_path(record)
       
       if action_name == 'update' || action_name == 'create'
-        case record
-        when Period
-          hash[:terms] = [record.term]
-        when Student, User
-          hash[:terms] = record.periods.map(&:term)
-        else
-          hash[:row] = render_to_string('_row', layout: false)
+        hash[:terms] = if record.class == Period
+          [record.term]
+        elsif [Student, User].include?(record.class)
+          record.periods.pluck(:term)
         end
-        hash[:path] = parent_path(record)
+        
+        if [Period, Student, User].include?(record.class)
+          hash[:term_filter] = render_to_string('_term_filter', layout: false)
+        end
+        hash[:row] = render_to_string('_row', layout: false)
       end
     end
   end

@@ -55,6 +55,7 @@ module Parents
       array = Array(record)
       first = array.first
       parents.each do |model|
+        Rails.logger.debug model
         if id = params[id_key(model)]
           if first.is_a?(Symbol) || first.is_a?(Class)
             array.unshift model.find(id)

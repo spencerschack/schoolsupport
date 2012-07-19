@@ -7,8 +7,9 @@ module StudentsHelper
     show: { fields: [:identifier, :grade, :bus_rfid, :dropped],
       relations: [:bus_route, :bus_stop, :periods, :users, :school, :district]},
     form: { fields: [:identifier, :first_name, :last_name, :grade,
-      [:dropped, as: :radio], :image], relations: [[:school, as: :school],
-      [:bus_stop, as: :bus], [:bus_route, as: :bus], [:periods, as: :token]] }
+      [:dropped, as: :radio], :image], relations: [[:school, as: :search_select],
+      [:bus_stop, as: :search_select, depends_on: :district], [:bus_route,
+        as: :search_select, depends_on: :district], [:periods, as: :token]] }
   }
   
 end

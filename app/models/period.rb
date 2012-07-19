@@ -2,6 +2,11 @@ class Period < ActiveRecord::Base
 
   using_access_control
   
+  include PgSearch
+  
+  pg_search_scope :search, :against => [:term, :name],
+    using: { tsearch: { prefix: true} }
+  
   attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
     :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
@@ -16,6 +21,7 @@ class Period < ActiveRecord::Base
     associate: { school: :identifier }
   
   after_initialize :set_term, on: :create
+  after_initialize :set_school
     
   before_validation :set_school
   before_validation :set_term
@@ -28,6 +34,15 @@ class Period < ActiveRecord::Base
   validate :students_in_school
   validate :users_in_school
   validate :school_in_district
+  
+  def as_json options = {}
+    { name: to_label, id: id }
+  end
+  
+  # Used by formtastic.
+  def to_label
+    "#{term} #{name}"
+  end
   
   # Returns a generic name for a user's period.
   def self.default_name_for user
@@ -64,13 +79,13 @@ class Period < ActiveRecord::Base
   
   # If no term exists, set it to the current term.
   def set_term
-    term = Period.current_term unless term.present?
+    write_attribute(:term, Period.current_term) unless term.present?
   end
   
   # For principals that cannot edit school_id, add school for them.
   def set_school
     if !school_id && Authorization.current_user.respond_to?(:school_id)
-      school_id = Authorization.current_user.school_id
+      write_attribute(:school_id, Authorization.current_user.school_id)
     end
   end
   

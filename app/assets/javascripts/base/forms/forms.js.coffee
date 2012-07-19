@@ -46,12 +46,19 @@ handle_form_submit = (event) ->
 					push_state(data.path)
 				
 				unless index.is('.destroyed')
-					if data.terms && (select = index.find('select#term')) && select.val() not in data.terms
-						select.val('All').trigger('change')
-					else if data.row
+					if data.term_filter
+						term_filter = index.find('.title h2')
+						prev_value = term_filter.find('select').val()
+						term_filter.html(data.term_filter)
+						term_filter.find('select').val(prev_value)
+					
+					if data.row && (!data.terms || prev_value in data.terms)
 						insert_row(index.find('.table'), data.row)
 						select_path(index)
 						index.find('.scroller').scrollTo('.selected')
+					else
+						term = data.terms.sort()[data.terms.length - 1]
+						term_filter.find('select').val(term).trigger('change')
 						
 					wrapper.next('.show.wrapper').trigger('unloaded').remove()
 					table = $(data.page).insertAfter(wrapper).trigger('loaded').find('.table')

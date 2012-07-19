@@ -1,5 +1,5 @@
 .title
-	%h2 Export
+	%h2 Print
 	%h1= export_title
 	= link_for :cancel, controller_model
 
@@ -16,19 +16,20 @@
 				- @export.student_ids.each do |id|
 					= hidden_field_tag 'export[student_ids][]', id
 					
-				- if @export.template && @export.template.prompts.any?
+				- if @export.pdf && @export.pdf.template.prompts.any?
 					%p Please fill in the appropriate values for the following fields.
 					= f.inputs do
-						- @export.template.prompts.each do |field|
+						- @export.pdf.template.prompts.each do |field|
 							= f.input :prompt_values, label: field.name,
 								input_html: { name: "export[prompt_values][#{field.name}]" }
 
 				= f.actions do
-					= f.action :submit, label: 'Export'
+					= f.action :submit
 				
 	- else
-		%h6 Print
-		- available_templates.each do |template|
-			= link_to template.name, export_path(type: 'print', id: template.id)
-		%h6 Zpass
-		= link_to 'Zpass', export_path(type: 'zpass')
+		%h6 Templates
+		- available_pdfs.each do |pdf|
+			= link_to pdf.template.name, export_path(type: 'print', id: pdf.id)
+		- if permitted_to?(:zpass, controller_model)
+			%h6 Zpass
+			= link_to 'Zpass', export_path(type: 'zpass')

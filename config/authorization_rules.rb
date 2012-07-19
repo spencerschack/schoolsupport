@@ -9,12 +9,12 @@ authorization do
 	role :superintendent do
     
     # Access to user.
-    has_permission_on :users, to: [:show, :edit, :update, :print] do
+    has_permission_on :users, to: [:show, :edit, :update] do
       if_attribute id: is { user.id }
     end
     
     # Access to district.
-    has_permission_on :districts, to: [:show, :update, :print] do
+    has_permission_on :districts, to: [:show, :update] do
       if_attribute id: is { user.district.id }
     end
     
@@ -39,13 +39,16 @@ authorization do
     # Access to export.
     includes :export
     
+    # Access to zpass.
+    includes :zpass
+    
 	end
 
 	# School level access.
 	role :principal do
     
     # Access to user.
-    has_permission_on :users, to: [:show, :update, :print] do
+    has_permission_on :users, to: [:show, :update] do
       if_attribute id: is { user.id }
     end
     
@@ -55,18 +58,18 @@ authorization do
     end
     
     # Access to school.
-    has_permission_on :schools, to: [:show, :update, :print] do
+    has_permission_on :schools, to: [:show, :update] do
       if_attribute id: is { user.school_id }
     end
     
     # Access to periods in school.
     has_permission_on :periods, to: :manage do
-      if_permitted_to :show, :school
+      if_attribute school_id: is { user.school_id }
     end
     
     # Access to students in school.
     has_permission_on :students, to: :manage do
-      if_permitted_to :show, :school
+      if_attribute school_id: is { user.school_id }
     end
     
     # Access to logout.
@@ -75,13 +78,16 @@ authorization do
     # Access to export.
     includes :export
     
+    # Access to zpass.
+    includes :zpass
+    
 	end
 
 	# Class level access.
 	role :teacher do
   
     # Access to user.
-    has_permission_on :users, to: [:show, :edit, :update, :print] do
+    has_permission_on :users, to: [:show, :edit, :update] do
       if_attribute id: is { user.id }
     end
     
@@ -96,12 +102,12 @@ authorization do
     end
     
     # Access to periods assigned.
-    has_permission_on :periods, to: [:index, :show, :print] do
+    has_permission_on :periods, to: [:index, :show] do
       if_attribute users: contains { user }
     end
     
     # Access to students in periods.
-    has_permission_on :students, to: [:index, :show, :print] do
+    has_permission_on :students, to: [:index, :show] do
       if_attribute periods: { users: contains { user } }
     end
     
@@ -110,6 +116,9 @@ authorization do
     
     # Access to export.
     includes :export
+    
+    # Access to zpass.
+    includes :zpass
     
 	end
 
@@ -123,11 +132,29 @@ authorization do
   
   # Access to print jobs.
   role :export do
-    has_permission_on :districts, to: :export
-    has_permission_on :schools, to: :export
-    has_permission_on :periods, to: :export
-    has_permission_on :students, to: :export
-    has_permission_on :users, to: :export
+    has_permission_on :districts, to: :export do
+      if_attribute zpass: true
+      if_attribute schools: { pdf_ids: is_not { [] } }
+    end
+    has_permission_on [:schools, :periods, :students, :users], to: :export do
+      if_permitted_to :zpass, :district 
+    end
+    has_permission_on :schools, to: :export do
+      if_attribute pdf_ids: is_not { [] }
+    end
+    has_permission_on [:periods, :students, :users], to: :export do
+      if_permitted_to :export, :school
+    end
+  end
+  
+  # Access to zpass.
+  role :zpass do
+    has_permission_on :districts, to: :zpass do
+      if_attribute zpass: true
+    end
+    has_permission_on [:schools, :periods, :students, :users], to: :zpass do
+      if_attribute district: { zpass: true }
+    end
   end
 
 end

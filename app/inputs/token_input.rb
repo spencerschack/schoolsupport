@@ -1,5 +1,9 @@
 class TokenInput < Formtastic::Inputs::CheckBoxesInput
   
+  def raw_collection
+    @object.send(method)
+  end
+  
   # Add search field.
   def choices_group_wrapping(&block)
     template.content_tag(:ol,
@@ -15,30 +19,16 @@ class TokenInput < Formtastic::Inputs::CheckBoxesInput
   # Add icon for clear button.
   def choice_html(choice)
     template.content_tag(:label,
-      hidden_fields? ?
-        check_box_with_hidden_input(choice) :
-        check_box_without_hidden_input(choice) <<
+      template.hidden_field_tag(input_name, choice_value(choice)) <<
       choice_label(choice) <<
       template.content_tag(:i),
       label_html_options.merge(:for => choice_input_dom_id(choice), :class => nil)
     )
   end
   
-  alias_method :choice_wrapping_html_options_super, :choice_wrapping_html_options
-  # Add school id to choice wrapping.
-  def choice_wrapping_html_options(choice)
-    super_options = choice_wrapping_html_options_super(choice)
-    if reflection
-      %w(school_id district_id).each do |column|
-        if reflection.klass.column_names.include?(column)
-          return super_options.merge({data: {
-            depends_on: column,
-            depends_id: reflection.klass.find(choice.last).send(column)
-          }})
-        end
-      end
-    else
-      super_options
+  def wrapper_html_options
+    super.tap do |hash|
+      hash[:data] = { depends_on: options[:depends_on] } if options[:depends_on]
     end
   end
   
