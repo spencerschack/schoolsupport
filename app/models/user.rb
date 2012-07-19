@@ -8,10 +8,7 @@ class User < ActiveRecord::Base
     select:     'DISTINCT users.*'
   }
   
-  include PgSearch
-  
-  pg_search_scope :search, :against => [:first_name, :last_name],
-    using: { tsearch: { prefix: true} }
+  searches :first_name, :last_name
 
   attr_accessible :email, :password, :password_confirmation, :first_name,
     :last_name, :name, as: [:developer, :superintendent, :principal, :teacher]

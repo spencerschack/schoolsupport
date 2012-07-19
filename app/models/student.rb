@@ -10,10 +10,7 @@ class Student < ActiveRecord::Base
     select:     'DISTINCT students.*'
   }
   
-  include PgSearch
-  
-  pg_search_scope :search, :against => [:first_name, :last_name, :identifier],
-    using: { tsearch: { prefix: true} }
+  searches :first_name, :last_name, :identifier
 
   attr_accessible :first_name, :grade, :last_name, as: [:developer,
     :superintendent, :principal, :teacher]

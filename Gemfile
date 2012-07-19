@@ -5,7 +5,6 @@ ruby '1.9.3'
 gem 'rails', '3.2.6'
 
 gem 'pg'
-  gem 'pg_search'
 gem 'unicorn'
 
 group :assets do

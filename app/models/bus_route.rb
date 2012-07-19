@@ -1,9 +1,6 @@
 class BusRoute < ActiveRecord::Base
   
-  include PgSearch
-  
-  pg_search_scope :search, :against => [:name],
-    using: { tsearch: { prefix: true} }
+  searches :name
   
   attr_accessible :district_id, :color_name, :color_value, :name,
     as: [:developer, :designer]

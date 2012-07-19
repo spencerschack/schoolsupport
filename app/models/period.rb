@@ -2,10 +2,7 @@ class Period < ActiveRecord::Base
 
   using_access_control
   
-  include PgSearch
-  
-  pg_search_scope :search, :against => [:term, :name],
-    using: { tsearch: { prefix: true} }
+  searches :name, :term
   
   attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
     :superintendent, :principal]

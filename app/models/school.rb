@@ -2,10 +2,7 @@ class School < ActiveRecord::Base
 
   using_access_control
   
-  include PgSearch
-  
-  pg_search_scope :search, :against => [:identifier, :name],
-    using: { tsearch: { prefix: true} }
+  searches :name, :identifier
 
   attr_accessible :name, :period_ids, :student_ids, as: [:developer,
     :superintendent]
