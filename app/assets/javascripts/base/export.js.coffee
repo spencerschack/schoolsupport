@@ -10,7 +10,6 @@ prepare_export_click = (event) ->
 			inputs.prop('checked', false)
 
 		input_data ||= inputs.serializeObject()
-		console.log input_data
 		data = $.extend(csrf_param(), input_data)
 		push_state(this.href, data)
 		

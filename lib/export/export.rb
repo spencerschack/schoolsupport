@@ -3,7 +3,7 @@ class Export < Tableless
   # Return whether the given model or record is capable of having an export.
   def self.for? model_or_record
     model_or_record = model_or_record.class unless model_or_record.is_a?(Class)
-    model_or_record == Student || !!model_or_record.reflect_on_association(:students)
+    [Student, Pdf].include?(model_or_record) || !!model_or_record.reflect_on_association(:students)
   end
   
   # What types are accepted.
@@ -116,7 +116,7 @@ class Export < Tableless
   
   # Ensure the current user is authorized to use the pdf.
   def pdf_in_scope
-    unless (School.with_permissions_to(:show).pluck(:id) | pdf.school_ids).any?
+    if pdf && !(School.with_permissions_to(:show).pluck(:id) | pdf.school_ids).any?
       errors.add :base, 'The template must be viewable by you'
     end
   end

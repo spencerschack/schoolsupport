@@ -3,7 +3,7 @@ module Methods
   
   # Index action. Finds the collection and sets the collection variable.
   def index
-    set_collection find_collection.limit(100)
+    set_collection find_collection
     respond_with collection
   end
   
@@ -34,7 +34,11 @@ module Methods
       }), as: current_role)
       @export.valid?
       
-      respond_with @export if params[:commit]
+      if params[:commit]
+        respond_with @export
+      else
+        render 'application/export'
+      end
     end
   end
 

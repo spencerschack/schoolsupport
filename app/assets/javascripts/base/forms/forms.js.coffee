@@ -32,7 +32,6 @@ handle_form_submit = (event) ->
 		files: file_inputs,
 		iframe: has_file,
 		processData: false,
-		dataType: 'json',
 		success: (data) ->
 			
 			if data.success
@@ -52,27 +51,39 @@ handle_form_submit = (event) ->
 						term_filter.html(data.term_filter)
 						term_filter.find('select').val(prev_value)
 					
-					if data.row && (!data.terms || prev_value in data.terms)
-						insert_row(index.find('.table'), data.row)
-						select_path(index)
-						index.find('.scroller').scrollTo('.selected')
-					else
-						term = data.terms.sort()[data.terms.length - 1]
-						term_filter.find('select').val(term).trigger('change')
-						
-					wrapper.next('.show.wrapper').trigger('unloaded').remove()
-					table = $(data.page).insertAfter(wrapper).trigger('loaded').find('.table')
-					update_count(table) unless data.row
-					wrapper.animate {
-						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
-							$(this).remove()
+					if data.row
+						if data.terms && prev_value in data.terms
+							insert_row(index.find('.table'), data.row)
+							select_path(index)
+							index.find('.scroller').scrollTo('.selected')
+						else
+							term = data.terms.sort()[data.terms.length - 1]
+							term_filter.find('select').val(term).trigger('change')
+					
+					if data.page
+						wrapper.next('.show.wrapper').trigger('unloaded').remove()
+						table = $(data.page).insertAfter(wrapper).trigger('loaded').find('.table')
+						wrapper.animate {
+							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+								$(this).remove()
 							
-			else
+			else if data.success == false
 				page = $(data.page)
 				errors = page.find('.inline-errors, .errors').hide()
 				page.insertBefore(wrapper).trigger('loaded')
 				wrapper.trigger('unloaded').remove()
 				errors.slideDown(SHORT_DURATION)
+			
+			else
+				wrapper.find('a.create, a.update').hide_loading_message()
+				form.find(':submit').hide_loading_message()
+				
+				page = $("<div class='page' data-path='#{form.attr('action')}' />")
+				page.html(data).css(marginLeft: '-200px').prependTo('#container')
+				width = page.children().width()
+				page.animate { width: width, marginLeft: 0 },
+					{ duration: SHORT_DURATION, step: ensure_visible_header }
+				animate_container_width_to(width)
 	
 	event.preventDefault()
 	return false

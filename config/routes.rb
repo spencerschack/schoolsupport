@@ -1,18 +1,21 @@
 Schoolsupport::Application.routes.draw do
 
-  resources :pdfs
-
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
   def helper *args
     resources *args do
       match 'import', on: :collection
-      match 'export(/:export_type(/:export_id))', action: 'export',
-        on: :collection, as: 'export'
-      match 'export(/:export_type(/:export_id))', action: 'export',
-        on: :member, as: 'export'
+      exportable
       yield if block_given?
     end
+  end
+  
+  # Extract export routes.
+  def exportable
+    match 'export(/:export_type(/:export_id))', action: 'export',
+      on: :collection, as: 'export'
+    match 'export(/:export_type(/:export_id))', action: 'export',
+      on: :member, as: 'export'
   end
   
   # Districts, Schools, Periods, Students, Users
@@ -46,6 +49,7 @@ Schoolsupport::Application.routes.draw do
   resources :templates do
     resources :pdfs do
       resources :schools
+      exportable
     end
     resources :fields
   end
