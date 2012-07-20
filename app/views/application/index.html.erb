@@ -20,16 +20,16 @@
       <span class="spacer"></span>
     </div>
     <% collection.each do |row| %>
-      <%= link_to "#{request.path}/#{row.id}", data: { id: row.id } do %>
+      <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
         <span class="spacer"></span>
         <span class="select">
-          <%= check_box_tag(export_attr(resource), row.id) %>
+          <input type="checkbox" value="<%= row.id %>" name="<%= export_attr(resource) %>">
         </span>
         <% fields(:index).each do |field| %>
           <span><%= cell_content(row, field) %></span>
         <% end %>
         <span class="spacer"></span>
-      <% end %>
+      </a>
     <% end %>
   </div>
 </div>

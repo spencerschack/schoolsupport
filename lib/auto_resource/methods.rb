@@ -3,7 +3,7 @@ module Methods
   
   # Index action. Finds the collection and sets the collection variable.
   def index
-    set_collection find_collection
+    set_collection find_collection.limit(100)
     respond_with collection
   end
   

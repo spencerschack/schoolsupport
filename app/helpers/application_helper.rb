@@ -71,15 +71,15 @@ module ApplicationHelper
 	# calling name if it can be called. If nil or a blank string was retrieved,
 	# return the default representation of none.
 	def cell_content record, field
-	  content = record.try(field)
+	  content = record.send(field)
 	  content = content.url if content.respond_to?(:url)
 	  content = content.name if content.respond_to?(:name)
-	  content.nil? || content == '' ? none : auto_link(content.to_s)
+	  content.nil? || content == '' ? none : content.to_s
 	end
 	
 	# Wrap cell_content in a paragraph with a bold title of the field.
 	def field_content record, field
-	  content = cell_content(record, field)
+	  content = auto_link(cell_content(record, field))
 	  content_tag(:p, content_tag(:b, field.to_s.titleize) << content)
 	end
 	
