@@ -24,11 +24,14 @@ module Methods
   # Export action.
   def export
     if params[:export_type]
-      params[:selected] ||= { :"#{controller_name.singularize}_ids" => params[:id] }
+      unless params[:commit]
+        params[:selected] ||=
+          { :"#{controller_name.singularize}_ids" => params[:id] }
+      end
       
       @export = Export.new
       @export.assign_attributes(
-        params[:selected].merge(params[:export] || {}).merge({
+        (params[:selected] || {}).merge(params[:export] || {}).merge({
           type: params[:export_type],
           pdf_id: params[:export_id]
       }), as: current_role)

@@ -8,6 +8,8 @@ class PdfsController < ApplicationController
       params[:export_id] = params[:id]
       params[:selected] = { student_ids: students.map(&:id) }
       super
+    elsif params[:export]
+      super
     end
   end
 
