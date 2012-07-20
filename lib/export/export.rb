@@ -2,8 +2,9 @@ class Export < Tableless
   
   # Return whether the given model or record is capable of having an export.
   def self.for? model_or_record
+    return true if model_or_record.is_a?(Pdf)
     model_or_record = model_or_record.class unless model_or_record.is_a?(Class)
-    [Student, Pdf].include?(model_or_record) || !!model_or_record.reflect_on_association(:students)
+    model_or_record == Student || !!model_or_record.reflect_on_association(:students)
   end
   
   # What types are accepted.
