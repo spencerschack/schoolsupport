@@ -27,11 +27,11 @@ class Export < Tableless
   attr_accessor :type, :prompt_values
   
   attr_accessible :students, :student_ids, :pdf_id, :period_ids,
-    :user_ids, :type, :prompt_values, as: [:developer, :designer,
+    :user_ids, :type, :prompt_values, as: [:developer,
     :superintendent, :principal, :teacher]
-  attr_accessible :school_ids, as: [:developer, :designer, :superintendent,
+  attr_accessible :school_ids, as: [:developer, :superintendent,
     :principal]
-  attr_accessible :district_ids, as: [:developer, :designer, :superintendent]
+  attr_accessible :district_ids, as: [:developer, :superintendent]
   
   belongs_to :pdf
   has_many :students

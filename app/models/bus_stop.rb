@@ -2,7 +2,7 @@ class BusStop < ActiveRecord::Base
   
   searches :name
   
-  attr_accessible :district_id, :name, as: [:developer, :designer]
+  attr_accessible :district_id, :name, as: [:developer]
   
   belongs_to :district
   

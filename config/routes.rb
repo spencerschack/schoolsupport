@@ -1,10 +1,12 @@
 Schoolsupport::Application.routes.draw do
 
+  resources :tests
+
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
   def helper *args
     resources *args do
-      match 'import', on: :collection
+      importable
       exportable
       yield if block_given?
     end
@@ -18,10 +20,16 @@ Schoolsupport::Application.routes.draw do
       on: :member, as: 'export'
   end
   
+  # Extract import routes.
+  def importable
+    match 'import', on: :collection
+  end
+  
   # Districts, Schools, Periods, Students, Users
   
   students  = proc { helper :periods  do; helper :users    end
-                     helper :users }
+                     helper :users
+                     resources :tests do; importable       end }
   periods   = proc { helper :students do; helper :users    end
                      helper :users }
   users     = proc { helper :periods  do; helper :students end

@@ -3,7 +3,7 @@ class BusRoute < ActiveRecord::Base
   searches :name
   
   attr_accessible :district_id, :color_name, :color_value, :name,
-    as: [:developer, :designer]
+    as: [:developer]
   
   belongs_to :district
   

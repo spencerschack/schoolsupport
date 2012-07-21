@@ -5,8 +5,9 @@ class District < ActiveRecord::Base
   attr_accessible :school_ids, :name, :identifier, :zpass, as: :developer
 
   has_many :schools, dependent: :destroy
-  has_many :users, through: :schools
-  has_many :students, through: :schools
+  has_many :users, through: :schools, extend: WithTermExtension
+  has_many :students, through: :schools, extend: WithTermExtension
+  has_many :tests, through: :students
   has_many :bus_stops, dependent: :destroy
   has_many :bus_routes, dependent: :destroy
   

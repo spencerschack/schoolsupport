@@ -17,4 +17,4 @@
 				You are not logged in.
 
 		%p
-			= link_to 'Login', js_link, data: { reload_link: true }
+			= link_to 'Login', request.path, data: { xhr: false }

@@ -11,4 +11,14 @@ class ActiveRecord::Base
     end
   end
   
+  module WithTermExtension
+    def with_term term = Period.current_term
+      if proxy_association.reflection.klass == Period
+        where(term: term)
+      else
+        joins(:periods).where(periods: { term: term })
+      end
+    end
+  end
+  
 end

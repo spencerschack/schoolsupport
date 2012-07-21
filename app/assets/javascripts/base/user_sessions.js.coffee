@@ -32,6 +32,7 @@ handle_login_form_submit = (event) ->
 window.load_login_form = ->
 	$('#header').append($('<div />').addClass('loading_message').text('Loading'))
 	$.get '/login', (data) ->
+		clearTimeout(window.login_timeout)
 		$('#header .loading_message').remove()
 		animate_container_width_to(300, true)
 		$('#header').append(data).animate({width: '300px'}, SHORT_DURATION)

@@ -11,7 +11,7 @@ class Field < ActiveRecord::Base
   using_access_control
   
   attr_accessible :name, :align, :column, :height, :template_id, :width, :x,
-    :y, :font_id, :text_size, :color, :spacing, as: [:developer, :designer]
+    :y, :font_id, :text_size, :color, :spacing, as: [:developer]
   
   belongs_to :template
   belongs_to :font

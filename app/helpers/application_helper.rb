@@ -85,26 +85,23 @@ module ApplicationHelper
 	
 	# Create an appropriate link for the relation.
 	def relation_content record, field
+	  value = record.send(field)
 	  case record.class.reflect_on_association(field).try(:macro)
     when :has_many, :has_and_belongs_to_many
       return unless permitted_to?(:index, field)
-      count = record.send(field).count
-      count = count.with_term if count.respond_to?(:with_term)
-      content = content_tag(:span, count)
+      value = value.with_term if value.respond_to?(:with_term)
+      content = content_tag(:span, value.count)
       path = parent_path(field)
     when :belongs_to, :has_one
       return unless permitted_to?(:show, field)
-      value = record.send(field)
       if name = value.try(:name)
         content, path = name, parent_path(value)
       else
         content, path = none, nil
       end
     end
-   
-    link_to path do
-      content_tag(:b, field.to_s.titleize) <<
-      content_tag(:span, content)
-    end
+    
+    content = content_tag(:b, field.to_s.titleize) << content_tag(:span, content)
+    path ? link_to(content, path) : content_tag(:a, content)
 	end
 end

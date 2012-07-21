@@ -127,8 +127,11 @@
 	div.export
 		width: 350px
 	
-	.fields
+	.fields, .relations
 		width: 50%
+		margin-bottom: $spacing
+	
+	.fields
 		float: left
 	
 		p
@@ -143,7 +146,6 @@
 				+force-wrap
 	
 	.relations
-		width: 50%
 		float: right
 	
 		a
@@ -173,27 +175,27 @@
 			b, span
 				color: #000
 			
-			&:hover
+			&:link:hover, &:visited:hover
 				background: $gray-hover
 				
 				span span
 					background: $gray-text
 			
-			&:active
+			&:link:active, &:visited:active
 				background: $gray-active
 			
-			&.selected
+			&:link.selected, &:visited.selected
 				background: $blue
 			
-			&.selected, &:active
+			&:link.selected, &:link:active, &:visited.selected, &:visited:active
 				b, span
 					color: #FFF
 					
 					span
 						background: #FFF
 			
-			&:active span span
+			&:link:active span span, &:visited:active span span
 				color: $gray-active
 			
-			&.selected span span
+			&:link.selected span span, &:visited.selected span span
 				color: $blue

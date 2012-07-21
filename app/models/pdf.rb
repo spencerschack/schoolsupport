@@ -2,7 +2,7 @@ class Pdf < ActiveRecord::Base
   
   using_access_control
   
-  attr_accessible :file, :school_ids, :name, :template_id, as: [:developer, :designer]
+  attr_accessible :file, :school_ids, :name, :template_id, as: [:developer]
   
   has_and_belongs_to_many :schools
   belongs_to :template

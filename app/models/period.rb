@@ -7,11 +7,12 @@ class Period < ActiveRecord::Base
   attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
     :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
-  attr_accessible :identifier, as: [:developer, :designer]
+  attr_accessible :identifier, as: [:developer]
 
   belongs_to :school
   has_one :district, through: :school
   has_and_belongs_to_many :students
+  has_many :tests, through: :students
   has_and_belongs_to_many :users
   
   has_import identify_with: { identifier: :school_id, name: :school_id },

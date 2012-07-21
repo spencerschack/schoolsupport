@@ -18,18 +18,15 @@ class Student < ActiveRecord::Base
     :dropped, as: [:developer, :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :image, :image_file_name, :bus_stop_id, :bus_route_id,
-    :bus_rfid, as: [:developer, :designer]
+    :bus_rfid, as: [:developer]
 
   belongs_to :school
   belongs_to :bus_stop
   belongs_to :bus_route
   has_one :district, through: :school
-  has_and_belongs_to_many :periods do
-    def with_term term = Period.current_term
-      where(term: term)
-    end
-  end
-  has_many :users, through: :periods
+  has_and_belongs_to_many :periods, extend: WithTermExtension
+  has_many :users, through: :periods, extend: WithTermExtension
+  has_many :tests, dependent: :destroy
   
   has_attached_file :image,
     path: '/student_images/:filename',
