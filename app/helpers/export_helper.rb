@@ -1,17 +1,17 @@
 module ExportHelper
   
   # The field name for the check boxes next to table rows on index pages.
-  def export_attr resource
-    @export_attr ||= "selected[#{resource.class.name.underscore}_ids][]"
+  def export_attr model = controller_model
+    @export_attr ||= "selected[#{model.name.underscore}_ids][]"
   end
   
   # The title to display under 'PRINT'.
   def export_title
-    if params[:export_type]
-      if @export.type == 'print'
-        @export.pdf.template.name
+    if params[:export_kind]
+      if @export.kind == 'print'
+        @export.template.name
       else
-        @export.type.titleize
+        @export.kind.titleize
       end
     else
       if params[:id]
@@ -25,8 +25,8 @@ module ExportHelper
   # Curry parent_path for exports.
   def export_path options = {}
     path = parent_path(resource || controller_model, { action: :export })
-    if type = defined?(@export) ? @export.type : options[:type]
-      path << "/#{type}"
+    if kind = defined?(@export) ? @export.kind : options[:kind]
+      path << "/#{kind}"
     end
     if id = defined?(@export) ? @export.pdf.try(:id) : options[:id]
       path << "/#{id}"
@@ -38,8 +38,8 @@ module ExportHelper
   end
   
   # Which templates to show to the current user as options.
-  def available_pdfs
-    School.with_permissions_to(:show).includes(:pdfs).map(&:pdfs).flatten
+  def available_types
+    School.with_permissions_to(:show).includes(:types).map(&:types).flatten
   end
   
 end

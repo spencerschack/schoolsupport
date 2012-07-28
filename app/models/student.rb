@@ -26,7 +26,7 @@ class Student < ActiveRecord::Base
   has_one :district, through: :school
   has_and_belongs_to_many :periods, extend: WithTermExtension
   has_many :users, through: :periods, extend: WithTermExtension
-  has_many :tests, dependent: :destroy
+  has_many :test_scores
   
   has_attached_file :image,
     path: '/student_images/:filename',
@@ -42,7 +42,7 @@ class Student < ActiveRecord::Base
   validate :periods_in_school
   validate :school_in_district
   validate :bus_in_district
-  
+
   def as_json options = {}
     { name: to_label, id: id }
   end
@@ -115,7 +115,7 @@ class Student < ActiveRecord::Base
   
   # Set the teacher for the current term.
   def teacher= name
-    set_teacher(name, Period.current_term)
+    set_teacher(name, Term.current)
   end
   
   # Method for students index.html
@@ -123,21 +123,28 @@ class Student < ActiveRecord::Base
     [bus_route, bus_stop].map{|r| r.try(:name)}.compact.join(' / ')
   end
   
+  # Options with titleized labels.
+  def self.sort_options
+    sorts.map { |option| [option.titleize, option] }
+  end
+  
+  # Which columns can be sorted on during export.
+  def self.sorts
+    @sorts ||= column_names.reject do |column|
+      case column; when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/; true end
+    end
+  end
+  
   # Which columns are available for templates.
   def self.template_column_options
     [
-      ['Text', (column_names + %w(last_name_first_name first_name_last_name
-        school_name bus_stop_name bus_route_name)).reduce([]) do |prev, curr|
-        case curr
-        when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/
-          prev
-        else
-          prev << [curr.titleize, curr]
-        end
-      end ],
-      ['Image', [['Image', 'image'], ['School Mascot Image', 'school_mascot_image']]],
-      ['Other', [['Bus Route Color Value', 'bus_route_color_value'], ['Prompt', 'prompt']]]
-    ]
+      ['Student', (sorts + %w(last_name_first_name first_name_last_name image))],
+      ['School', %w(school_mascot_image school_name)],
+      ['Bus', %w(bus_route_name bus_stop_name bus_route_color_value)],
+      ['Other', %w(type prompt)]
+    ].map do |(group, options)|
+      [group, options.map { |option| [option.titleize, option] } ]
+    end
   end
   
   # The values of template_column_options.

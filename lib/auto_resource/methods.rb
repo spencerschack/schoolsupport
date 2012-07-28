@@ -3,7 +3,11 @@ module Methods
   
   # Index action. Finds the collection and sets the collection variable.
   def index
-    set_collection find_collection
+    records = find_collection
+    if params[:search] && records.respond_to?(:search)
+      records = records.search(params[:search])
+    end
+    set_collection records
     respond_with collection
   end
   
@@ -23,7 +27,7 @@ module Methods
   
   # Export action.
   def export
-    if params[:export_type]
+    if params[:export_kind]
       unless params[:commit]
         params[:selected] ||=
           { :"#{controller_name.singularize}_ids" => params[:id] }
@@ -32,8 +36,8 @@ module Methods
       @export = Export.new
       @export.assign_attributes(
         (params[:selected] || {}).merge(params[:export] || {}).merge({
-          type: params[:export_type],
-          pdf_id: params[:export_id]
+          kind: params[:export_kind],
+          type_id: params[:export_id]
       }), as: current_role)
       @export.valid?
       

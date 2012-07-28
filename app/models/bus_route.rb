@@ -1,5 +1,7 @@
 class BusRoute < ActiveRecord::Base
   
+  using_access_control
+  
   searches :name
   
   attr_accessible :district_id, :color_name, :color_value, :name,

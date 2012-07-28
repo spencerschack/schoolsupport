@@ -1,0 +1,3 @@
+class TestModelsController < ApplicationController
+
+end

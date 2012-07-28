@@ -10,9 +10,7 @@ class Import
   validate :file_type
   
   def self.for? model_or_record
-    unless model_or_record.is_a? Class
-      model_or_record = model_or_record.class
-    end
+    model_or_record = model_or_record.class unless model_or_record.is_a? Class
     model_or_record.has_import_options.present?
   end
   

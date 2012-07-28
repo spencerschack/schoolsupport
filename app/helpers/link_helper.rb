@@ -49,7 +49,9 @@ module LinkHelper
       link_to 'Cancel', js_link, options
       
     when :search
-      link_to 'Search', js_link, options
+      if (model_or_record.is_a?(Class) ? model_or_record : model_or_record.class).respond_to?(:search)
+        link_to 'Search', js_link, options
+      end
       
     when :import
       if permitted_to?(action, model_or_record) && Import.for?(model_or_record)

@@ -11,8 +11,9 @@ class ActiveRecord::Base
     end
   end
   
+  # Relations that can be termed extend this.
   module WithTermExtension
-    def with_term term = Period.current_term
+    def with_term term = Term.current
       if proxy_association.reflection.klass == Period
         where(term: term)
       else

@@ -2,6 +2,8 @@ class Template < ActiveRecord::Base
   
   using_access_control
   
+  searches :name
+  
   attr_accessible :name, :field_ids, as: [:developer]
   
   has_many :fields, dependent: :destroy

@@ -5,21 +5,28 @@
 
 .scroller
 
-	- if params[:export_type]
+	- if params[:export_kind]
 		= semantic_form_for @export, url: export_path, html: { target: '_blank' } do |f|
 			- if @export.errors.any?
+				= debug @export.errors
 				%p This export cannot be used:
-				= f.semantic_errors
+				%ul.errors
+					- @export.errors.full_messages do |error|
+						%li= error
 			
 			- else
-				%p #{@export.student_ids.count} students selected.
+				%p #{pluralize @export.student_ids.count, 'student'} selected.
 				- @export.student_ids.each do |id|
 					= hidden_field_tag 'export[student_ids][]', id
+				
+				- if @export.student_ids.count > 1
+					= f.inputs do
+						= f.input :sort_by, collection: Student.sort_options
 					
-				- if @export.pdf && @export.pdf.template.prompts.any?
+				- if @export.template && @export.template.prompts.any?
 					%p Please fill in the appropriate values for the following fields.
 					= f.inputs do
-						- @export.pdf.template.prompts.each do |field|
+						- @export.template.prompts.each do |field|
 							= f.input :prompt_values, label: field.name,
 								input_html: { name: "export[prompt_values][#{field.name}]" }
 
@@ -28,8 +35,8 @@
 				
 	- else
 		%h6 Templates
-		- available_pdfs.each do |pdf|
-			= link_to pdf.template.name, export_path(type: 'print', id: pdf.id)
+		- available_types.each do |type|
+			= link_to type.name, export_path(kind: 'print', id: type.id)
 		- if permitted_to?(:zpass, controller_model)
 			%h6 Zpass
-			= link_to 'Zpass', export_path(type: 'zpass')
+			= link_to 'Zpass', export_path(kind: 'zpass')

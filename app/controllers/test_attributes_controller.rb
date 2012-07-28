@@ -1,0 +1,3 @@
+class TestAttributesController < ApplicationController
+
+end

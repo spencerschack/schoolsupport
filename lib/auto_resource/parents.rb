@@ -16,7 +16,7 @@ module Parents
           if has_valid_association(model, type_of(parent, false))
             attributes[id_attr(parent)] = id
           elsif has_valid_association(model, type_of(parent))
-            attributes[ids_attr(parent)] = id
+            attributes[ids_attr(parent)] = [id]
           end
         end
       end

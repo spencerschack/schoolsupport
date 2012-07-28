@@ -6,7 +6,7 @@ module HasImport
   
   def has_import options
     self.has_import_options ||= {}
-    self.has_import_options.merge(options)
+    self.has_import_options.merge!(options)
   end
   
 end

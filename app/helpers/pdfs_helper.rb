@@ -4,9 +4,8 @@ module PdfsHelper
   
   FIELDS[:pdfs] = {
     index: [:name, :template],
-    show: { fields: [:name, :file], relations: [:template] },
-    form: { fields: [:name, [:file, hint: 'must be a PDF']],
-      relations: [:template, [:schools, as: :token]]}
+    show: { fields: [:name, :file], relations: [:template, :types] },
+    form: { fields: [:name, [:file, hint: 'must be a PDF']], relations: [:template]}
   }
   
 end

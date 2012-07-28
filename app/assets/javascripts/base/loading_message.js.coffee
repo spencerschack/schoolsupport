@@ -20,7 +20,7 @@ $ ->
 	# text.
 	$.fn.hide_loading_message = ->
 		this.each ->
-			$(this).removeClass('loading')
+			$(this).removeClass('loading').prop('disabled', false)
 			clearTimeout($(this).data('loading_message_timeout'))
 			method = if $(this).is(':submit') then 'val' else 'text'
 			$(this)[method]($(this).attr('data-previous-text'))

@@ -19,10 +19,11 @@ class ApplicationController < ActionController::Base
   # If the request is not xhr, render only the layout.
   def handle_non_xhr
     file_upload = params['X-Requested-With'] == 'IFrame'
-    export = params[:export_type] && request.post? && !request.xhr?
+    export = params[:export] && request.post? && !request.xhr?
     unless export || request.xhr? || file_upload
       if request.path != root_path
-        redirect_to root_url, flash: { initial_path: corrected_path }
+        path = current_user ? corrected_path : root_path
+        redirect_to root_url, flash: { initial_path: path }
       else
         render 'blank', layout: 'application'
       end

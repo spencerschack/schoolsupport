@@ -33,11 +33,6 @@ authorization do
       if_permitted_to :manage, :school
     end
     
-    # Access to tests of students in district.
-    has_permission_on :tests, to: :manage do
-      if_permitted_to :manage, :student
-    end
-    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -77,11 +72,6 @@ authorization do
       if_attribute school_id: is { user.school_id }
     end
     
-    # Access to tests of students in school.
-    has_permission_on :tests, to: :manage do
-      if_permitted_to :show, :school
-    end
-    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -119,11 +109,6 @@ authorization do
     # Access to students in periods.
     has_permission_on :students, to: [:index, :show] do
       if_permitted_to :show, :periods
-    end
-    
-    # Access to tests of students in periods.
-    has_permission_on :tests, to: [:index, :show] do
-      if_permitted_to :show, :student
     end
     
     # Access to logout.

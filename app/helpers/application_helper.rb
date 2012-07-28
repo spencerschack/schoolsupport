@@ -7,6 +7,16 @@ module ApplicationHelper
   # Initialize fields constant for storing which fields to show for types of
   # records.
   ::FIELDS = {}
+  
+  # Title to display on collection pages.
+  def plural_title model = controller_model
+    singular_title(model).pluralize
+  end
+  
+  # Title to display on member pages.
+  def singular_title model = controller_model
+    (model.respond_to?(:display_name) ? model.display_name : model.model_name).titleize
+  end
 	
 	# Return a render if applicable.
 	def term_filter
@@ -32,7 +42,7 @@ module ApplicationHelper
       other_options = ['All', 'With No Period']
     end
     
-    selected = params[:term] || Period.current_term
+    selected = params[:term] || Term.current
     (years << selected) unless years.include?(selected)
     years.sort!
     
@@ -92,6 +102,7 @@ module ApplicationHelper
       value = value.with_term if value.respond_to?(:with_term)
       content = content_tag(:span, value.count)
       path = parent_path(field)
+      title = title_from_field(field, true)
     when :belongs_to, :has_one
       return unless permitted_to?(:show, field)
       if name = value.try(:name)
@@ -99,9 +110,15 @@ module ApplicationHelper
       else
         content, path = none, nil
       end
+      title = title_from_field(field, false)
     end
     
-    content = content_tag(:b, field.to_s.titleize) << content_tag(:span, content)
+    content = content_tag(:b, title) << content_tag(:span, content)
     path ? link_to(content, path) : content_tag(:a, content)
+	end
+	
+	def title_from_field field, pluralize
+	  model = field.to_s.singularize.camelize.constantize
+	  pluralize ? plural_title(model) : singular_title(model)
 	end
 end

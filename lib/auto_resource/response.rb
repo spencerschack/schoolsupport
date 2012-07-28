@@ -15,7 +15,7 @@ module Response
     case action_name
     when 'create', 'update', 'import'
       if record.errors.any?
-        render json: failure_hash(record)
+        render json: failure_hash
       else
         render json: success_hash(record)
       end
@@ -23,7 +23,7 @@ module Response
       if record.errors.any?
         render text: record.errors.full_messages.join("\n")
       else
-        render "exports/#{record.type}",
+        render "exports/#{record.kind}",
           formats: [record.format],
           content_type: record.content_type,
           layout: false
@@ -62,11 +62,10 @@ module Response
   end
   
   # The object to return in case of a failure.
-  def failure_hash record
+  def failure_hash
     {
       page: render_to_string(view_for(false)),
-      success: false,
-      errors: record.errors
+      success: false
     }
   end
   

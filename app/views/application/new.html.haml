@@ -1,6 +1,6 @@
 .title
 	%h2 New
-	%h1= controller_name.singularize.titleize
+	%h1= singular_title
 	= link_for :cancel, resource
 	= link_for :create, resource
 .scroller= render 'form'

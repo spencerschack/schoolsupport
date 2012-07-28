@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720195350) do
+ActiveRecord::Schema.define(:version => 20120727021448) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -35,6 +35,11 @@ ActiveRecord::Schema.define(:version => 20120720195350) do
     t.datetime "updated_at",                    :null => false
     t.string   "identifier"
     t.boolean  "zpass",      :default => false
+  end
+
+  create_table "districts_test_models", :id => false, :force => true do |t|
+    t.integer "district_id"
+    t.integer "test_model_id"
   end
 
   create_table "fields", :force => true do |t|
@@ -76,11 +81,6 @@ ActiveRecord::Schema.define(:version => 20120720195350) do
     t.datetime "updated_at",        :null => false
   end
 
-  create_table "pdfs_schools", :id => false, :force => true do |t|
-    t.integer "pdf_id"
-    t.integer "school_id"
-  end
-
   create_table "periods", :force => true do |t|
     t.string   "name"
     t.integer  "school_id"
@@ -120,6 +120,11 @@ ActiveRecord::Schema.define(:version => 20120720195350) do
     t.string   "city"
   end
 
+  create_table "schools_types", :id => false, :force => true do |t|
+    t.integer "school_id"
+    t.integer "type_id"
+  end
+
   create_table "students", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -144,11 +149,38 @@ ActiveRecord::Schema.define(:version => 20120720195350) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "tests", :force => true do |t|
-    t.string   "type"
-    t.text     "data"
-    t.string   "term"
+  create_table "test_attributes", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "test_model_id"
+  end
+
+  create_table "test_models", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "test_scores", :force => true do |t|
     t.integer  "student_id"
+    t.integer  "test_model_id"
+    t.string   "term"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "test_values", :force => true do |t|
+    t.integer  "test_score_id"
+    t.integer  "test_attribute_id"
+    t.string   "value"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "types", :force => true do |t|
+    t.string   "name"
+    t.integer  "pdf_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

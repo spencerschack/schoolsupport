@@ -2,13 +2,13 @@ class Export < Tableless
   
   # Return whether the given model or record is capable of having an export.
   def self.for? model_or_record
-    return true if model_or_record.is_a?(Pdf)
+    return true if model_or_record.is_a?(Type)
     model_or_record = model_or_record.class unless model_or_record.is_a?(Class)
     model_or_record == Student || !!model_or_record.reflect_on_association(:students)
   end
   
-  # What types are accepted.
-  def self.types
+  # What kind are accepted.
+  def self.kinds
     %w(print zpass)
   end
   
@@ -22,46 +22,58 @@ class Export < Tableless
     %w(bus_route_color_value)
   end
   
-  column :pdf_id, :integer
+  column :type_id, :integer
   
-  attr_accessor :type, :prompt_values
+  attr_accessor :kind, :prompt_values, :sort_by
   
-  attr_accessible :students, :student_ids, :pdf_id, :period_ids,
-    :user_ids, :type, :prompt_values, as: [:developer,
+  attr_accessible :students, :student_ids, :type_id, :period_ids,
+    :user_ids, :kind, :prompt_values, :sort_by, as: [:developer,
     :superintendent, :principal, :teacher]
   attr_accessible :school_ids, as: [:developer, :superintendent,
     :principal]
   attr_accessible :district_ids, as: [:developer, :superintendent]
   
-  belongs_to :pdf
+  belongs_to :type
   has_many :students
   has_many :schools, through: :students
   
-  validates_presence_of :type
-  validates_presence_of :pdf, if: :is_print?
-  validates_inclusion_of :type, in: Export.types
-  validate :students_in_scope
-  validate :pdf_in_scope, :image_presence, :color_presence, if: :is_print?
+  delegate :pdf, to: :type
+  delegate :template, to: :pdf
   
-  # Create methods to see if the export is a certain type.
-  types.each do |t|
+  validates_presence_of :kind
+  validates_presence_of :type, if: :is_print?
+  validates_inclusion_of :sort_by, in: Student.sorts, allow_blank: true
+  validate :students_in_scope
+  validate :type_in_scope, :image_presence, :color_presence, if: :is_print?
+  
+  # Create methods to see if the export is a certain kind.
+  kinds.each do |t|
     define_method "is_#{t}?" do
-      type == t
+      kind == t
     end
   end
   
-  # Pre-fetch all files associated with this export in parallel.
+  # Pre-fetch all files associated with this export in parallel. A block is
+  # provided to the hash so key lookup only depends on the path of the url.
   def fetch_files
     require 'open-uri'
-    Thread.current[:export_files] = Hash[file_urls.pmap do |url|
-      [url, open(url)]
-    end]
+    Thread.current[:export_files] = Hash.new do |hash, key|
+      hash[key] = hash.has_key?(path = URI(key).path) ? hash[path] : nil
+    end
+    file_urls.each_with_object(Thread.current[:export_files]).pmap do |url, hash|
+      hash[URI(url).path] = open(url)
+    end
+  end
+  
+  # After the export is done with all the files, empty the thread variable.
+  def dump_files
+    Thread.current[:export_files] = nil
   end
   
   # The urls of each file associated with this export.
   def file_urls
     urls = { pdf.file.url => true }
-    pdf.fonts.map { |font| urls[font.file.url] = true }
+    template.fonts.map { |font| urls[font.file.url] = true }
     if columns.include? 'image'
       students.map { |student| urls[student.image.url] = true }
     end
@@ -73,16 +85,17 @@ class Export < Tableless
   
   # Return the format for the given export.
   def format
-    { 'print' => :pdf, 'zpass' => :csv }[type]
+    { 'print' => :pdf, 'zpass' => :csv }[kind]
   end
   
+  # Return the content type for the given export.
   def content_type
-    { 'print' => 'application/pdf', 'zpass' => 'text/plain' }[type]
+    { 'print' => 'application/pdf', 'zpass' => 'text/plain' }[kind]
   end
   
   # Return all students associated with this print job.
   def students
-    @students ||= Student.find(student_ids)
+    @students ||= Student.order(sort_by).find(student_ids)
   end
   
   # Store student ids and initialize when nil.
@@ -108,16 +121,16 @@ class Export < Tableless
     end
   end
   
-  # Returns all columns in the pdf.
+  # Returns all columns in the template.
   def columns
-    pdf ? pdf.fields.map(&:column) : []
+    template ? template.fields.map(&:column) : []
   end
   
   private
   
   # Ensure the current user is authorized to use the pdf.
-  def pdf_in_scope
-    if pdf && !(School.with_permissions_to(:show).pluck(:id) | pdf.school_ids).any?
+  def type_in_scope
+    if type && !(School.with_permissions_to(:show).pluck(:id) | type.school_ids).any?
       errors.add :base, 'The template must be viewable by you'
     end
   end

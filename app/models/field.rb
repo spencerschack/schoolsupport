@@ -10,6 +10,8 @@ class Field < ActiveRecord::Base
   
   using_access_control
   
+  searches :name
+  
   attr_accessible :name, :align, :column, :height, :template_id, :width, :x,
     :y, :font_id, :text_size, :color, :spacing, as: [:developer]
   

@@ -2,6 +2,8 @@ class Font < ActiveRecord::Base
   
   using_access_control
   
+  searches :name
+  
   attr_accessible :name, :file, as: [:developer]
   
   has_many :fields

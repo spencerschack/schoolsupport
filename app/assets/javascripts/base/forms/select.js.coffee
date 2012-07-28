@@ -73,7 +73,7 @@ prepare_multiple = ->
 						result_text = 'Loading.'
 						url = "/#{type}"
 						url = "/#{depends_on_path}/#{depends_select_value()}" + url if depends_on
-						$.getJSON url, { search: self.val() }, (data) ->
+						$.getJSON url, { search: self.val(), term: 'All' }, (data) ->
 							if data.length
 								results.text('')
 								$.each data, (index, record) ->

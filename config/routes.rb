@@ -1,7 +1,5 @@
 Schoolsupport::Application.routes.draw do
 
-  resources :tests
-
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
   def helper *args
@@ -14,9 +12,9 @@ Schoolsupport::Application.routes.draw do
   
   # Extract export routes.
   def exportable
-    match 'export(/:export_type(/:export_id))', action: 'export',
+    match 'export(/:export_kind(/:export_id))', action: 'export',
       on: :collection, as: 'export'
-    match 'export(/:export_type(/:export_id))', action: 'export',
+    match 'export(/:export_kind(/:export_id))', action: 'export',
       on: :member, as: 'export'
   end
   
@@ -25,39 +23,44 @@ Schoolsupport::Application.routes.draw do
     match 'import', on: :collection
   end
   
-  # Districts, Schools, Periods, Students, Users
+  # Districts, Schools, Periods, Students, Users, and Tests
   
-  students  = proc { helper :periods  do; helper :users    end
-                     helper :users
-                     resources :tests do; importable       end }
-  periods   = proc { helper :students do; helper :users    end
-                     helper :users }
-  users     = proc { helper :periods  do; helper :students end
-                     helper :students do; helper :periods  end }
-  schools   = proc { helper :periods,  &periods
-                     helper :users,    &users
-                     helper :students, &students }
-  districts = proc { helper :bus_stops
-                     helper :bus_routes
-                     helper :schools,  &schools
-                     helper :users,    &users
-                     helper :students, &students }
+  test_scores = proc { resources :test_attributes }
+  students    = proc { helper :periods  do; helper :users    end
+                       helper :users
+                       resources :test_scores do; importable end }
+  periods     = proc { helper :students do; helper :users    end
+                       helper :users }
+  users       = proc { helper :periods  do; helper :students end
+                       helper :students do; helper :periods  end }
+  schools     = proc { helper :periods,  &periods
+                       helper :users,    &users
+                       helper :students, &students }
+  districts   = proc { helper :bus_stops
+                       helper :bus_routes
+                       helper :schools,  &schools
+                       helper :users,    &users
+                       helper :students, &students
+                       resources :test_models, &test_scores }
 
   helper :districts, &districts
   helper :schools,   &schools
   helper :periods,   &periods
   helper :students,  &students
   helper :users,     &users
+  resources :test_models, &test_scores
   
   # Bus Routes and Stops
   helper :bus_stops
   helper :bus_routes
   
-  # Templates, Fields, Fonts
+  # Templates, Pdfs, Types, Fields, and Fonts
   resources :templates do
     resources :pdfs do
-      resources :schools
-      exportable
+      resources :types do
+        resources :schools
+        exportable
+      end
     end
     resources :fields
   end

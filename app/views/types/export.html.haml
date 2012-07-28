@@ -1,0 +1,15 @@
+.title
+	%h2 Print
+	%h1 Select Students
+	= link_for :cancel, controller_model
+
+.scroller
+	= semantic_form_for 'student_select', url: export_path(kind: 'print', id: params[:id]) do |f|
+		- if @error
+			%ul.errors
+				%li= @error
+		= f.inputs do
+			= hidden_field_tag 'student_select[file]', ''
+			= f.input :file, as: :file, hint: 'line delimited student state ids'
+		= f.actions do
+			= f.action :submit, label: 'Upload'
