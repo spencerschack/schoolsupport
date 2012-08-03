@@ -1,0 +1,9 @@
+= semantic_form_for resource_with_parents(resource) do |f|
+	= f.semantic_errors
+	= render 'dynamic_fields'
+	= f.inputs class: 'relations' do
+		= f.input :student, as: :search_select
+		= f.input :test_model, label: 'Test', include_blank: true
+		= f.input :term, collection: Term.choices
+	= f.actions do
+		= f.action :submit

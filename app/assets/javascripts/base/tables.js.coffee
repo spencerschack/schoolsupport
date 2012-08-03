@@ -83,5 +83,5 @@ comparator = (index) ->
 $ ->
 
 	# Handle table header clicks.
-	$('body').delegate '.table div span:not(.spacer, .select)', 'click.sort',
+	$('body').delegate '.table div span:not(.spacer, .select, .image)', 'click.sort',
 		handle_table_header_click

@@ -27,9 +27,9 @@ class TokenInput < Formtastic::Inputs::CheckBoxesInput
   end
   
   def wrapper_html_options
-    super.tap do |hash|
-      hash[:data] = { depends_on: options[:depends_on] } if options[:depends_on]
-    end
+    hash = super
+    hash[:data] = { depends_on: options[:depends_on] } if options[:depends_on]
+    hash
   end
   
 end

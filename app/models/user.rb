@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   belongs_to :role
   has_and_belongs_to_many :periods, extend: WithTermExtension
   has_many :students, through: :periods
+  has_many :test_scores, through: :students
   
   has_import identify_with: { email: nil, name: :school_id },
     associate: { school: :identifier, role: :name }

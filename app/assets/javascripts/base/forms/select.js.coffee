@@ -7,27 +7,31 @@ prepare_multiple = ->
 	
 	# For each token input.
 	$(this).find('li.token, li.search_select').each ->
-		list = $(this).find('fieldset ol.choices-group')
-		results = $(this).find('fieldset ol.results')
+		element = $(this)
+		list = element.find('fieldset ol.choices-group')
+		results = element.find('fieldset ol.results')
 		
-		type = $(this).find('legend label').text()
+		type = element.find('legend label').text()
 			.toLowerCase()
 			.replace(' ', '_')
 			.replace('*', '')
 			.replace(/([^s])$/, '$1s')
+			.replace('classes', 'periods')
+			.replace 'parents', ->
+				element.closest('.wrapper').attr('data-name')
 			
-		name = $(this).find('input:hidden').attr('name')
-		single = $(this).is('.search_select')
-		depends_on = $(this).attr('data-depends-on')
+		name = element.find('input:hidden').attr('name')
+		single = element.is('.search_select')
+		depends_on = element.attr('data-depends-on')
 		
 		# Clear button handler.
-		$(this).delegate 'label', 'click.delete', (event) ->
+		element.delegate 'label', 'click.delete', (event) ->
 			event.preventDefault()
 			if $(event.target).is('i')
 				$(this).closest('li').remove()
 		
 		# Store the search input.
-		search_input = $(this).find('.search_field input').autoInputWidth()
+		search_input = element.find('.search_field input').autoInputWidth()
 		
 		# Dump current selections when school changes.
 		if depends_on

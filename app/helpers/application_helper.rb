@@ -20,15 +20,15 @@ module ApplicationHelper
 	
 	# Return a render if applicable.
 	def term_filter
-	  if [Period, Student, User].include?(controller_model)
+	  if [Period, Student, User, TestScore].include?(controller_model)
 	    render 'term_filter'
     end
 	end
 	
 	# Which terms can be selected.
 	def term_options
-	  if controller_model == Period
-	    years = find_collection.uniq.pluck(:term)
+	  if [Period, TestScore].include?(controller_model)
+	    years = find_collection.uniq.pluck([controller_name, 'term'].join('.'))
 	    other_options = ['All']
 	    
     elsif [Student, User].include?(controller_model)
@@ -48,6 +48,13 @@ module ApplicationHelper
     
     options_for_select(other_options) <<
     grouped_options_for_select([['By year', years]], selected)
+	end
+	
+	# Includes an include_blank option.
+	def import_prompt_options args
+	  options = args.extract_options!
+	  options.merge! include_blank: true
+	  [*args, options]
 	end
 	
 	# What to use for buttons that act on javascript events, not anchors.
@@ -106,7 +113,8 @@ module ApplicationHelper
     when :belongs_to, :has_one
       return unless permitted_to?(:show, field)
       if name = value.try(:name)
-        content, path = name, parent_path(value)
+        content = name
+        path = field == :parent ? nil : parent_path(value)
       else
         content, path = none, nil
       end
@@ -118,6 +126,7 @@ module ApplicationHelper
 	end
 	
 	def title_from_field field, pluralize
+	  return pluralize ? 'Parents' : 'Parent' if field == :parent
 	  model = field.to_s.singularize.camelize.constantize
 	  pluralize ? plural_title(model) : singular_title(model)
 	end

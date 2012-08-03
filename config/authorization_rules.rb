@@ -33,6 +33,11 @@ authorization do
       if_permitted_to :manage, :school
     end
     
+    # Access to test scores of students.
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+      if_permitted_to :show, :student
+    end
+    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -72,6 +77,11 @@ authorization do
       if_attribute school_id: is { user.school_id }
     end
     
+    # Access to test scores of students.
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+      if_permitted_to :show, :student
+    end
+    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -109,6 +119,11 @@ authorization do
     # Access to students in periods.
     has_permission_on :students, to: [:index, :show] do
       if_permitted_to :show, :periods
+    end
+    
+    # Access to test scores of students.
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+      if_permitted_to :show, :student
     end
     
     # Access to logout.

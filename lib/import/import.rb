@@ -4,7 +4,7 @@ class Import
   include ActiveModel::Conversion
   extend ActiveModel::Naming
   
-  attr_accessor :model, :file, :defaults, :update_ids
+  attr_accessor :model, :file, :defaults, :update_ids, :prompt_values
   
   validate :model_import
   validate :file_type
@@ -17,25 +17,10 @@ class Import
   def initialize options = nil
     if options
       options[:update_ids] ||= []
-      [:model, :file, :defaults, :update_ids].each do |option|
+      [:model, :file, :defaults, :update_ids, :prompt_values].each do |option|
         send("#{option}=", options[option])
       end
     end
-  end
-  
-  def dropped_ids
-    @dropped_ids ||= Set.new.tap do |set|
-      update_ids.each { |id| set.add(id.to_i) }
-    end
-  end
-  
-  class Row
-    include ActiveModel::Validations
-    extend ActiveModel::Naming
-  end
-  
-  def row
-    @row_instance ||= Row.new.tap { |row| row.valid? }
   end
   
   def save
@@ -53,15 +38,47 @@ class Import
     errors.add :base, "File error: #{error.message}"
   end
   
+  class Row
+    include ActiveModel::Validations
+    extend ActiveModel::Naming
+  end
+  
+  def row
+    @row_instance ||= Row.new.tap { |row| row.valid? }
+  end
+  
+  def parser
+    options[:parser] || CsvParser
+  end
+  
+  def prompts
+    if options[:prompts].respond_to?(:call)
+      options[:prompts].call()
+    else
+      options[:prompts]
+    end || []
+  end
+  
+  def options
+    model.has_import_options
+  end
+  
+  def persisted?
+    false
+  end
+  
+  private
+  
   def create_records path
     index = 1
     current_user = Authorization.current_user
+    current_role = current_user.role_symbols.first
     parser.read(path) do |hash|
       begin
         Thread.current[:current_user] = current_user
         process(hash = hash.with_indifferent_access)
         record = new_record(hash)
-        record.assign_attributes(hash, as: current_user.role_symbols.first)
+        record.assign_attributes(hash, as: current_role)
         record.save!
         dropped_ids.delete(record.id)
       rescue => error
@@ -80,8 +97,15 @@ class Import
     end
   end
   
+  def dropped_ids
+    @dropped_ids ||= Set.new.tap do |set|
+      update_ids.each { |id| set.add(id.to_i) }
+    end
+  end
+  
   def process hash
     hash.reverse_merge!(defaults) if defaults
+    hash.reverse_merge!(ask_for_values) if prompt_values
     options[:associate].each do |record, field|
       if value = hash.delete(record)
         finder = record.to_s.camelize.constantize
@@ -90,20 +114,6 @@ class Import
       end
     end if options[:associate].present?
   end
-  
-  def parser
-    options[:parser] || CsvParser
-  end
-  
-  def options
-    model.has_import_options
-  end
-  
-  def persisted?
-    false
-  end
-  
-  private
   
   def new_record hash
     options[:identify_with].each do |identifier, *scopes|

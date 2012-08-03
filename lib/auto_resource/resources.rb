@@ -11,17 +11,25 @@ module Resources
   # the corresponding children, if not return the model for the current
   # controller.
   def find_collection model = controller_model
-    return @find_collection if defined?(@find_collection)
-    if parents = PARENTS[type_of(model)]
-      parents.each do |parent|
-        id = params[:"#{parent.name.underscore}_id"]
-        if id && parent.reflect_on_association(type_of(model))
-          collection = parent.find(id).send(type_of(model))
-          return @find_collection = collection.with_permissions_to(:show)
+    @find_collection ||= if first_parent = find_first_parent(model)
+      collection = first_parent.send(type_of(model))
+    else
+      model
+    end.with_permissions_to(:show)
+  end
+  
+  # Find the first available parent.
+  def find_first_parent model = controller_model
+    defined?(@first_parent) ? @first_parent : @first_parent = begin
+      if parents = PARENTS[type_of(model)]
+        parents.any? do |parent|
+          id = params[:"#{parent.name.underscore}_id"]
+          if id && parent.reflect_on_association(type_of(model))
+            return parent.find(id)
+          end
         end
       end
     end
-    @find_collection = model.with_permissions_to(:show)
   end
   
   # Creates a new resource for the given model and adds parent ids if they

@@ -2,8 +2,10 @@
 
 	&.stuck
 		min-height: 300px
-		height: $container-height
+		height: auto
 		position: fixed
+		top: 20px
+		bottom: 40px
 		left: 0
 
 	h1
@@ -95,6 +97,15 @@
 
 				&:active, &.selected
 					background-position: $spacing -409px
+	
+			&.test_models a
+				background-position: $spacing -1519px
+
+				&:hover
+					background-position: $spacing -1549px
+
+				&:active, &.selected
+					background-position: $spacing -1579px
 			
 			&.bus_routes a
 				background-position: $spacing -1309px

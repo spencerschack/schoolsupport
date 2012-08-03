@@ -1,7 +1,8 @@
 class SearchSelectInput < TokenInput
   
   def raw_collection
-    Array.wrap(super || reflection.klass.first)
+    default = options[:include_blank] ? [] : reflection.klass.first
+    Array.wrap(super || default)
   end
   
   # Add icon for clear button.

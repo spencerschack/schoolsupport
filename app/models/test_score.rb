@@ -2,21 +2,47 @@ class TestScore < ActiveRecord::Base
   
   using_access_control
   
-  attr_reader :dynamic_methods
+  scope :leveled_values, where('
+    maximum_value IS NOT NULL AND 
+    advanced_proficient_boundary IS NOT NULL AND 
+    proficient_basic_boundary IS NOT NULL AND 
+    basic_below_basic_boundary IS NOT NULL AND 
+    below_basic_far_below_basic_boundary IS NOT NULL AND 
+    minimum_value IS NOT NULL
+  ').includes(:test_attribute)
+  
+  attr_accessor :dynamic_methods
   
   attr_accessible :student_id, :test_model_id, :term, as: [:developer,
     :superintendent, :principal, :teacher]
   
   belongs_to :student
+  has_many :periods, through: :student
+  has_many :users, through: :periods
+  has_one :school, through: :student
+  has_one :district, through: :school
   belongs_to :test_model
-  has_many :test_values, autosave: true, inverse_of: :test_score
+  has_many :test_attributes, through: :test_model
+  has_many :test_values, inverse_of: :test_score, dependent: :destroy,
+    include: :test_attribute, order: 'test_attributes.name'
+  
+  has_import identify_with: { test_model_id: [:term, :student_id] },
+    associate: { student: :identifier, test_model: :name },
+    prompts: proc { [[:test_model, collection: TestModel.with_permissions_to(:show)],
+      [:term, collection: Term.choices]] }
   
   validates_presence_of :student, :test_model
   validates_with Term
   validates_uniqueness_of :test_model_id, scope: [:term, :student_id]
+  validate :test_model_in_district
   
   after_find :update_dynamic_methods
   after_initialize :set_term, on: :create
+  after_save :save_updated_test_values
+  
+  def name
+    test_model.try(:name) || 'Test Score'
+  end
   
   # Override to ensure test_model_id is set before anything else.
   def assign_attributes attributes, options = {}
@@ -33,56 +59,55 @@ class TestScore < ActiveRecord::Base
   
   private
   
+  # Set term as current term if not already set.
   def set_term
     write_attribute(:term, Term.current) unless term.present?
+  end
+  
+  # Manually save updated test values because autosave: true on the association
+  # does not recognize changes on the test value objects referenced in the
+  # dynamic methods.
+  def save_updated_test_values
+    @updated_test_values.each(&:save)
   end
   
   # Ensure the proper instance variables are initialized, undefine all previous
   # methods and define the new ones.
   def update_dynamic_methods
     @dynamic_methods ||= []
-    @test_value_cache ||= {}
+    @updated_test_values ||= Set.new
     undefine_dynamic_methods if @dynamic_methods.any?
-    define_dynamic_methods
+    define_dynamic_methods if test_model_id.present?
   end
   
   # Create methods for the test attributes and cache the test values.
   def define_dynamic_methods
     if new_record?
-
-      # If the record is new, load the test attributes and build new test
-      # values.
       test_model.test_attributes.each do |test_attribute|
-        method_name = test_attribute.name
-        @dynamic_methods << method_name
-        @test_value_cache[method_name] = test_values.build do |test_value|
+        define_dynamic_method(test_attribute.name, test_values.build do |test_value|
           test_value.test_attribute_id = test_attribute.id
-        end
+        end)
       end
     else
-      
-      # If the record has been saved, just load the test values and include
-      # the test attributes.
-      test_values.includes(:test_attribute).each do |test_value|
-        method_name = test_value.test_attribute.name
-        @dynamic_methods << method_name
-        @test_value_cache[method_name] = test_value
+      test_values.each do |test_value|
+        define_dynamic_method test_value.test_attribute.name, test_value
       end
     end
-    
-    # Define reader and writer methods for the test attributes.
-    @dynamic_methods.each do |method_name|
-      define_singleton_method method_name do
-        @test_value_cache[method_name].value
-      end
-      define_singleton_method "#{method_name}=" do |value|
-        @test_value_cache[method_name].value = value
-      end
-    end
-    
-    # Add the dynamic methods to the accessible attributes.
-    singleton_class.attr_accessible *@dynamic_methods, as: [:developer,
+    self.class.attr_accessible *@dynamic_methods, as: [:developer,
       :superintendent, :principal, :teacher]
+  end
+  
+  # Create setter and getter methods.
+  def define_dynamic_method name, object
+    @dynamic_methods << name.to_sym
+    define_singleton_method name do
+      object.value
+    end
+    define_singleton_method "#{name}=" do |value|
+      object.value = value
+      @updated_test_values << object if object.value_changed?
+      value
+    end
   end
   
   # Dump all test values and remove the dynamic mehods on this singleton class.
@@ -92,6 +117,12 @@ class TestScore < ActiveRecord::Base
       singleton_class.remove_method method_name, "#{method_name}="
     end
     @dynamic_methods.clear
-    @test_value_cache.clear
+    @updated_test_values.clear
+  end
+  
+  def test_model_in_district
+    unless test_model.district_ids.include? student.district.id
+      errors.add :test_model, 'cannot be used for this student'
+    end
   end
 end

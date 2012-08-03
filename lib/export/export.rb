@@ -34,11 +34,10 @@ class Export < Tableless
   attr_accessible :district_ids, as: [:developer, :superintendent]
   
   belongs_to :type
+  has_one :pdf, through: :type
+  has_one :template, through: :pdf
   has_many :students
   has_many :schools, through: :students
-  
-  delegate :pdf, to: :type
-  delegate :template, to: :pdf
   
   validates_presence_of :kind
   validates_presence_of :type, if: :is_print?

@@ -21,7 +21,10 @@ module Methods
       @import.save
       respond_with @import
     else
-      @import = Import.new(update_ids: params[:selected].try(:first).try(:last))
+      @import = Import.new(
+        update_ids: params[:selected].try(:first).try(:last),
+        model: controller_model
+      )
     end
   end
   

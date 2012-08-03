@@ -29,8 +29,8 @@ class Student < ActiveRecord::Base
   has_many :test_scores
   
   has_attached_file :image,
-    path: '/student_images/:filename',
-    styles: { original: ['', :jpg] }
+    path: '/student_images/:basename:style_unless_original.:extension',
+    styles: { original: ['', :jpg], thumbnail: ['70x70', :jpg] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name }

@@ -1,0 +1,46 @@
+<div class="title">
+  <h2><%= term_filter %></h2>
+  <h1>Test Scores</h1>
+  <%= link_for :new, new_resource %>
+  <%= link_for :import, TestScore %>
+</div>
+  
+<div class="scroller">
+  <div class="table">
+    <% content_for :table_body do %>
+      <% collection.each do |student| %>
+        <a href="<%= "#{request.path}/#{student.id}" %>" data-id="<%= student.id %>">
+          <span class="spacer"></span>
+          <span class="image"><%= image_tag student.image(:thumbnail) %></span>
+          <span><%= student.last_name %>,<br />
+            <%= student.first_name %></span>
+          <% ordered_scores(student.test_scores).each do |test_score| %>
+            <span>
+              <ul>
+              <% test_score && test_score.test_values.each do |test_value| %>
+                <% unless test_value.test_attribute.parent %>
+                <li class="<%= test_value.leveled? ? test_value.level.underscore : 'unleveled' %>">
+                  <b><%= test_value.name %>:</b>
+                  <i><%= test_value.value %></i>
+                </li>
+                <% end %>
+              <% end %>
+              </ul>
+            </span>
+          <% end %>
+          <span class="spacer"></span>
+        </a>
+      <% end %>
+    <% end %>
+    <div>
+      <span class="spacer"></span>
+      <span class="image"></span>
+      <span>Student</span>
+      <% @test_models.each do |test_model| %>
+        <span><%= test_model.name %></span>
+      <% end %>
+      <span class="spacer"></span>
+    </div>
+    <%= yield :table_body %>
+  </div>
+</div>

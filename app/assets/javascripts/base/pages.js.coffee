@@ -64,3 +64,6 @@ window.ensure_visible_header = ->
 $ ->
 	# Handle window resize.
 	$(window).resize ensure_visible_header
+	
+	# Handle window focus.
+	$(window).focus ensure_visible_header

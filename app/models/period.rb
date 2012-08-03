@@ -12,6 +12,7 @@ class Period < ActiveRecord::Base
   belongs_to :school
   has_one :district, through: :school
   has_and_belongs_to_many :students
+  has_many :test_scores, through: :students
   has_and_belongs_to_many :users
   
   has_import identify_with: { identifier: :school_id, name: :school_id },
@@ -42,7 +43,7 @@ class Period < ActiveRecord::Base
   
   # Returns a generic name for a user's period.
   def self.default_name_for user
-    "#{user.name(true)}'s Period"
+    "#{user.name(true)}'s Class"
   end
   
   # What this model is called on the client end.

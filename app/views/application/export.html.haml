@@ -8,10 +8,9 @@
 	- if params[:export_kind]
 		= semantic_form_for @export, url: export_path, html: { target: '_blank' } do |f|
 			- if @export.errors.any?
-				= debug @export.errors
 				%p This export cannot be used:
 				%ul.errors
-					- @export.errors.full_messages do |error|
+					- @export.errors.full_messages.each do |error|
 						%li= error
 			
 			- else
@@ -27,8 +26,8 @@
 					%p Please fill in the appropriate values for the following fields.
 					= f.inputs do
 						- @export.template.prompts.each do |field|
-							= f.input :prompt_values, label: field.name,
-								input_html: { name: "export[prompt_values][#{field.name}]" }
+							= f.semantic_fields_for :prompt_values do |a|
+								= a.input field.name
 
 				= f.actions do
 					= f.action :submit

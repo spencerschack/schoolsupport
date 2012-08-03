@@ -25,30 +25,45 @@ Schoolsupport::Application.routes.draw do
   
   # Districts, Schools, Periods, Students, Users, and Tests
   
-  test_scores = proc { resources :test_attributes }
+  test_scores = proc { importable
+                       match 'dynamic_fields(/:test_model_id)', on: :member, action: :dynamic_fields_member
+                       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields_collection }
+  test_models = proc { resources :test_attributes }
   students    = proc { helper :periods  do; helper :users    end
                        helper :users
-                       resources :test_scores do; importable end }
+                       resources :test_scores, &test_scores}
   periods     = proc { helper :students do; helper :users    end
-                       helper :users }
-  users       = proc { helper :periods  do; helper :students end
-                       helper :students do; helper :periods  end }
+                       helper :users
+                       resources :test_scores, &test_scores }
+  users       = proc { helper :periods do
+                         helper :students do
+                           resources :test_scores, &test_scores
+                         end
+                       end
+                       helper :students do
+                         helper :periods do
+                           resources :test_scores, &test_scores
+                         end
+                       end
+                       resources :test_scores, &test_scores }
   schools     = proc { helper :periods,  &periods
                        helper :users,    &users
-                       helper :students, &students }
+                       helper :students, &students
+                       resources :test_scores, &test_scores }
   districts   = proc { helper :bus_stops
                        helper :bus_routes
                        helper :schools,  &schools
                        helper :users,    &users
                        helper :students, &students
-                       resources :test_models, &test_scores }
+                       resources :test_models, &test_models
+                       resources :test_scores, &test_scores }
 
   helper :districts, &districts
   helper :schools,   &schools
   helper :periods,   &periods
   helper :students,  &students
   helper :users,     &users
-  resources :test_models, &test_scores
+  resources :test_models, &test_models
   
   # Bus Routes and Stops
   helper :bus_stops

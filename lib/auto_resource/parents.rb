@@ -21,7 +21,7 @@ module Parents
         end
       end
     end
-    attributes
+    attributes.with_indifferent_access
   end
   
   # Finds the correct path for the given index or show.
@@ -59,12 +59,16 @@ module Parents
           if first.is_a?(Symbol) || first.is_a?(Class)
             array.unshift model.find(id)
           else
-            if first.class.reflect_on_association(type_of(model))
-              if first.send(ids_attr(model)).include?(id.to_i)
+            if association = first.class.reflect_on_association(type_of(model))
+              if first.send(ids_attr(model)).include?(id.to_i) || association.options.has_key?(:through)
                 array.unshift model.find(id)
               end
-            elsif first.class.reflect_on_association(type_of(model, false))
-              array.unshift first.send(model.name.underscore)
+            elsif association = first.class.reflect_on_association(type_of(model, false))
+              if direct = first.send(model.name.underscore)
+                array.unshift direct
+              elsif association.options.has_key?(:through)
+                array.unshift model.find(id)
+              end
             end
           end
 
