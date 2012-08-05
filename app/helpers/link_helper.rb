@@ -66,6 +66,8 @@ module LinkHelper
       
     when :upload
       link_to 'Upload', js_link, options
+    when :fullscreen
+      link_to 'Fullscreen', js_link, options
     end
 	end
   

@@ -4,7 +4,7 @@ class TestScoresController < ApplicationController
   filter_access_to :dynamic_fields_member, attribute_check: true
   
   def index
-    @test_models = Set.new
+    @test_models = Hash[find_first_parent.test_models.uniq.each_with_index.to_a]
     if find_first_parent.is_a?(Student)
       set_collection [find_first_parent]
     else

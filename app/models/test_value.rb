@@ -32,10 +32,10 @@ class TestValue < ActiveRecord::Base
       when advanced_proficient_boundary..maximum_value
         'advanced'
       else
-        value > maximum_value ? 'Higher than maximum value' : 'Lower than minimum value'
+        value > maximum_value ? 'maximum' : 'minimum'
       end
     else
-      nil
+      'unleveled'
     end
   end
 end

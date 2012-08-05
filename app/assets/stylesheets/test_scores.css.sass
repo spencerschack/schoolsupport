@@ -1,34 +1,43 @@
 .page
+	&.fullscreen
+		div.test_scores.index
+			width: auto
+
 	div.test_scores.index
 		width: 1000px
 		
-		.table
-			a span.image
-				position: relative
-				
-				img
-					position: absolute
+		a span.image
+			position: relative
 			
-			div span.image
-				width: 56px
-				background: none
-				cursor: default
+			img
+				position: absolute
+		
+		div span.image
+			width: 56px
+			background: none
+			cursor: default
+		
+		span.image
+			border: 0
+		
+		span
+			li
+				height: 35px
+				
+			.advanced i
+				color: #54841E
 			
-			span.image
-				border: 0
+			.proficient i
+				color: #82C63B
 			
-			span
-				.advanced i
-					color: #54841E
-				
-				.proficient i
-					color: #82C63B
-				
-				.basic i
-					color: #EAD64A
-				
-				.below_basic i
-					color: #FF8000
-				
-				.far_below_basic i
-					color: #D02324
+			.basic i
+				color: #EAD64A
+			
+			.below_basic i
+				color: #FF8000
+			
+			.far_below_basic i
+				color: #D02324
+			
+			.child
+				display: none

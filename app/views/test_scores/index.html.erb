@@ -3,6 +3,7 @@
   <h1>Test Scores</h1>
   <%= link_for :new, new_resource %>
   <%= link_for :import, TestScore %>
+  <%= link_for :fullscreen, TestScore %>
 </div>
   
 <div class="scroller">
@@ -17,13 +18,11 @@
           <% ordered_scores(student.test_scores).each do |test_score| %>
             <span>
               <ul>
-              <% test_score && test_score.test_values.each do |test_value| %>
-                <% unless test_value.test_attribute.parent %>
-                <li class="<%= test_value.leveled? ? test_value.level.underscore : 'unleveled' %>">
+              <% test_score && ordered_test_values(test_score.test_values).each do |test_value| %>
+                <li class="<%= test_value_classes_for(test_value) %>">
                   <b><%= test_value.name %>:</b>
                   <i><%= test_value.value %></i>
                 </li>
-                <% end %>
               <% end %>
               </ul>
             </span>
@@ -36,7 +35,7 @@
       <span class="spacer"></span>
       <span class="image"></span>
       <span>Student</span>
-      <% @test_models.each do |test_model| %>
+      <% @test_models.keys.each do |test_model| %>
         <span><%= test_model.name %></span>
       <% end %>
       <span class="spacer"></span>

@@ -2,15 +2,6 @@ class TestScore < ActiveRecord::Base
   
   using_access_control
   
-  scope :leveled_values, where('
-    maximum_value IS NOT NULL AND 
-    advanced_proficient_boundary IS NOT NULL AND 
-    proficient_basic_boundary IS NOT NULL AND 
-    basic_below_basic_boundary IS NOT NULL AND 
-    below_basic_far_below_basic_boundary IS NOT NULL AND 
-    minimum_value IS NOT NULL
-  ').includes(:test_attribute)
-  
   attr_accessor :dynamic_methods
   
   attr_accessible :student_id, :test_model_id, :term, as: [:developer,
@@ -23,8 +14,7 @@ class TestScore < ActiveRecord::Base
   has_one :district, through: :school
   belongs_to :test_model
   has_many :test_attributes, through: :test_model
-  has_many :test_values, inverse_of: :test_score, dependent: :destroy,
-    include: :test_attribute, order: 'test_attributes.name'
+  has_many :test_values, inverse_of: :test_score, dependent: :destroy, include: :test_attribute
   
   has_import identify_with: { test_model_id: [:term, :student_id] },
     associate: { student: :identifier, test_model: :name },
