@@ -9,7 +9,6 @@ module TestScoresHelper
   def arranged_attributes test_models
     ordered = Array.new(@column_total)
     test_models.each do |model|
-      parents = model.test_attributes.reject{|attribute| attribute.parent_id }
       ordered[@test_model_indices[model.id]] = model
       model.test_attributes.each do |attribute|
         ordered[@test_attribute_indices[attribute.id]] = attribute

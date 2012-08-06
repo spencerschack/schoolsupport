@@ -12,18 +12,10 @@
       <span class="spacer"></span>
       <span class="image"></span>
       <span>Student</span>
-      <% arranged_attributes(@test_models).each_with_index do |test_attributes, index| %>
-        <% if test_attributes.respond_to?(:each) %>
-          <% test_attributes.each do |test_attribute| %>
-            <span title="<%= test_attribute.name %>" <%= @cell_attributes[index] %>>
-              <%= test_attribute.name %>
-            </span>
-          <% end %>
-        <% else %>
-          <span <%= @cell_attributes[index] %>>
-            <%= test_attributes.name %>
-          </span>
-        <% end %>
+      <% arranged_attributes(@test_models).each_with_index do |test_attribute, index| %>
+        <span title="<%= test_attribute.name %>" <%= @cell_attributes[index] %>>
+          <%= test_attribute.name %>
+        </span>
       <% end %>
       <span class="spacer"></span>
     </div>
