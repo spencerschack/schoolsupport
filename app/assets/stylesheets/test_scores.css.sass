@@ -21,7 +21,7 @@
 			
 				&.child
 					max-width: 50px
-					padding-right: 10px
+					padding-right: 5px
 					+ellipsis(false)
 					font-size: 12px
 			
@@ -49,22 +49,34 @@
 			
 			a span.child
 				background: darken(#FFF, 5%)
+				
+				&.overall
+					background: darken(#FFF, 10%)
 			
 			a:nth-child(even) span.child
 				background: darken($gray-stripe, 5%)
+				
+				&.overall
+					background: darken($gray-stripe, 10%)
 
 			a.selected, a:hover.selected, a:active.selected
 				span.child
 					background: darken($blue, 5%)
-					color: #FFF
+					
+					&.overall
+						background: darken($blue, 10%)
 
 			a:hover span.child
 				background: darken($gray-hover, 5%)
-				color: #000
+				
+				&.overall
+					background: darken($gray-hover, 10%)
 
 			a:active span.child
 				background: darken($gray-active, 5%)
-				color: #FFF
+				
+				&.overall
+					background: darken($gray-active, 10%)
 		
 			span
 				white-space: nowrap
