@@ -29,7 +29,15 @@ module ApplicationHelper
 	def term_options
 	  if [Period, TestScore].include?(controller_model)
 	    years = find_collection.uniq.pluck([controller_name, 'term'].join('.'))
-	    other_options = ['All']
+	    other_options = if controller_model == Period
+	      options_for_select(['All'])
+      else
+        test_options = @test_models.map do |model|
+          group = model.test_group
+          [group.name, group.id]
+        end
+        grouped_options_for_select([['By test', test_options]])
+      end
 	    
     elsif [Student, User].include?(controller_model)
       record_ids = find_collection.pluck("#{controller_name}.id")
@@ -39,14 +47,14 @@ module ApplicationHelper
         []
       end
       years = periods.any? ? periods.uniq.pluck(:term) : []
-      other_options = ['All', 'With No Period']
+      other_options = options_for_select(['All', 'With No Period'])
     end
     
     selected = params[:term] || Term.current
     (years << selected) unless years.include?(selected)
     years.sort!
     
-    options_for_select(other_options) <<
+    other_options <<
     grouped_options_for_select([['By year', years]], selected)
 	end
 	
@@ -103,10 +111,13 @@ module ApplicationHelper
 	# Create an appropriate link for the relation.
 	def relation_content record, field
 	  value = record.send(field)
-	  case record.class.reflect_on_association(field).try(:macro)
+	  association = record.class.reflect_on_association(field)
+	  case association.try(:macro)
     when :has_many, :has_and_belongs_to_many
       return unless permitted_to?(:index, field)
-      value = value.with_term if value.respond_to?(:with_term)
+      if association.options[:extend].include?(ActiveRecord::Base::WithTermExtension)
+        value = value.with_term
+      end
       content = content_tag(:span, value.count)
       path = parent_path(field)
       title = title_from_field(field, true)

@@ -29,6 +29,7 @@ Schoolsupport::Application.routes.draw do
                        match 'dynamic_fields(/:test_model_id)', on: :member, action: :dynamic_fields_member
                        match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields_collection }
   test_models = proc { resources :test_attributes }
+  test_groups = proc { resources :test_models, &test_models }
   students    = proc { helper :periods  do; helper :users    end
                        helper :users
                        resources :test_scores, &test_scores}
@@ -55,8 +56,8 @@ Schoolsupport::Application.routes.draw do
                        helper :schools,  &schools
                        helper :users,    &users
                        helper :students, &students
-                       resources :test_models, &test_models
-                       resources :test_scores, &test_scores }
+                       resources :test_scores, &test_scores
+                       resources :test_groups, &test_groups }
 
   helper :districts, &districts
   helper :schools,   &schools
@@ -64,6 +65,7 @@ Schoolsupport::Application.routes.draw do
   helper :students,  &students
   helper :users,     &users
   resources :test_models, &test_models
+  resources :test_groups, &test_groups
   
   # Bus Routes and Stops
   helper :bus_stops

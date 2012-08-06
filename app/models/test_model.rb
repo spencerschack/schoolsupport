@@ -4,9 +4,9 @@ class TestModel < ActiveRecord::Base
   
   searches :name
   
-  attr_accessible :name, :district_ids, as: [:developer, :superintendent, :principal, :teacher]
+  attr_accessible :name, :test_group_id, as: [:developer, :superintendent, :principal, :teacher]
   
-  has_and_belongs_to_many :districts
+  belongs_to :test_group
   has_many :test_attributes, dependent: :destroy
   has_many :test_scores, dependent: :destroy
   

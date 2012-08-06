@@ -1,0 +1,3 @@
+class TestGroupsController < ApplicationController
+
+end

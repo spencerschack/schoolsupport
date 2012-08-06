@@ -1,5 +1,7 @@
 class TestScore < ActiveRecord::Base
   
+  @@skip_dynamic_methods = false
+  
   using_access_control
   
   attr_accessor :dynamic_methods
@@ -30,6 +32,13 @@ class TestScore < ActiveRecord::Base
   after_initialize :set_term, on: :create
   after_save :save_updated_test_values
   
+  def self.without_dynamic_methods
+    @@skip_dynamic_methods = true
+    yield if block_given?
+  ensure
+    @@skip_dynamic_methods = false
+  end
+  
   def name
     test_model.try(:name) || 'Test Score'
   end
@@ -47,6 +56,16 @@ class TestScore < ActiveRecord::Base
     update_dynamic_methods if test_model_id_changed?
   end
   
+  # Ensure the proper instance variables are initialized, undefine all previous
+  # methods and define the new ones.
+  def update_dynamic_methods
+    return if @@skip_dynamic_methods
+    @dynamic_methods ||= []
+    @updated_test_values ||= Set.new
+    undefine_dynamic_methods if @dynamic_methods.any?
+    define_dynamic_methods if test_model_id.present?
+  end
+  
   private
   
   # Set term as current term if not already set.
@@ -59,15 +78,6 @@ class TestScore < ActiveRecord::Base
   # dynamic methods.
   def save_updated_test_values
     @updated_test_values.each(&:save)
-  end
-  
-  # Ensure the proper instance variables are initialized, undefine all previous
-  # methods and define the new ones.
-  def update_dynamic_methods
-    @dynamic_methods ||= []
-    @updated_test_values ||= Set.new
-    undefine_dynamic_methods if @dynamic_methods.any?
-    define_dynamic_methods if test_model_id.present?
   end
   
   # Create methods for the test attributes and cache the test values.
@@ -104,7 +114,7 @@ class TestScore < ActiveRecord::Base
   def undefine_dynamic_methods
     test_values.destroy_all
     @dynamic_methods.each do |method_name|
-      singleton_class.remove_method method_name, "#{method_name}="
+      singleton_class.send :remove_method, method_name, "#{method_name}="
     end
     @dynamic_methods.clear
     @updated_test_values.clear

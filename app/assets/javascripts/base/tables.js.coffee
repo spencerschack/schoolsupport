@@ -73,7 +73,7 @@ parse_table = (table) ->
 
 # Creates a comparison function for the given index.
 comparator = (index) ->
-	window.c = (a, b) ->
+	(a, b) ->
 		a = a[index] || ''
 		b = b[index] || ''
 		a = parseFloat(a) || a.toLowerCase()
@@ -83,5 +83,5 @@ comparator = (index) ->
 $ ->
 
 	# Handle table header clicks.
-	$('body').delegate '.table div span:not(.spacer, .select, .image)', 'click.sort',
-		handle_table_header_click
+	$('body').delegate '.table div span:not(.spacer, .select, .image, .parent)',
+		'click.sort', handle_table_header_click

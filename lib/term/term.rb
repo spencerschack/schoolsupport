@@ -4,9 +4,14 @@ class Term < ActiveModel::Validator
   def validate record
     if record.term.blank?
       record.errors.add :term, 'can\'t be blank'
-    elsif record.term !~ /(\d{4})-(\d{4})/ && $1.to_i + 1 == $2.to_i
+    elsif !self.valid?(record.term)
       record.errors.add :term, 'must be in the format: YYYY-YYYY'
     end
+  end
+  
+  # Returns whether the given term is a valid representation of a term.
+  def self.valid? term
+    !!(term =~ /(\d{4})-(\d{4})/ && $1.to_i + 1 == $2.to_i)
   end
   
   # Return the first year of the current term.

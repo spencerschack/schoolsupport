@@ -6,32 +6,16 @@ module TestScoresHelper
     show: { fields: [:term], relations: [:student, :test_model] }
   }
   
-  def ordered_scores test_scores
-    ordered = Array.new(@test_models.length)
-    test_scores.map do |test_score|
-      ordered[@test_models[test_score.test_model]] = test_score
-    end
-    ordered
-  end
-  
-  def ordered_test_values test_values
-    grouped = test_values.group_by do |test_value|
-      test_value.test_attribute.parent_id
-    end
-    ordered = []
-    grouped[nil].each do |parent|
-      ordered << parent
-      if children = grouped[parent.test_attribute.id]
-        ordered += children
+  def arranged_values test_scores
+    ordered = Array.new(@column_total)
+    test_scores.each do |score|
+      index = @test_model_indices[score.test_model_id]
+      ordered[index] = score.test_values.reject{|value| value.test_attribute.parent_id }
+      score.test_values.each do |value|
+        ordered[index += 1] = value
       end
     end
     ordered
-  end
-  
-  def test_value_classes_for test_value
-    [test_value.level,
-      test_value.test_attribute.parent_id ? 'child' : 'parent'
-    ].join(' ')
   end
   
 end

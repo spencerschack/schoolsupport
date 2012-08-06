@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120802230119) do
+ActiveRecord::Schema.define(:version => 20120805232651) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -37,9 +37,9 @@ ActiveRecord::Schema.define(:version => 20120802230119) do
     t.boolean  "zpass",      :default => false
   end
 
-  create_table "districts_test_models", :id => false, :force => true do |t|
+  create_table "districts_test_groups", :id => false, :force => true do |t|
     t.integer "district_id"
-    t.integer "test_model_id"
+    t.integer "test_group_id"
   end
 
   create_table "fields", :force => true do |t|
@@ -164,10 +164,17 @@ ActiveRecord::Schema.define(:version => 20120802230119) do
     t.integer  "parent_id"
   end
 
-  create_table "test_models", :force => true do |t|
+  create_table "test_groups", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "test_models", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "test_group_id"
   end
 
   create_table "test_scores", :force => true do |t|

@@ -17,6 +17,9 @@
 
 	%li.group Tools
 	
+	- if permitted_to? :index, :test_groups
+		%li.test_groups= link_to 'Test Groups', test_groups_path
+	
 	- if permitted_to? :index, :test_models
 		%li.test_models= link_to 'Test Models', test_models_path
 	

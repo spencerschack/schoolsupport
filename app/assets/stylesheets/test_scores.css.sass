@@ -6,38 +6,90 @@
 	div.test_scores.index
 		width: 1000px
 		
-		a span.image
-			position: relative
+		.table
+			width: auto
+			min-width: 100%
+			table-layout: fixed
+		
+			a span.image
+				position: relative
 			
-			img
-				position: absolute
+				img
+					position: absolute
 		
-		div span.image
-			width: 56px
-			background: none
-			cursor: default
-		
-		span.image
-			border: 0
-		
-		span
-			li
-				height: 35px
+			div span
+			
+				&.child
+					max-width: 50px
+					padding-right: 10px
+					+ellipsis(false)
+					font-size: 12px
+			
+				&.image
+					background: none
+					cursor: default
 				
-			.advanced i
-				color: #54841E
+				&.parent
+					background-position: 100% -709px
+				
+					&:hover
+						background-position: 100% -739px
+					
+					&:active
+						background-position: 100% -769px
+				
+					&.parent.expanded
+						background-position: 100% -1129px
+						
+						&:hover
+							background-position: 100% -1159px
+						
+						&:active
+							background-position: 100% -1189px
 			
-			.proficient i
-				color: #82C63B
+			a span.child
+				background: darken(#FFF, 5%)
 			
-			.basic i
-				color: #EAD64A
+			a:nth-child(even) span.child
+				background: darken($gray-stripe, 5%)
+
+			a.selected, a:hover.selected, a:active.selected
+				span.child
+					background: darken($blue, 5%)
+					color: #FFF
+
+			a:hover span.child
+				background: darken($gray-hover, 5%)
+				color: #000
+
+			a:active span.child
+				background: darken($gray-active, 5%)
+				color: #FFF
+		
+			span
+				white-space: nowrap
+				
+				&.image
+					min-width: 56px
+					padding-left: 0
+				
+				&.child
+					display: none
+				
+				li
+					height: 35px
+				
+				.advanced i, &.child .advanced
+					color: #54841E
 			
-			.below_basic i
-				color: #FF8000
+				.proficient i, &.child .proficient
+					color: #82C63B
 			
-			.far_below_basic i
-				color: #D02324
+				.basic i, &.child .basic
+					color: #EAD64A
 			
-			.child
-				display: none
+				.below_basic i, &.child .below_basic
+					color: #FF8000
+			
+				.far_below_basic i, &.child .far_below_basic
+					color: #D02324

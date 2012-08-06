@@ -40,7 +40,8 @@ handle_search_click = (event) ->
 					$(this).remove()
 
 handle_term_filter_change = ->
-	$(this).siblings('span').text($(this).val())
+	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
+	$(this).siblings('span').text(selected_text)
 	load_results($(this).closest('.wrapper').find('.table'))
 
 update_export_button = (table) ->

@@ -12,6 +12,44 @@ handle_test_model_change = ->
 		self.prop('disabled', false)
 		$(data).hide().replaceAll(fields).slideDown(SHORT_DURATION)
 
+handle_expand_click = ->
+	selected_id = $(this).attr('data-id')
+	table = $(this).closest('.table')
+	children = table.find('span.child')
+	if $(this).is('.expanded')
+		$(this).removeClass('expanded')
+		hide_cells.apply(children)
+	else
+		$(this).siblings('.expanded').removeClass('expanded')
+		$(this).addClass('expanded')
+		children.each ->
+			if $(this).is("[data-parent-id='#{selected_id}']")
+				$(this).css(
+					display: 'table-cell'
+					maxWidth: 0
+					minWidth: 0
+					paddingLeft: 0
+					paddingRight: 0
+				).animate {
+					minWidth: '50px'
+					maxWidth: '50px'
+					paddingLeft: '10px'
+					paddingRight: '10px'
+				}, SHORT_DURATION
+			else
+				hide_cells.apply(this)
+
+hide_cells = ->
+	$(this).animate {
+		maxWidth: 0
+		minWidth: 0
+		paddingLeft: 0
+		paddingRight: 0
+	}, TINY_DURATION, ->
+		$(this).hide()
+
 $ ->
 	$('#container').delegate '.test_scores.wrapper #test_score_test_model_id',
 		'change.update_dynamic_fields', handle_test_model_change
+	
+	$('#container').delegate '.table div span.parent', 'click.expand_test', handle_expand_click

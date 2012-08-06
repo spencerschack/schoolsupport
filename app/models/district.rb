@@ -4,7 +4,7 @@ class District < ActiveRecord::Base
   
   searches :name, :identifier
 
-  attr_accessible :school_ids, :name, :identifier, :zpass, as: :developer
+  attr_accessible :school_ids, :test_group_ids, :name, :identifier, :zpass, as: :developer
 
   has_many :schools, dependent: :destroy
   has_many :users, through: :schools, extend: WithTermExtension
@@ -13,7 +13,7 @@ class District < ActiveRecord::Base
   has_many :test_models, through: :test_scores
   has_many :bus_stops, dependent: :destroy
   has_many :bus_routes, dependent: :destroy
-  has_and_belongs_to_many :test_models
+  has_and_belongs_to_many :test_groups
   
   has_import identify_with: { identifier: nil }
   
