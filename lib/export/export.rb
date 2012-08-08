@@ -34,8 +34,6 @@ class Export < Tableless
   attr_accessible :district_ids, as: [:developer, :superintendent]
   
   belongs_to :type
-  has_one :pdf, through: :type
-  has_one :template, through: :pdf
   has_many :students
   has_many :schools, through: :students
   
@@ -44,6 +42,14 @@ class Export < Tableless
   validates_inclusion_of :sort_by, in: Student.sorts, allow_blank: true
   validate :students_in_scope
   validate :type_in_scope, :image_presence, :color_presence, if: :is_print?
+  
+  def template
+    pdf.try(:template)
+  end
+  
+  def pdf
+    type.try(:pdf)
+  end
   
   # Create methods to see if the export is a certain kind.
   kinds.each do |t|

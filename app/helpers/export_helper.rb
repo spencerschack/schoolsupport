@@ -8,6 +8,7 @@ module ExportHelper
   # The title to display under 'PRINT'.
   def export_title
     if params[:export_kind]
+      Rails.logger.debug @export
       if @export.kind == 'print'
         @export.template.name
       else
