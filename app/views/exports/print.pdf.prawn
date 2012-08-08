@@ -49,6 +49,10 @@ begin
     end
 
   end
+
+rescue => error
+  pdf.start_new_page
+  pdf.text error.message
   
 ensure
   @export.dump_files

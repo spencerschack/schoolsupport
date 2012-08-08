@@ -21,6 +21,7 @@ module Response
       end
     when 'export'
       if record.errors.any?
+        Rails.logger.debug "EXPORT: #{record}"
         render text: record.errors.full_messages.join("\n")
       else
         render "exports/#{record.kind}",
