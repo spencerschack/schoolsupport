@@ -192,6 +192,7 @@
                     root ? (root.textContent || root.innerText) : null
                 };
               cleanUp();
+              console.log(content);
               completeCallback(status, statusText, content, type ?
                 ("Content-Type: " + type) :
                 null);

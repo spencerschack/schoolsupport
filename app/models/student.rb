@@ -34,7 +34,8 @@ class Student < ActiveRecord::Base
     styles: { original: ['', :jpg], thumbnail: ['70x70', :jpg] }
   
   has_import identify_with: { identifier: nil }, associate: { school: :identifier,
-    bus_route: :name, bus_stop: :name }
+    bus_route: :name, bus_stop: :name },
+    prompts: proc { [[:school, collection: School.with_permissions_to(:show)]] }
   
   after_initialize :set_school
   

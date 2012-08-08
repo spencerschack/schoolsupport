@@ -7,7 +7,9 @@ $ ->
 		this.each ->
 			self = $(this).addClass('loading')
 			method = if self.is(':submit') then 'val' else 'text'
-			self.attr(disabled: 'disabled') if method == 'val'
+			self.on 'click.loading_disable', (event) ->
+				event.stopImmediatePropagation()
+				event.preventDefault()
 			self.attr('data-previous-text': self[method]())
 			periods = ''
 			update_text = ->
@@ -20,7 +22,7 @@ $ ->
 	# text.
 	$.fn.hide_loading_message = ->
 		this.each ->
-			$(this).removeClass('loading').prop('disabled', false)
+			$(this).removeClass('loading').off('click.loading_disable')
 			clearTimeout($(this).data('loading_message_timeout'))
 			method = if $(this).is(':submit') then 'val' else 'text'
 			$(this)[method]($(this).attr('data-previous-text'))

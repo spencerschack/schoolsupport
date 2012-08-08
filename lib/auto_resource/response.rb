@@ -44,7 +44,7 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = render_to_string(view_for(true))
-      hash[:path] = parent_path(record)
+      hash[:path] = parent_path(record) unless action_name == 'import'
       
       if action_name == 'update' || action_name == 'create'
         hash[:terms] = if record.class == Period

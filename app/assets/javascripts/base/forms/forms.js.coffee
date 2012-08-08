@@ -32,7 +32,11 @@ handle_form_submit = (event) ->
 		files: file_inputs
 		iframe: has_file
 		processData: false
+		dataType: 'text'
 		success: (data) ->
+			try
+				data = $.parseJSON(data)
+			catch e
 			if data.success
 				page = wrapper.parent()
 				index = page.next('.page')
