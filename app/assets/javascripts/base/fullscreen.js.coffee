@@ -1,6 +1,8 @@
 handle_fullscreen_click = ->
 	page = $(this).closest('.page')
-	unless page.is('.fullscreen')
+	if page.is('.fullscreen')
+		page.trigger 'exit_fullscreen'
+	else
 		page.trigger 'enter_fullscreen'
 
 enter_fullscreen = (event, callback) ->
@@ -21,7 +23,7 @@ enter_fullscreen = (event, callback) ->
 		right: 0
 	}, SHORT_DURATION, ->
 		callback() if $.isFunction(callback)
-	page.find('a').on 'click.exit_fullscreen_first', (event) ->
+	page.find('a').not('[href="javascript:;"]').on 'click.exit_fullscreen_first', (event) ->
 		event.stopImmediatePropagation()
 		event.preventDefault()
 		self = $(this)

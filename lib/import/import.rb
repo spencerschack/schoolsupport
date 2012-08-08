@@ -116,11 +116,11 @@ class Import
   end
   
   def new_record hash
-    options[:identify_with].each do |identifier, *scopes|
+    options[:identify_with].each do |identifier, scopes|
       if hash[identifier]
         finder = model
         scopes.each do |scope|
-          unless hash[scope]
+          if !hash[scope]
             raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
               " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"
           else

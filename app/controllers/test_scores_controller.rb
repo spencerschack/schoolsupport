@@ -41,6 +41,14 @@ class TestScoresController < ApplicationController
     end
   end
   
+  def pie
+    
+  end
+  
+  def line
+    
+  end
+  
   def dynamic_fields_collection
     set_resource new_resource
     dynamic_fields_member

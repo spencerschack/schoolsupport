@@ -15,7 +15,7 @@ class District < ActiveRecord::Base
   has_many :bus_routes, dependent: :destroy
   has_and_belongs_to_many :test_groups
   
-  has_import identify_with: { identifier: nil }
+  has_import identify_with: { identifier: [] }
   
   validates_presence_of :name
   validates_uniqueness_of :identifier

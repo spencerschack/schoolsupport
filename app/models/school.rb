@@ -20,7 +20,7 @@ class School < ActiveRecord::Base
   has_attached_file :mascot_image, path: '/school_mascots/:id/:basename_:style.:extension',
     styles: { thumbnail: '35x35^', original: ['', :png] }
   
-  has_import identify_with: { identifier: nil }, associate: { district: :identifier }
+  has_import identify_with: { identifier: [] }, associate: { district: :identifier }
   
   validates_presence_of :name, :district, :identifier
   validates_uniqueness_of :identifier

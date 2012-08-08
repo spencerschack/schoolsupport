@@ -48,8 +48,14 @@ hide_cells = ->
 	}, TINY_DURATION, ->
 		$(this).hide()
 
+handle_view_option_click = ->
+	$(this).addClass('chosen')
+	$(this).siblings().removeClass('chosen')
+
 $ ->
 	$('#container').delegate '.test_scores.wrapper #test_score_test_model_id',
 		'change.update_dynamic_fields', handle_test_model_change
 	
 	$('#container').delegate '.table div span.parent', 'click.expand_test', handle_expand_click
+	
+	$('#container').delegate '.title .view_options a', 'click.view_option', handle_view_option_click

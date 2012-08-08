@@ -27,13 +27,19 @@ Schoolsupport::Application.routes.draw do
   
   test_scores = proc { importable
                        match 'dynamic_fields(/:test_model_id)', on: :member, action: :dynamic_fields_member
-                       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields_collection }
+                       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields_collection
+                       match 'table', on: :collection, action: :index
+                       match 'pie', on: :collection
+                       match 'line', on: :collection }
   test_models = proc { resources :test_attributes }
   test_groups = proc { resources :test_models, &test_models }
   students    = proc { helper :periods  do; helper :users    end
                        helper :users
                        resources :test_scores, &test_scores}
-  periods     = proc { helper :students do; helper :users    end
+  periods     = proc { helper :students do
+                         helper :users
+                         resources :test_scores, &test_scores
+                       end
                        helper :users
                        resources :test_scores, &test_scores }
   users       = proc { helper :periods do

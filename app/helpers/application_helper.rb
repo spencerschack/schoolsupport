@@ -28,34 +28,37 @@ module ApplicationHelper
 	# Which terms can be selected.
 	def term_options
 	  if [Period, TestScore].include?(controller_model)
-	    years = find_collection.uniq.pluck([controller_name, 'term'].join('.'))
-	    other_options = if controller_model == Period
-	      options_for_select(['All'])
+	    test_options = if controller_model == TestScore
+	      selected = params[:term] if params[:term] =~ /\d+/
+        test_groups = @test_models.map(&:test_group).uniq.map{|group| [group.name, group.id]}
+        grouped_options_for_select([['By test', test_groups]], selected)
+      end
+      if controller_model == TestScore && find_first_parent.is_a?(Period)
+        test_options
       else
-        test_options = @test_models.map do |model|
-          group = model.test_group
-          [group.name, group.id]
+        terms = controller_model.with_permissions_to(:show).uniq.pluck(:term)
+        unless selected || terms.include?((selected = params[:term] || Term.current))
+          terms << selected
         end
-        grouped_options_for_select([['By test', test_options]])
+        term_options = grouped_options_for_select([['By year', terms.sort]], selected)
+        if controller_model == Period
+          options_for_select(['All']) + term_options
+        else
+          test_options ? test_options + term_options : term_options
+        end
       end
-	    
     elsif [Student, User].include?(controller_model)
-      record_ids = find_collection.pluck("#{controller_name}.id")
-      periods = if record_ids.any?
-        Period.joins(controller_name).where(controller_name => { id: record_ids })
+      terms = if find_first_parent
+        find_first_parent.joins(controller_name => 'periods')
       else
-        []
+        controller_model.joins(:periods)
+      end.with_permissions_to(:show).uniq.pluck('periods.term')
+      unless terms.include? (selected = params[:term] || Term.current)
+        terms << selected
       end
-      years = periods.any? ? periods.uniq.pluck(:term) : []
-      other_options = options_for_select(['All', 'With No Period'])
+      options_for_select(['All', 'With No Period']) <<
+      grouped_options_for_select([['By year', terms.sort]], selected)
     end
-    
-    selected = params[:term] || Term.current
-    (years << selected) unless years.include?(selected)
-    years.sort!
-    
-    other_options <<
-    grouped_options_for_select([['By year', years]], selected)
 	end
 	
 	# Includes an include_blank option.

@@ -2,7 +2,7 @@ module Resources
   
   # When included, add a helper method.
   def self.included base
-    base.helper_method :new_resource, :find_collection
+    base.helper_method :new_resource, :find_collection, :find_first_parent
   end
 
   private
