@@ -29,7 +29,7 @@ module ExportHelper
     if kind = defined?(@export) ? @export.kind : options[:kind]
       path << "/#{kind}"
     end
-    if id = defined?(@export) ? @export.pdf.try(:id) : options[:id]
+    if id = defined?(@export) ? @export.type.try(:id) : options[:id]
       path << "/#{id}"
     end
     if format = defined?(@export) ? @export.format : options[:format]

@@ -142,8 +142,6 @@ class Export < Tableless
   
   # Ensure the current user is authorized to print the current students.
   def students_in_scope
-    Rails.logger.info "TYPE = #{type}"
-    Rails.logger.info "TYPE_ID = #{type_id}"
     common = student_ids & Student.with_permissions_to(:show).map(&:id)
     if common.length < student_ids.length
       errors.add :base, 'Exported students must be viewable by you'

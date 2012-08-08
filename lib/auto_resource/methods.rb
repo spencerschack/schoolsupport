@@ -42,8 +42,6 @@ module Methods
           kind: params[:export_kind],
           type_id: params[:export_id]
       }), as: current_role)
-      Rails.logger.debug "PARAMS[:export_id] = #{params[:export_id]}"
-      Rails.logger.debug "EXPORT.type_id = #{@export.type_id}"
       @export.valid?
       
       if params[:commit]

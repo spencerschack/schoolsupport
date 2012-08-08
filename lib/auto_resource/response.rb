@@ -21,7 +21,6 @@ module Response
       end
     when 'export'
       if record.errors.any?
-        Rails.logger.info "EXPORT ERROR => #{record.to_yaml}"
         render text: record.errors.full_messages.join("\n")
       else
         render "exports/#{record.kind}",
