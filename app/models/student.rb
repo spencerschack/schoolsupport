@@ -93,6 +93,11 @@ class Student < ActiveRecord::Base
     bus_route.try(:color_value)
   end
   
+  # Column for print jobs.
+  def barcode
+    "*#{identifier}*"
+  end
+  
   # Used by Import to create a period to associate a user with a student.
   # All actions are taken with bangs to stop the import if unsuccessful.
   def set_teacher name, term
@@ -142,7 +147,7 @@ class Student < ActiveRecord::Base
       ['Student', (sorts + %w(last_name_first_name first_name_last_name image))],
       ['School', %w(school_mascot_image school_name)],
       ['Bus', %w(bus_route_name bus_stop_name bus_route_color_value)],
-      ['Other', %w(type prompt)]
+      ['Other', %w(type barcode prompt)]
     ].map do |(group, options)|
       [group, options.map { |option| [option.titleize, option] } ]
     end
