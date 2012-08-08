@@ -49,7 +49,7 @@ module ApplicationHelper
       end
     elsif [Student, User].include?(controller_model)
       terms = if find_first_parent
-        find_first_parent.joins(controller_name => 'periods')
+        find_first_parent.periods
       else
         controller_model.joins(:periods)
       end.with_permissions_to(:show).uniq.pluck('periods.term')
