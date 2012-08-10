@@ -17,7 +17,8 @@ handle_parent_click = (mousedown_event) ->
 	header = $(this)
 	dragged = false
 	
-	insert_at = null
+	insert_at = table = column = cells = width = left_index = right_index =
+		next_offsets = prev_offsets = left_limit = right_limit = id = null
 	
 	$(document).on 'mousemove.table_reorder', (mousemove_event) ->
 		if dragged
@@ -26,31 +27,51 @@ handle_parent_click = (mousedown_event) ->
 			if offset > 0
 				index = next_offsets.length
 				while index--
-					if mousemove_event.pageX > next_offsets[new_index].offset
-						insert_at = next_offsets[index].right_index
-						table.find("span:gt(#{dragging_right_index})" +
-							":lt(#{insert_at + 1})").css left: "-#{width}px"
-						break
-			else if offset < 0
+					if mousemove_event.pageX > next_offsets[index].offset
+						insert_at = next_offsets[index].right_index + 1
+						cells.each ->
+							i = $(this).index()
+							if i > right_index && i < insert_at
+								$(this).css(left: "-#{width}px")
+							else
+								$(this).css(left: '')
+						return column.css left: offset
+			else
 				index = prev_offsets.length
 				while index--
-					if mousemove_event.pageX < prev_offsets[new_index].offset
+					if mousemove_event.pageX < prev_offsets[index].offset
 						insert_at = prev_offsets[index].left_index
-						table.find("span:gt(#{insert_at - 1})" +
-							":lt(#{dragging_left_index})").css left: "-#{width}px"
-						break
-			cells.addClass('dragging').css
-				left: offset
+						cells.each ->
+							i = $(this).index()
+							if i < left_index && i > insert_at - 1
+								$(this).css(left: "#{width}px")
+							else
+								$(this).css(left: '')
+						return column.css left: offset
+			
+			insert_at = left_index
+			cells.each ->
+				if $(this).is(".parent[data-id='#{id}'], .child[data-parent-id='#{id}']")
+					$(this).css left: offset
+				else
+					$(this).css left: ''
 		else
 			dragged = true
 			table = header.closest('.table')
 			id = header.attr('data-id')
 			
-			cells = table.find("div span.parent[data-id='#{id}'], div span.child[data-parent-id='#{id}']")
+			cells = table.find('span')
+			column = cells.filter(".parent[data-id='#{id}'], .child[data-parent-id='#{id}']")
+			column.css(zIndex: 1)
 			width = 0
-			cells.each -> width += $(this).width()
+			column.each ->
+				if $(this).is(':visible') && $(this).parent().is('div')
+					width += $(this).outerWidth()
 			
-			last_cell = cell.filter(':visible:last')
+			left_index = column.first().index()
+			right_index = column.last().index()
+			
+			last_cell = column.filter(':visible:last')
 			headers = header.parent().children('.parent, .child:visible')
 			header_left = header.offset().left
 			left_limit = headers.first().offset().left - header_left
@@ -58,27 +79,32 @@ handle_parent_click = (mousedown_event) ->
 				last_cell.offset().left - last_cell.outerWidth()
 			
 			next_offsets = header.nextAll('.parent').map(->
+				i = $(this).attr('data-id')
 				{
 					offset: $(this).offset().left
-					index: $(this).index()
+					left_index: $(this).index()
+					right_index: $(this).nextAll("[data-parent-id='#{i}']:last").index()
 				}
 			).get()
 			prev_offsets = header.prevAll('.parent').map(->
-				element = if $(this).is('.expanded')
-					id = $(this).attr('data-id')
-					$(this).nextAll("span.child[data-parent-id='#{id}']:last")
-				else
-					$(this)
+				i = $(this).attr('data-id')
+				last = $(this).nextAll("[data-parent-id='#{i}']:last")
+				element = if $(this).is('.expanded') then last else $(this)
 				{
 					offset: element.offset().left + element.outerWidth()
-					index: $(this).index()
+					left_index: $(this).index()
+					right_index: last.index()
 				}
 			).get()
 	
 	$(document).on 'mouseup.parent_click_release', ->
 		$(document).off('mousemove.table_reorder mouseup.parent_click_release')
 		if dragged
-			cells.removeClass('dragging').css(left: '')#.insertAfter insert_at
+			cells.css(left: '', zIndex: '')
+			if insert_at && (insert_at > right_index || insert_at < left_index)
+				table.find('div, a').each ->
+					group = $(this).find("[data-id='#{id}'], [data-parent-id='#{id}']")
+					$(this).children(":nth-child(#{insert_at + 1})").before(group)
 		else
 			handle_expand_click.apply(header)
 
@@ -106,8 +132,6 @@ handle_expand_click = ->
 					paddingLeft: '10px'
 					paddingRight: '10px'
 				}, SHORT_DURATION
-			else
-				hide_cells.apply(this)
 
 hide_cells = ->
 	$(this).animate {
