@@ -35,8 +35,11 @@ module ApplicationHelper
       other_options << 'With No Period'
       terms = scope.joins(:periods).with_permissions_to(:show).uniq.pluck('periods.term')
     end
-    unless terms.include? (selected = params[:term] || Term.current)
-      terms << selected
+    selected = if !params[:term]
+      'All'
+    else
+      terms << params[:term] unless terms.include? params[:term]
+      params[:selected]
     end
     options_for_select(other_options) <<
     grouped_options_for_select([['By year', terms.sort]], selected)

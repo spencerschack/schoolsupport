@@ -20,6 +20,12 @@ module TestScoresHelper
     end)
   end
   
+  def group_name test_model
+    if test_model.is_a?(TestModel)
+      " data-group-name='#{test_model.test_group.name}'"
+    end
+  end
+  
   def arranged_attributes test_models
     ordered = Array.new(@column_total)
     test_models.each do |model|
