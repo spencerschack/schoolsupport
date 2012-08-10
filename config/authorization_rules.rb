@@ -34,7 +34,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
       if_permitted_to :show, :student
     end
     
@@ -78,7 +78,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
       if_permitted_to :show, :student
     end
     
@@ -122,7 +122,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields_member, :dynamic_fields_collection] do
+    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
       if_permitted_to :show, :student
     end
     
@@ -149,13 +149,13 @@ authorization do
   role :export do
     has_permission_on :districts, to: :export do
       if_attribute zpass: true
-      if_attribute schools: { pdf_ids: is_not { [] } }
+      if_attribute schools: { type_ids: is_not { [] } }
     end
     has_permission_on [:schools, :periods, :students, :users], to: :export do
       if_permitted_to :zpass, :district 
     end
     has_permission_on :schools, to: :export do
-      if_attribute pdf_ids: is_not { [] }
+      if_attribute type_ids: is_not { [] }
     end
     has_permission_on [:periods, :students, :users], to: :export do
       if_permitted_to :export, :school

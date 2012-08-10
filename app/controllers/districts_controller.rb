@@ -1,5 +1,9 @@
 class DistrictsController < ApplicationController
   
+  def find_collection
+    super.order('districts.name')
+  end
+  
   protected
   
   def new_district_from_params

@@ -4,7 +4,7 @@ class Term < ActiveModel::Validator
   def validate record
     if record.term.blank?
       record.errors.add :term, 'can\'t be blank'
-    elsif !Term.valid?(record.term)
+    elsif !::Term.valid?(record.term)
       record.errors.add :term, 'must be in the format: YYYY-YYYY'
     end
   end

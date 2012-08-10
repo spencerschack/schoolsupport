@@ -20,45 +20,26 @@ module ApplicationHelper
 	
 	# Return a render if applicable.
 	def term_filter
-	  if [Period, Student, User, TestScore].include?(controller_model)
+	  if [Period, Student, User, TestScore].include?(controller_model) && !find_first_parent.is_a?(Period)
 	    render 'term_filter'
     end
 	end
 	
 	# Which terms can be selected.
 	def term_options
+	  other_options = ['All']
+	  scope = find_first_parent ? find_first_parent.send(controller_name) : controller_model
 	  if [Period, TestScore].include?(controller_model)
-	    test_options = if controller_model == TestScore
-	      selected = params[:term] if params[:term] =~ /\d+/
-        test_groups = @test_models.map(&:test_group).uniq.map{|group| [group.name, group.id]}
-        grouped_options_for_select([['By test', test_groups]], selected)
-      end
-      if controller_model == TestScore && find_first_parent.is_a?(Period)
-        test_options
-      else
-        terms = controller_model.with_permissions_to(:show).uniq.pluck(:term)
-        unless selected || terms.include?((selected = params[:term] || Term.current))
-          terms << selected
-        end
-        term_options = grouped_options_for_select([['By year', terms.sort]], selected)
-        if controller_model == Period
-          options_for_select(['All']) + term_options
-        else
-          test_options ? test_options + term_options : term_options
-        end
-      end
+      terms = scope.with_permissions_to(:show).uniq.pluck("#{controller_name}.term")
     elsif [Student, User].include?(controller_model)
-      terms = if find_first_parent
-        find_first_parent.periods
-      else
-        controller_model.joins(:periods)
-      end.with_permissions_to(:show).uniq.pluck('periods.term')
-      unless terms.include? (selected = params[:term] || Term.current)
-        terms << selected
-      end
-      options_for_select(['All', 'With No Period']) <<
-      grouped_options_for_select([['By year', terms.sort]], selected)
+      other_options << 'With No Period'
+      terms = scope.joins(:periods).with_permissions_to(:show).uniq.pluck('periods.term')
     end
+    unless terms.include? (selected = params[:term] || Term.current)
+      terms << selected
+    end
+    options_for_select(other_options) <<
+    grouped_options_for_select([['By year', terms.sort]], selected)
 	end
 	
 	# Includes an include_blank option.

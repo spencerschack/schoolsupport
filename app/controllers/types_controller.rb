@@ -23,5 +23,9 @@ class TypesController < ApplicationController
       super
     end
   end
+  
+  def find_collection
+    super.order('types.name')
+  end
 
 end

@@ -2,7 +2,7 @@ prepare_export_click = (event) ->
 	index = $(this).closest('.page').next('.page').find('.index.wrapper')
 	
 	$(this).find('.scroller a').click (event) ->
-		inputs = index.find('.table a span input:visible')
+		inputs = index.find('div.table a span input:visible')
 		
 		if !inputs.filter(':checked').length
 			inputs.prop('checked', true)

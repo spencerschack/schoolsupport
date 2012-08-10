@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_filter :set_params_id, only: [:show, :edit, :update, :destroy]
   
   def find_collection
-    default = super.includes(:role, school: [:district])
+    default = super.includes(:role, school: [:district]).order('users.last_name')
     return default if params[:term] == 'All'
     return default.with_no_period if params[:term] == 'With No Period'
     default.joins(:periods).where(periods: { term: params[:term] || Term.current })

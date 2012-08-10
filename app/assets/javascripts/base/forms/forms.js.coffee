@@ -56,7 +56,7 @@ handle_form_submit = (event) ->
 				
 					if data.row
 						if !data.terms || prev_value in data.terms
-							insert_row(index.find('.table'), data.row)
+							insert_row(index.find('div.table'), data.row)
 							select_path(index)
 							index.find('.scroller').scrollTo('.selected')
 						else
@@ -65,7 +65,7 @@ handle_form_submit = (event) ->
 				
 					if data.page
 						wrapper.next('.show.wrapper').trigger('unloaded').remove()
-						table = $(data.page).insertAfter(wrapper).trigger('loaded').find('.table')
+						table = $(data.page).insertAfter(wrapper).trigger('loaded').find('div.table')
 						wrapper.animate {
 							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 								$(this).remove()

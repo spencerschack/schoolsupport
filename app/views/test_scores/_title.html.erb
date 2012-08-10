@@ -1,5 +1,5 @@
 <div class="title">
-  <h2><%= term_filter %></h2>
+  <h2><%= term_filter || 'All' %></h2>
   <h1>Test Scores</h1>
   <%= link_for :new, new_resource %>
   <%= link_for :import, TestScore %>

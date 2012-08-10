@@ -26,8 +26,7 @@ Schoolsupport::Application.routes.draw do
   # Districts, Schools, Periods, Students, Users, and Tests
   
   test_scores = proc { importable
-                       match 'dynamic_fields(/:test_model_id)', on: :member, action: :dynamic_fields_member
-                       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields_collection
+                       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields
                        match 'table', on: :collection, action: :index
                        match 'pie', on: :collection
                        match 'line', on: :collection }

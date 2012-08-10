@@ -1,0 +1,5 @@
+<% arranged_attributes(@test_models).each_with_index do |test_attribute, index| %>
+  <span title="<%= test_attribute.name %>" <%= @cell_attributes[index] %>>
+    <%= test_attribute.name %>
+  </span>
+<% end %>

@@ -11,6 +11,9 @@
           <%= test_attribute.name %>
         </span>
       <% end %>
+      <span class="add">
+        <%= add_test_column_select %>
+      </span>
       <span class="spacer"></span>
     </div>
     <% collection.each do |student| %>
@@ -38,6 +41,7 @@
             <% end %>
           </span>
         <% end %>
+        <span class="add"></span>
         <span class="spacer"></span>
       </a>
     <% end %>

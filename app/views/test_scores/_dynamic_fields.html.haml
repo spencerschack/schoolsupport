@@ -1,5 +1,5 @@
 = semantic_fields_for resource do |f|
-	- if resource.dynamic_methods && !@hide_fields
+	- if resource.dynamic_methods
 		= f.inputs *resource.dynamic_methods, class: 'fields'
 	- else
 		%fieldset.fields

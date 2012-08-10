@@ -5,7 +5,7 @@ class TestAttributesController < ApplicationController
       super.where(parent_id: nil)
     else
       super
-    end
+    end.order('test_attributes.name')
   end
 
 end

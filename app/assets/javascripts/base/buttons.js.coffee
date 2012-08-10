@@ -45,7 +45,7 @@ handle_destroy_click = (event) ->
 			if data.success
 				index = self.closest('.page').next('.page')
 				push_state index.attr('data-path')
-				remove_row(index.find('.table'), data.id)
+				remove_row(index.find('div.table'), data.id)
 				
 			else
 				page = $(data.page)

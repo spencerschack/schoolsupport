@@ -13,7 +13,7 @@ sort = (table) ->
 # Handle table header clicks.
 handle_table_header_click = (event) ->
 	index = $(this).index() + 1
-	table = $(this).closest('.table')
+	table = $(this).closest('div.table')
 	$(this).siblings().removeClass('sorted reverse')
 	if $(this).is('.sorted')
 		$(this).toggleClass('reverse')
@@ -83,5 +83,5 @@ comparator = (index) ->
 $ ->
 
 	# Handle table header clicks.
-	$('body').delegate '.table div span:not(.spacer, .select, .image, .parent)',
+	$('body').delegate 'div.table div span:not(.spacer, .select, .image, .parent, .add)',
 		'click.sort', handle_table_header_click

@@ -121,7 +121,7 @@ class TestScore < ActiveRecord::Base
   end
   
   def test_model_in_district
-    unless test_model.district_ids.include? student.district.id
+    unless test_model.test_group.district_ids.include? student.district.id
       errors.add :test_model, 'cannot be used for this student'
     end
   end

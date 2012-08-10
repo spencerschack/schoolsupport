@@ -6,7 +6,7 @@ handle_import_click = ->
 		wrapper = page.children('.wrapper')
 		url = [page.attr('data-path'), 'import'].join('/')
 		
-		visible_inputs = wrapper.find('.table a span input:visible')
+		visible_inputs = wrapper.find('div.table a span input:visible')
 		data = [$.param(csrf_param()), visible_inputs.serialize()].join('&')
 		
 		$.post url, data, (data) ->

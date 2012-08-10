@@ -1,13 +1,13 @@
 # Select all check boxes.
 handle_select_all_click = (event) ->
-	table = $(this).closest('.table')
+	table = $(this).closest('div.table')
 	table.find('[type="checkbox"]:visible').prop('checked', $(this).prop('checked'))
 	update_io_buttons(table)
 
 # Selects all check boxes in between the one clicked and the last one clicked
 # if shift is being held down.
 handle_select_click = (event) ->
-	table = $(this).closest('.table')
+	table = $(this).closest('div.table')
 	last = table.data('last_selected')
 	if table.data('shifted') && last && !$(this).is(last)
 		method = if $(this).index() > last.index() then 'next' else 'prev'
@@ -41,11 +41,11 @@ window.update_io_buttons = (table) ->
 
 $ ->
 	
-	$('#container').delegate '.table div span input', 'click.select_all',
+	$('#container').delegate 'div.table div span input', 'click.select_all',
 		handle_select_all_click
 	
 	$('#container').delegate '.wrapper.index', 'loaded.select', (event) ->
-		table = $(this).find('.table')
+		table = $(this).find('div.table')
 		table.data('shifted', false)
 		table.data('last_selected', null)
 	

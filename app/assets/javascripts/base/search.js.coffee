@@ -5,7 +5,7 @@ loading_message = $('<div class="loading_message">Loading</div>')
 handle_search_click = (event) ->
 	self = $(this)
 	wrapper = self.closest('.wrapper')
-	table = wrapper.find('.table')
+	table = wrapper.find('div.table')
 	rows = $(table).find('a')
 	search_field = $('<input type="text" class="search" />')
 	clear_button = $('<i class="clear"></i>')
@@ -42,7 +42,7 @@ handle_search_click = (event) ->
 handle_term_filter_change = ->
 	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
 	$(this).siblings('span').text(selected_text)
-	load_results($(this).closest('.wrapper').find('.table'))
+	load_results($(this).closest('.wrapper').find('div.table'))
 
 update_export_button = (table) ->
 	search_field = table.closest('.wrapper').find('.title input.search')
@@ -53,9 +53,10 @@ update_export_button = (table) ->
 load_results = (table, term) ->
 	wrapper = table.closest('.wrapper')
 	buttons = wrapper.find('.title a')
+	year = wrapper.find('.title h2 select').val()
 	
 	url = wrapper.closest('.page').attr('data-path') + '?'
-	url += $.param term: wrapper.find('.title h2 select').val()
+	url += $.param term: year if year
 	url += '&' + $.param search: term if term
 	
 	table.empty()
@@ -69,7 +70,7 @@ load_results = (table, term) ->
 	xhr = $.get url, (data) ->
 		buttons.fadeTo(TINY_DURATION, 1).off('click.term_disable')
 		loading_message.remove()
-		table.html($(data).find('.table').children())
+		table.html($(data).find('div.table').children())
 		update_select_all(table)
 		
 		select_path(wrapper.closest('.page'))
