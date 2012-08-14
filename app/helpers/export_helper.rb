@@ -10,7 +10,7 @@ module ExportHelper
     if params[:export_kind]
       Rails.logger.debug @export
       if @export.kind == 'print'
-        @export.template.name
+        @export.type.name
       else
         @export.kind.titleize
       end
