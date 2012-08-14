@@ -7,7 +7,7 @@ class Pdf < ActiveRecord::Base
   attr_accessible :file, :school_ids, :name, :template_id, as: [:developer]
   
   belongs_to :template
-  has_many :types
+  has_many :types, dependent: :destroy
   
   has_attached_file :file, path: '/pdfs/:id/:basename_:style.:extension',
     styles: { thumbnail: ['35x35^', :png] }
