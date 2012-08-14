@@ -10,7 +10,7 @@ class TestScoresController < ApplicationController
       
       if params[:test_model_ids].is_a?(Array)
         params[:test_model_ids].map!(&:to_i).uniq!
-      else params[:term] != 'All' || params[:term].blank? || find_first_parent.is_a?(Period)
+      elsif params[:term].present? && params[:term] != 'All' && find_first_parent.is_a?(Period)
         scope = scope.where('test_scores.term' => params[:term])
       end
       

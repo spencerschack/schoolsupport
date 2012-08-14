@@ -102,9 +102,6 @@ module ApplicationHelper
 	  case association.try(:macro)
     when :has_many, :has_and_belongs_to_many
       return unless permitted_to?(:index, field)
-      if association.options[:extend].include?(ActiveRecord::Base::WithTermExtension)
-        value = value.with_term
-      end
       content = content_tag(:span, value.count)
       path = parent_path(field)
       title = title_from_field(field, true)

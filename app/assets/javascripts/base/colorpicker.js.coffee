@@ -1,7 +1,7 @@
 prepare_colorpicker = ->
 	$(this).find('#bus_route_color_value, #field_color').ColorPicker(
 		onSubmit: (hsb, hex, rgb, el, parent) ->
-			$(el).val("##{hex}")
+			$(el).val(hex)
 			$(el).ColorPickerHide()
 		onBeforeShow: ->
 			$(this).ColorPickerSetColor(this.value)
