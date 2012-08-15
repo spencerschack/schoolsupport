@@ -8,7 +8,6 @@ handle_view_option_click = ->
 	url = page.attr('data-path') + '/' + $(this).text()
 	
 	load_content wrapper, null, url, (data) ->
-		console.log $(data).find('div.scroller').children()
 		wrapper.children('div.scroller').replaceWith($(data).find('div.scroller'))
 
 $ ->

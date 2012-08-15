@@ -15,9 +15,9 @@ module Response
     case action_name
     when 'create', 'update', 'import'
       if record.errors.any?
-        render json: failure_hash
+        render json: failure_hash, content_type: 'text/plain'
       else
-        render json: success_hash(record)
+        render json: success_hash(record), content_type: 'text/plain'
       end
     when 'export'
       if record.errors.any?
