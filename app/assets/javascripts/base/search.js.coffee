@@ -47,7 +47,7 @@ load_results = (wrapper, search) ->
 	load_content wrapper, data, url, (data) ->
 		scroller = wrapper.find('div.scroller')
 		scroller.replaceWith($(data).find('div.scroller'))
-		update_select_all(table)
+		update_select_all(wrapper.find('div.table'))
 		
 		select_path(wrapper.closest('.page'))
 		selected = table.find('.selected')

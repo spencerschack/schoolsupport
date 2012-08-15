@@ -42,7 +42,6 @@ class Student < ActiveRecord::Base
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier
   validate :periods_in_school
-  validate :school_in_district
   validate :bus_in_district
 
   def as_json options = {}
@@ -186,14 +185,6 @@ class Student < ActiveRecord::Base
   def periods_in_school
     if periods.map(&:school_id).any?{|id| id != school_id }
       errors.add(:periods, 'must be in the same school as the student')
-    end
-  end
-  
-  # If the given school is not in the current user's scope of districts, then
-  # add an error.
-  def school_in_district
-    if school && !permitted_to?(:show, object: district)
-      errors.add(:school, 'must be in your district')
     end
   end
   
