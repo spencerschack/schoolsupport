@@ -1,6 +1,3 @@
-# There should never be more than one loading message.
-loading_message = $('<div class="loading_message">Loading</div>')
-
 # Handle search button click.
 handle_search_click = (event) ->
 	self = $(this)
@@ -28,11 +25,11 @@ handle_search_click = (event) ->
 				value = input.val()
 				if value != input.data('prev_val')
 					input.data('prev_val', value)
-					load_results(table, value)
+					load_results(wrapper, value)
 			), 500
 		).bind 'blur.unsearch', ->
 			unless $(this).val()
-				load_results(table)
+				load_results(wrapper)
 				$(this).siblings('.clear').fadeOut TINY_DURATION, ->
 					$(this).remove()
 				$(this).animate { width: width, opacity: 0 }, TINY_DURATION, ->
@@ -44,33 +41,12 @@ handle_term_filter_change = ->
 	$(this).siblings('span').text(selected_text)
 	load_results($(this).closest('.wrapper').find('div.table'))
 
-update_export_button = (table) ->
-	search_field = table.closest('.wrapper').find('.title input.search')
-	export_button = search_field.parent().siblings('.export').addClass('searching')
-	export_button.removeClass('searching') unless search_field.val()
-	update_io_buttons(table)
-
-load_results = (table, term) ->
-	wrapper = table.closest('.wrapper')
-	buttons = wrapper.find('.title a')
-	year = wrapper.find('.title h2 select').val()
-	
-	url = wrapper.closest('.page').attr('data-path') + '?'
-	url += $.param term: year if year
-	url += '&' + $.param search: term if term
-	
-	table.empty()
-	loading_message.appendTo(wrapper.find('.scroller'))
-	buttons.fadeTo(TINY_DURATION, 0.5).on 'click.term_disable', (event) ->
-		event.stopImmediatePropagation()
-		event.preventDefault()
-	update_export_button(table)
-	
-	table.data('search_xhr').abort() if table.data('search_xhr')
-	xhr = $.get url, (data) ->
-		buttons.fadeTo(TINY_DURATION, 1).off('click.term_disable')
-		loading_message.remove()
-		table.html($(data).find('div.table').children())
+load_results = (wrapper, search) ->
+	url = wrapper.closest('.page').attr('data-path')
+	data = { search: search } if search
+	load_content wrapper, data, url, (data) ->
+		scroller = wrapper.find('div.scroller')
+		scroller.replaceWith($(data).find('div.scroller'))
 		update_select_all(table)
 		
 		select_path(wrapper.closest('.page'))
@@ -78,7 +54,6 @@ load_results = (table, term) ->
 		scroller.scrollTo(selected) if selected.length
 		wrapper.trigger('loaded')
 		update_count(table)
-	table.data('search_xhr', xhr)
 
 $ ->
 

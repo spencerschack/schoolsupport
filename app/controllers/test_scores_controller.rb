@@ -1,6 +1,6 @@
 class TestScoresController < ApplicationController
   
-  filter_access_to :dynamic_fields
+  filter_access_to :dynamic_fields, :pie, :line, :compare
   
   def index
     if find_first_parent.is_a?(Student)
@@ -8,16 +8,10 @@ class TestScoresController < ApplicationController
     else
       scope = find_first_parent.students.includes(test_scores: { test_values: :test_attribute })
       
-      if params[:test_model_ids].is_a?(Array)
-        params[:test_model_ids].map!(&:to_i).uniq!
-      elsif params[:term].present? && params[:term] != 'All' && find_first_parent.is_a?(Period)
-        scope = scope.where('test_scores.term' => params[:term])
-      end
-      
       TestScore.without_dynamic_methods { set_collection scope.uniq.to_a }
       
       test_model_ids = if params[:test_model_ids].is_a?(Array)
-        params[:test_model_ids]
+        params[:test_model_ids].map!(&:to_i).uniq!
       else
         collection.map(&:test_scores).flatten.map(&:test_model_id).uniq
       end
@@ -64,6 +58,10 @@ class TestScoresController < ApplicationController
   end
   
   def line
+    
+  end
+  
+  def compare
     
   end
   

@@ -5,8 +5,8 @@ handle_cancel_click = (event) ->
 		push_state $(this).closest('.page').next('.page').attr('data-path')
 	else
 		$(this).closest('.wrapper').trigger('unloaded')
-			.animate { marginTop: "-#{$('#container').height()}px" },
-				SHORT_DURATION, -> $(this).remove()
+			.animate { marginTop: "-#{$('#container').height()}px" }, SHORT_DURATION, ->
+				$(this).remove()
 
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
@@ -22,8 +22,7 @@ handle_edit_click = (event) ->
 			button.hide_loading_message()
 			data = $(data)
 			data.css(marginTop: "-#{$('#container').height()}px")
-			$(data).prependTo(page).trigger('loaded').animate {
-				marginTop: 0 }, MEDIUM_DURATION
+			$(data).prependTo(page).trigger('loaded').animate { marginTop: 0 }, MEDIUM_DURATION
 
 # After clicking the delete button, show a confirmation message in the
 # button. After a second click, destroy the record and remove the page. If

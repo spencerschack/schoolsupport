@@ -12,12 +12,12 @@ class Student < ActiveRecord::Base
   
   searches :first_name, :last_name, :identifier
 
-  attr_accessible :first_name, :grade, :last_name, as: [:developer,
+  attr_accessible :first_name, :grade, :last_name, :image, as: [:developer,
     :superintendent, :principal, :teacher]
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]
-  attr_accessible :image, :image_file_name, :bus_stop_id, :bus_route_id,
+  attr_accessible :image_file_name, :bus_stop_id, :bus_route_id,
     :bus_rfid, as: [:developer]
 
   belongs_to :school

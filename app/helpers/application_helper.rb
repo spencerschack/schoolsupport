@@ -20,7 +20,7 @@ module ApplicationHelper
 	
 	# Return a render if applicable.
 	def term_filter
-	  if [Period, Student, User, TestScore].include?(controller_model) && !find_first_parent.is_a?(Period)
+	  if [Period, Student, User].include?(controller_model) && !find_first_parent.is_a?(Period)
 	    render 'term_filter'
     end
 	end
@@ -29,7 +29,7 @@ module ApplicationHelper
 	def term_options
 	  other_options = ['All']
 	  scope = find_first_parent ? find_first_parent.send(controller_name) : controller_model
-	  if [Period, TestScore].include?(controller_model)
+	  if controller_model == Period
       terms = scope.with_permissions_to(:show).uniq.pluck("#{controller_name}.term")
     elsif [Student, User].include?(controller_model)
       other_options << 'With No Period'

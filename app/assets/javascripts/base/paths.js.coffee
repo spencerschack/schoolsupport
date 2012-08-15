@@ -23,7 +23,7 @@ handle_link_click = (event) ->
 
 # When a page is clicked, not an anchor or submit button, focus that page.
 handle_page_click = (event) ->
-	if $(event.target).is(':not(a:urlInternal, :submit, .cancel)')
+	if $(event.target).is(':not(a:urlInternal, :submit, .cancel, input)')
 		push_state $(this).attr('data-path')
 
 # Retrieve the current path, handle special cases for certain paths,

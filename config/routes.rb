@@ -29,7 +29,8 @@ Schoolsupport::Application.routes.draw do
                        match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields
                        match 'table', on: :collection, action: :index
                        match 'pie', on: :collection
-                       match 'line', on: :collection }
+                       match 'line', on: :collection
+                       match 'compare', on: :collection }
   test_models = proc { resources :test_attributes }
   test_groups = proc { resources :test_models, &test_models }
   students    = proc { helper :periods  do; helper :users    end

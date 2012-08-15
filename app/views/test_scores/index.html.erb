@@ -1,4 +1,16 @@
-<%= render 'title' %>
+<div class="title">
+  <h2>All</h2>
+  <h1>Test Scores</h1>
+  <%= link_for :new, new_resource %>
+  <%= link_for :import, TestScore %>
+  <div class="view_options">
+    <%= link_to 'table', js_link, class: 'table chosen' %>
+    <%= link_to 'pie', js_link, class: 'pie' %>
+    <%= link_to 'compare', js_link, class: 'compare' %>
+    <%= link_to 'line', js_link, class: 'line' %>
+  </div>
+  <%= link_for :fullscreen, TestScore %>
+</div>
   
 <div class="scroller">
   <div class="table">
