@@ -45,9 +45,10 @@ load_results = (wrapper, search) ->
 	url = wrapper.closest('.page').attr('data-path')
 	data = { search: search } if search
 	load_content wrapper, data, url, (data) ->
+		table = wrapper.find('div.table')
 		scroller = wrapper.find('div.scroller')
 		scroller.replaceWith($(data).find('div.scroller'))
-		update_select_all(wrapper.find('div.table'))
+		update_select_all(table)
 		
 		select_path(wrapper.closest('.page'))
 		selected = table.find('.selected')

@@ -1,6 +1,8 @@
 # Curry the push state method.
 window.push_state = (url, data) ->
-	History.pushState(data, null, url)
+	setTimeout (->
+		History.pushState(data, null, url)
+	), 0
 
 # Return url without the protocol or host.
 window.url_to_path = (url) ->
@@ -9,9 +11,9 @@ window.url_to_path = (url) ->
 # Retrieves the initial path from the meta tag and loads that url into
 # history.
 window.load_initial_path = ->
-	initial_path = $('head meta[name="initial_path"]').attr('content')
-	if initial_path == '/'
-		initial_path = $('#navigation li.account a').attr('href')
+	initial_path = History.getHash() || $('head meta[name="initial_path"]').attr('content')
+	initial_path = $('#navigation li.account a').attr('href') if initial_path == '/'
+	window.location.hash = ''
 	push_state(initial_path)
 
 # Replace the current state with the href of the link that was clicked and
