@@ -48,9 +48,9 @@ module Response
       
       if action_name == 'update' || action_name == 'create'
         hash[:terms] = if record.class == Period
-          [record.term]
+          ['All', record.term]
         elsif [Student, User].include?(record.class)
-          record.periods.pluck(:term)
+          ['All', 'With No Period'] + record.periods.pluck(:term)
         end
         
         if [Period, Student, User].include?(record.class)
