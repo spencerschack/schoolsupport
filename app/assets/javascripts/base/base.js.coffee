@@ -1,6 +1,7 @@
 window.MEDIUM_DURATION  = 500
 window.SHORT_DURATION   = 250
 window.TINY_DURATION    = 125
+window.MICRO_DURATION   = 75
 
 window.csrf_param = ->
 	hash = {}
