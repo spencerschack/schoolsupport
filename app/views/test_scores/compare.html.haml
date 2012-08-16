@@ -1,5 +1,21 @@
 .scroller
-	Compare
+	.compare
+		%h2.select
+			Compare x axis:
+			= select_tag 'x_axis', grouped_options_for_select(@x_axis_options, @x_axis_id)
+			and y axis:
+			= select_tag 'y_axis', grouped_options_for_select(@y_axis_options, @y_axis_id)
 	
-	%script{type: 'text/chart-data'}
-		window.s = {"this": "that"}
+		.chart
+			
+			.y_axis
+				- axis_labels(@y_axis_labels).each do |label, position, klass|
+					%div{style: "bottom: #{position}%", class: klass}= label
+			
+			.x_axis
+				- axis_labels(@x_axis_labels).each do |label, position, klass|
+					%div{style: "left: #{position}%", class: klass}= label
+			
+			.data
+				- calculate_positions(collection).each do |student, bottom, left|
+					%div{style: "bottom: #{bottom}%; left: #{left}%"}= student.name

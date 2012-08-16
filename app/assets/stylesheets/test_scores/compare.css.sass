@@ -1,0 +1,68 @@
+.page .test_scores.index
+	.compare
+	
+		h2.select
+			margin: $spacing
+			font-size: 14px
+			font-weight: bold
+		
+		div.chart
+			position: absolute
+			top: 60px
+			left: $spacing + 30
+			bottom: $spacing + 20
+			right: $spacing + 20
+			
+			div.x_axis, div.y_axis
+				position: absolute
+				z-index: 1
+			
+				div
+					position: absolute
+					
+					&.adv, &.pro, &.bas, &.blb, &.fbb, &.min
+						font-size: 12px
+						font-weight: bold
+					
+					&.adv
+						color: $advanced
+					
+					&.pro
+						color: $proficient
+					
+					&.bas
+						color: $basic
+					
+					&.blb
+						color: $below-basic
+						
+					&.fbb
+						color: $far-below-basic
+			
+			div.x_axis
+				height: 20px
+				right: 0
+				bottom: -20px
+				left: 0
+				border-top: 1px $gray-text solid
+			
+			div.y_axis
+				width: 30px
+				top: 0
+				bottom: 0
+				left: -30px
+				border-right: 1px $gray-text solid
+				text-align: right
+			
+			div.data
+				z-index: 2
+			
+				div
+					width: 5px
+					height: 5px
+					border: 3px $blue solid
+					+border-radius(5px)
+					position: absolute
+					line-height: 5px
+					text-indent: 15px
+					white-space: nowrap

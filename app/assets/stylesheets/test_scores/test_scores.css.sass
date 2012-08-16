@@ -1,0 +1,58 @@
+$advanced: #54841E
+$proficient: #82C63B
+$basic: #EAD64A
+$below-basic: #FF8000
+$far-below-basic: #D02324
+
+@import table
+@import compare
+
+.page
+	&.fullscreen
+		div.test_scores.index
+			width: auto
+	
+	.title .view_options
+		margin-left: $spacing
+		float: right
+		
+		a
+			width: 35px
+			margin: 0
+			padding: 0
+			background-image: url(image-path("icons.png"))
+			background-repeat: no-repeat
+			text-indent: -9999px
+			float: left
+			
+			&.table
+				background-position: 50% -1698px
+				+border-right-radius(0)
+				
+				&.chosen
+					background-position: 50% -1728px
+					background-color: #FFF
+			
+			&.pie
+				background-position: 50% -1758px
+				+border-radius(0)
+				
+				&.chosen
+					background-position: 50% -1788px
+					background-color: #FFF
+			
+			&.line
+				background-position: 50% -1818px
+				+border-left-radius(0)
+				
+				&.chosen
+					background-position: 50% -1848px
+					background-color: #FFF
+			
+			&.compare
+				background-position: 50% -1968px
+				+border-radius(0)
+				
+				&.chosen
+					background-position: 50% -1998px
+					background-color: #FFF

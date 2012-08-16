@@ -6,6 +6,29 @@ module TestScoresHelper
     show: { fields: [:term], relations: [:student, :test_model] }
   }
   
+  def calculate_positions collection
+    collection.map do |student|
+      x = x_value_for(student)
+      y = y_value_for(student)
+      next unless x && y
+      [student, x, y]
+    end.compact
+  end
+  
+  def axis_labels range_or_cutoffs
+    if (range = range_or_cutoffs).is_a?(Range)
+      ary = range.begin.upto(range.end).to_a.in_groups(10, false).map(&:first)
+      ary.map do |num|
+        [num, position_for(num, range)]
+      end
+    elsif (cutoffs = range_or_cutoffs).is_a?(Hash)
+      range = cutoffs[:min]..cutoffs[:adv]
+      cutoffs.map do |key, value|
+        [key.to_s.upcase, position_for(value, range), key]
+      end
+    end
+  end
+  
   def add_test_column_select
     if @unscoped_test_models.any?
       select_tag('add_test_column', test_column_options, prompt: 'Select a test to add...')
@@ -49,6 +72,31 @@ module TestScoresHelper
       end
     end
     ordered
+  end
+  
+  private
+  
+  def x_value_for student
+    range = if @x_axis_labels.is_a?(Range)
+      @x_axis_labels
+    else
+      @x_axis_labels[:min]..@x_axis_labels[:adv]
+    end
+    position_for @test_values[@x_axis_id][student.id].value, range
+  end
+  
+  def y_value_for student
+    range = if @y_axis_labels.is_a?(Range)
+      @y_axis_labels
+    else
+      @y_axis_labels[:min]..@y_axis_labels[:adv]
+    end
+    position_for @test_values[@y_axis_id][student.id].value, range
+  end
+  
+  def position_for value, range
+    return unless value && range
+    (value - range.begin).to_f / (range.end - range.begin) * 100
   end
   
 end

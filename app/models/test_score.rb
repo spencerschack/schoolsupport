@@ -4,7 +4,7 @@ class TestScore < ActiveRecord::Base
   
   using_access_control
   
-  attr_accessor :dynamic_methods
+  attr_writer :dynamic_methods
   
   attr_accessible :student_id, :test_model_id, :term, as: [:developer,
     :superintendent, :principal, :teacher]
@@ -39,6 +39,10 @@ class TestScore < ActiveRecord::Base
     @@skip_dynamic_methods = false
   end
   
+  def dynamic_methods
+    @dynamic_methods || define_dynamic_methods
+  end
+  
   def name
     test_model.try(:name) || 'Test Score'
   end
@@ -60,10 +64,8 @@ class TestScore < ActiveRecord::Base
   # methods and define the new ones.
   def update_dynamic_methods
     return if @@skip_dynamic_methods
-    @dynamic_methods ||= []
-    @updated_test_values ||= Set.new
-    undefine_dynamic_methods if @dynamic_methods.any?
-    define_dynamic_methods if test_model_id.present?
+    undefine_dynamic_methods
+    define_dynamic_methods
   end
   
   private
@@ -82,6 +84,9 @@ class TestScore < ActiveRecord::Base
   
   # Create methods for the test attributes and cache the test values.
   def define_dynamic_methods
+    return unless test_model_id?
+    @dynamic_methods ||= []
+    @updated_test_values ||= Set.new
     if new_record?
       test_model.test_attributes.each do |test_attribute|
         define_dynamic_method(test_attribute.name, test_values.build do |test_value|
@@ -95,6 +100,7 @@ class TestScore < ActiveRecord::Base
     end
     self.class.attr_accessible *@dynamic_methods, as: [:developer,
       :superintendent, :principal, :teacher]
+    @dynamic_methods
   end
   
   # Create setter and getter methods.
@@ -112,6 +118,7 @@ class TestScore < ActiveRecord::Base
   
   # Dump all test values and remove the dynamic mehods on this singleton class.
   def undefine_dynamic_methods
+    return unless @dynamic_methods.try(:any?)
     test_values.destroy_all
     @dynamic_methods.each do |method_name|
       singleton_class.send :remove_method, method_name, "#{method_name}="

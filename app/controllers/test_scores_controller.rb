@@ -62,7 +62,64 @@ class TestScoresController < ApplicationController
   end
   
   def compare
+    scope = find_first_parent.students.includes(test_scores: [
+      { test_values: :test_attribute }, { test_model: :test_attributes } ])
+    TestScore.without_dynamic_methods { set_collection scope.to_a }
     
+    @x_axis_id = params[:x_axis].try(:to_i)
+    @y_axis_id = params[:y_axis].try(:to_i)
+    @test_values = {}
+    
+    test_attributes = collection.map do |student|
+      student.test_scores.map do |score|
+        score.test_values.each do |value|
+          @test_values[value.test_attribute_id] ||= {}
+          @test_values[value.test_attribute_id][student.id] = value
+        end
+        score.test_model
+      end
+    end.flatten.uniq.map do |model|
+      [model.name, ordered_attributes(model.test_attributes).map do |attribute|
+        if @x_axis_id == attribute.id || !@x_axis_id
+          @x_axis_id = attribute.id  
+          @x_axis_method = attribute.name
+        end
+        if @y_axis_id == attribute.id || (!@y_axis_id && @x_axis_id != attribute.id)
+          @y_axis_id = attribute.id
+          @y_axis_method = attribute.name
+        end
+        [attribute.name, attribute.id]
+      end]
+    end
+    
+    x_values = @test_values[@x_axis_id].values
+    @x_axis_labels = if x_values.first.leveled?
+      cutoffs_for(x_values.first)
+    else
+      x_values.map!(&:value)
+      x_min = x_values.min
+      x_max = x_values.max
+      x_margin = [(x_max - x_min), 50].max / 10
+      x_min -= x_margin
+      x_max += x_margin
+      x_min.floor..x_max.ceil
+    end
+    
+    y_values = @test_values[@y_axis_id].values
+    @y_axis_labels = if y_values.first.leveled?
+      cutoffs_for(y_values.first)
+    else
+      y_values.map!(&:value)
+      y_min = y_values.min
+      y_max = y_values.max
+      y_margin = [(y_max - y_min), 50].max / 10
+      y_min -= y_margin
+      y_max += y_margin
+      y_min.floor..y_max.ceil
+    end
+    
+    @x_axis_options = test_attributes
+    @y_axis_options = test_attributes
   end
   
   def dynamic_fields
@@ -71,6 +128,17 @@ class TestScoresController < ApplicationController
   end
   
   private
+  
+  def cutoffs_for attribute
+    {
+      min: attribute.minimum_value,
+      fbb: attribute.below_basic_far_below_basic_boundary,
+      blb: attribute.basic_below_basic_boundary,
+      bas: attribute.proficient_basic_boundary,
+      pro: attribute.advanced_proficient_boundary,
+      adv: attribute.maximum_value
+    }
+  end
   
   def ordered_models test_models
     if params[:test_model_ids]
