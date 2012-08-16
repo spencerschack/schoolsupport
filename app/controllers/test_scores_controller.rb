@@ -92,6 +92,11 @@ class TestScoresController < ApplicationController
       end]
     end
     
+    # Break unless there are valid columns to compare
+    unless @x_axis_id && @y_axis_id
+      return render
+    end
+    
     x_values = @test_values[@x_axis_id].values
     @x_axis_labels = if x_values.first.leveled?
       cutoffs_for(x_values.first)
@@ -131,12 +136,12 @@ class TestScoresController < ApplicationController
   
   def cutoffs_for attribute
     {
-      min: attribute.minimum_value,
-      fbb: attribute.below_basic_far_below_basic_boundary,
-      blb: attribute.basic_below_basic_boundary,
-      bas: attribute.proficient_basic_boundary,
-      pro: attribute.advanced_proficient_boundary,
-      adv: attribute.maximum_value
+      far_below_basic: attribute.minimum_value,
+      below_basic: attribute.below_basic_far_below_basic_boundary,
+      basic: attribute.basic_below_basic_boundary,
+      proficient: attribute.proficient_basic_boundary,
+      advanced: attribute.advanced_proficient_boundary,
+      maximum: attribute.maximum_value
     }
   end
   

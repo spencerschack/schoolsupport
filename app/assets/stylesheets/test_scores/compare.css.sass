@@ -6,6 +6,9 @@
 			font-size: 14px
 			font-weight: bold
 		
+		div.error
+			margin: $spacing
+		
 		div.chart
 			position: absolute
 			top: 60px
@@ -15,54 +18,77 @@
 			
 			div.x_axis, div.y_axis
 				position: absolute
-				z-index: 1
+				z-index: 2
+				
+				hr
+					position: absolute
+					margin: 0
+					background: $gray-hover
+					border: 0
+					z-index: 1
 			
 				div
 					position: absolute
+					font-size: 12px
+					font-weight: bold
 					
-					&.adv, &.pro, &.bas, &.blb, &.fbb, &.min
-						font-size: 12px
-						font-weight: bold
-					
-					&.adv
+					&.advanced
 						color: $advanced
 					
-					&.pro
+					&.proficient
 						color: $proficient
 					
-					&.bas
+					&.basic
 						color: $basic
 					
-					&.blb
+					&.below_basic
 						color: $below-basic
 						
-					&.fbb
+					&.far_below_basic
 						color: $far-below-basic
 			
 			div.x_axis
-				height: 20px
-				right: 0
-				bottom: -20px
-				left: 0
-				border-top: 1px $gray-text solid
+				width: 100%
+				height: 100%
+				border-bottom: 1px $gray-text solid
+				
+				div
+					top: 100%
+				
+				hr
+					width: 1px
+					top: 0
+					bottom: 0
 			
 			div.y_axis
-				width: 30px
-				top: 0
-				bottom: 0
-				left: -30px
-				border-right: 1px $gray-text solid
+				width: 100%
+				height: 100%
+				border-left: 1px $gray-text solid
 				text-align: right
+				
+				div
+					right: 100%
+					left: -40px
+					padding-right: 5px
+					line-height: 15px
+					word-wrap: break-word
+				
+				hr
+					height: 1px
+					left: 0
+					right: 0
 			
 			div.data
-				z-index: 2
 			
-				div
-					width: 5px
-					height: 5px
-					border: 3px $blue solid
-					+border-radius(5px)
+				ul
+					height: 20px
 					position: absolute
-					line-height: 5px
-					text-indent: 15px
+					margin: 0 0 -9px 14px
+					list-style-type: disc
 					white-space: nowrap
+					color: $blue
+					line-height: 20px
+					z-index: 2
+					
+					span
+						color: #000

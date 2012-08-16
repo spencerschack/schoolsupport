@@ -22,11 +22,11 @@ module TestScoresHelper
         [num, position_for(num, range)]
       end
     elsif (cutoffs = range_or_cutoffs).is_a?(Hash)
-      range = cutoffs[:min]..cutoffs[:adv]
-      cutoffs.map do |key, value|
-        [key.to_s.upcase, position_for(value, range), key]
+      range = cutoffs[:far_below_basic]..cutoffs[:maximum]
+      cutoffs.except(:maximum).map do |key, value|
+        [key.to_s.humanize, position_for(value, range), key]
       end
-    end
+    end.tap { |ary| ary[0][3] = true }
   end
   
   def add_test_column_select
@@ -80,22 +80,25 @@ module TestScoresHelper
     range = if @x_axis_labels.is_a?(Range)
       @x_axis_labels
     else
-      @x_axis_labels[:min]..@x_axis_labels[:adv]
+      @x_axis_labels[:far_below_basic]..@x_axis_labels[:maximum]
     end
-    position_for @test_values[@x_axis_id][student.id].value, range
+    if test_value = @test_values[@x_axis_id][student.id]
+      position_for test_value.value, range
+    end
   end
   
   def y_value_for student
     range = if @y_axis_labels.is_a?(Range)
       @y_axis_labels
     else
-      @y_axis_labels[:min]..@y_axis_labels[:adv]
+      @y_axis_labels[:far_below_basic]..@y_axis_labels[:maximum]
     end
-    position_for @test_values[@y_axis_id][student.id].value, range
+    if test_value = @test_values[@y_axis_id][student.id]
+      position_for test_value.value, range
+    end
   end
   
   def position_for value, range
-    return unless value && range
     (value - range.begin).to_f / (range.end - range.begin) * 100
   end
   
