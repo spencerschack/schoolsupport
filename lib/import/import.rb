@@ -105,7 +105,7 @@ class Import
   
   def process hash
     hash.reverse_merge!(defaults) if defaults
-    hash.reverse_merge!(ask_for_values) if prompt_values
+    hash.reverse_merge!(prompt_values) if prompt_values
     options[:associate].each do |record, field|
       if value = hash.delete(record)
         finder = record.to_s.camelize.constantize
