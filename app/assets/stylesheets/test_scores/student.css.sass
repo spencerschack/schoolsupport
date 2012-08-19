@@ -1,0 +1,51 @@
+.page
+	&.fullscreen .test_scores.student
+		width: auto
+	
+	.test_scores.student
+		width: 1000px
+	
+		.left_column
+			width: 350px
+			margin: $spacing
+			float: left
+		
+			img
+				width: 120px
+				float: left
+				margin-right: $spacing
+		
+			table
+				th
+					font-weight: bold
+			
+				th, td
+					padding: 5px
+	
+		.right_column
+			position: absolute
+			left: 410px
+			right: $spacing
+			float: right
+		
+			h2
+				margin: $spacing 0 10px 0
+				font-size: 16px
+				font-weight: bold
+		
+			h3
+				margin: 5px 0
+				padding: 5px
+				background: $gray-stripe
+				font-size: 14px
+				font-weight: bold
+		
+			table
+				width: 100%
+			
+				th
+					+ellipsis
+					font-weight: bold
+				
+				td, th
+					color: #000

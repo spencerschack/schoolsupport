@@ -12,8 +12,8 @@ class Student < ActiveRecord::Base
   
   searches :first_name, :last_name, :identifier
 
-  attr_accessible :first_name, :grade, :last_name, :image, as: [:developer,
-    :superintendent, :principal, :teacher]
+  attr_accessible :first_name, :grade, :last_name, :image, :hispanic, :english_learner,
+    as: [:developer, :superintendent, :principal, :teacher]
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal]
   attr_accessible :school_id, as: [:developer, :superintendent]

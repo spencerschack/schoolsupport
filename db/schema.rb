@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120805232651) do
+ActiveRecord::Schema.define(:version => 20120819051129) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -129,8 +129,8 @@ ActiveRecord::Schema.define(:version => 20120805232651) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "grade"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
@@ -141,6 +141,8 @@ ActiveRecord::Schema.define(:version => 20120805232651) do
     t.integer  "bus_route_id"
     t.string   "bus_rfid"
     t.boolean  "dropped"
+    t.boolean  "hispanic",           :default => false
+    t.boolean  "english_learner",    :default => false
   end
 
   create_table "templates", :force => true do |t|

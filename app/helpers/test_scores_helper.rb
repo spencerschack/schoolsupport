@@ -74,7 +74,32 @@ module TestScoresHelper
     ordered
   end
   
+  def arranged_scores scores
+    scores.group_by do |score|
+      score.test_model.test_group
+    end.map do |group, scores|
+      [group, scores.map do |score|
+        [score, ordered_values(score.test_values)]
+      end]
+    end
+  end
+  
   private
+  
+  def ordered_values values
+    grouped = values.group_by { |value| value.test_attribute.parent_id }
+    ordered = []
+    index = -1
+    grouped[nil].sort_by(&:name).each do |parent|
+      ordered[index += 1] = parent
+      if children = grouped[parent.test_attribute_id]
+        children.sort_by(&:name).each do |child|
+          ordered[index += 1] = child
+        end
+      end
+    end
+    ordered
+  end
   
   def x_value_for student
     range = if @x_axis_labels.is_a?(Range)

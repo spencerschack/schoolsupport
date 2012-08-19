@@ -6,11 +6,40 @@ $far-below-basic: #D02324
 
 @import table
 @import compare
+@import student
 
 .page
 	&.fullscreen
 		div.test_scores.index
 			width: auto
+	
+	div.table
+		a.group
+			div
+				position: absolute
+				left: 0
+				right: 0
+				display: block
+				padding-left: $spacing
+				background: $gray-active
+				line-height: 35px
+				font-weight: bold
+				color: #FFF
+			
+			&.advanced div
+				background: $advanced
+			
+			&.proficient div
+				background: $proficient
+			
+			&.basic div
+				background: $basic
+			
+			&.below_basic div
+				background: $below_basic
+			
+			&.far_below_basic div
+				background: $far_below_basic
 	
 	.title .view_options
 		margin-left: $spacing
@@ -51,7 +80,7 @@ $far-below-basic: #D02324
 			
 			&.compare
 				background-position: 50% -1968px
-				+border-radius(0)
+				+border-left-radius(0)
 				
 				&.chosen
 					background-position: 50% -1998px

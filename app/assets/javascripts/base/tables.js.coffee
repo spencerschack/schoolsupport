@@ -9,6 +9,7 @@ sort = (table) ->
 	data.reverse() if table.attr('data-sorted-reverse') == 'true'
 	for row in data
 		table.append(row[0])
+	table.trigger('sorted')
 
 # Handle table header clicks.
 handle_table_header_click = (event) ->

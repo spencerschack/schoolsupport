@@ -37,7 +37,6 @@ prepare_multiple = ->
 		if depends_on
 			depends_on_path = depends_on.replace(/([^s])$/, '$1s')
 			depends_select_value = ->
-				list.find('li.choice').remove()
 				list.closest('form').find(":input[id$='#{depends_on}_id']").val()
 		
 		# Whenever a key is pressed or focused
@@ -98,8 +97,7 @@ prepare_multiple = ->
 												if depends_on == 'district'
 													choice.append("<input type='hidden' id='district_id' value='#{record.district_id}' />")
 												choice.append('<i />') unless single
-												$('<li class="choice" />').html(choice)
-													.insertBefore(search_input.parent())
+												$('<li class="choice" />').html(choice).insertBefore(search_input.parent())
 											else
 												list.scrollTo(inserted, { onAfter: ->
 													inserted.closest('label')

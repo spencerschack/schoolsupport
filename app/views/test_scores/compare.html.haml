@@ -27,8 +27,8 @@
 					- calculate_positions(collection).each do |student, left, bottom|
 						%ul{style: "bottom: #{bottom}%; left: #{left}%"}
 							%li
-								%span= student.name
-								%span.coordinates= "(#{@test_values[@x_axis_id][student.id].value}, #{@test_values[@y_axis_id][student.id].value})"
+								= link_to student.name, "#{parent_path(TestScore)}/#{student.id}"
+								%span= "(#{@test_values[@x_axis_id][student.id].value}, #{@test_values[@y_axis_id][student.id].value})"
 		- else
 			
 			.error

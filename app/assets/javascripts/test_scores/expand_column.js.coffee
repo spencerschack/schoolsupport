@@ -100,10 +100,20 @@ handle_expand_click = ->
 	children = table.find('span.child')
 	if $(this).is('.expanded')
 		$(this).removeClass('expanded')
-		hide_cells.apply(children)
+		if $(this).nextAll(".child.sorted[data-parent-id='#{selected_id}']").length
+			hide_test_score_groups(table)
+		children.animate {
+			maxWidth: 0
+			minWidth: 0
+			paddingLeft: 0
+			paddingRight: 0
+		}, TINY_DURATION, ->
+			$(this).hide()
 	else
 		$(this).siblings('.expanded').removeClass('expanded')
 		$(this).addClass('expanded')
+		if $(this).nextAll(".child.sorted[data-parent-id='#{selected_id}']").length
+			table.trigger('sorted.insert_breaks')
 		children.each ->
 			if $(this).is("[data-parent-id='#{selected_id}']")
 				$(this).css(
@@ -118,15 +128,6 @@ handle_expand_click = ->
 					paddingLeft: '10px'
 					paddingRight: '10px'
 				}, SHORT_DURATION
-
-hide_cells = ->
-	$(this).animate {
-		maxWidth: 0
-		minWidth: 0
-		paddingLeft: 0
-		paddingRight: 0
-	}, TINY_DURATION, ->
-		$(this).hide()
 
 $ ->
 	$('#container').delegate 'div.table div span.parent', 'mousedown.parent_click', handle_parent_click

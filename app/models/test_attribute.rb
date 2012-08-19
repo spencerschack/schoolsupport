@@ -17,9 +17,9 @@ class TestAttribute < ActiveRecord::Base
   validate :valid_parent
   
   def leveled?
-    @leveled ||= maximum_value? && advanced_proficient_boundary? &&
-      proficient_basic_boundary? && basic_below_basic_boundary? &&
-      below_basic_far_below_basic_boundary? && minimum_value?
+    @leveled ||= maximum_value.present? && advanced_proficient_boundary.present? &&
+      proficient_basic_boundary.present? && basic_below_basic_boundary.present? &&
+      below_basic_far_below_basic_boundary.present? && minimum_value.present?
   end
   
   private

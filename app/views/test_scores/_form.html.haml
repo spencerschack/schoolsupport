@@ -4,7 +4,8 @@
 	= f.inputs class: 'relations' do
 		= f.input :student, as: :search_select, include_blank: true
 		- if resource.new_record?
-			= f.input :test_model, label: 'Test', include_blank: true
+			= f.input :test_model, label: 'Test', include_blank: true,
+				collection: option_groups_from_collection_for_select(TestGroup.with_permissions_to(:show), :test_models, :name, :id, :name)
 		= f.input :term, collection: Term.choices
 	= f.actions do
 		= f.action :submit

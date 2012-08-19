@@ -5,9 +5,7 @@
   <%= link_for :import, TestScore %>
   <div class="view_options">
     <%= link_to 'table', js_link, class: 'table chosen', title: 'Table' %>
-    <%= link_to 'pie', js_link, class: 'pie', title: 'Pie Chart' %>
     <%= link_to 'compare', js_link, class: 'compare', title: 'Compare' %>
-    <%= link_to 'line', js_link, class: 'line', title: 'Line Chart' %>
   </div>
   <%= link_for :fullscreen, TestScore %>
 </div>
@@ -49,7 +47,7 @@
                 <%= test_values.value %>
               </i>
             <% else %>
-              <%= none %>
+              <i title="No Score"><%= none %></i>
             <% end %>
           </span>
         <% end %>

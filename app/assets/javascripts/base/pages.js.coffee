@@ -30,10 +30,14 @@ window.create_page = (path, data, method = 'GET') ->
 window.destroy_page = (page) ->
 	page.find('.wrapper').trigger('unloaded')
 	page.addClass('destroyed').animate {
-		width: '200px',
+		width: '200px'
 		marginLeft: '-200px'
-	}, SHORT_DURATION, ->
-		$(this).remove()
+	}, {
+		duration: SHORT_DURATION
+		step: ensure_visible_header
+		complete: ->
+			$(this).remove()
+	}
 
 # Animate the container to the new width and adjust the marginRight so it
 # stays centered in the window.
