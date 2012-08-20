@@ -105,6 +105,8 @@ class TestScoresController < ApplicationController
     
     # Break unless there are valid columns to compare
     unless @x_axis_id && @y_axis_id
+      @x_axis_options = []
+      @y_axis_options = []
       return render
     end
     

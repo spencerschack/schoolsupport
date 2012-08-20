@@ -14,8 +14,8 @@ module Errors
   private
   
   def server_error exception
-    Rails.logger.debug "[server error] #{exception}"
-    Rails.logger.debug exception.backtrace.join("\n")
+    Rails.logger.info "[server error] #{exception}"
+    Rails.logger.info exception.backtrace.join("\n")
     @exception = exception
     render 'errors/server_error'
   end
