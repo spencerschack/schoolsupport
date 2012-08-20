@@ -26,19 +26,11 @@ Schoolsupport::Application.routes.draw do
   # Districts, Schools, Periods, Students, Users, and Tests
   
   def test_scores
-    resources :test_scores, only: [:index, :new, :create] do
+    resources :test_scores do
       importable
       match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields
-      match 'table', on: :collection, action: :index
       match 'compare', on: :collection
     end
-    match 'test_scores/:student_id' => 'test_scores#student', via: :get
-    match 'test_scores/:student_id/new' => 'test_scores#new', via: :get
-    match 'test_scores/:student_id/dynamic_fields(/:test_model_id)' => 'test_scores#dynamic_fields'
-    match 'test_scores/:student_id/:id' => 'test_scores#show', via: :get
-    match 'test_scores/:student_id/:id' => 'test_scores#update', via: :put
-    match 'test_scores/:student_id/:id' => 'test_scores#destroy', via: :delete
-    match 'test_scores/:student_id/:id/edit' => 'test_scores#edit', via: :get
   end
   def test_models
     resources :test_models do

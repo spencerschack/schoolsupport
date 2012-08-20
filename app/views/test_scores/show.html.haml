@@ -1,23 +1,51 @@
 .title
-	%h2= singular_title
-	%h1= resource.name
-	= link_for :edit, resource
-	= link_for :destroy, resource
-	= link_for :export, resource
+	%h2 Student Test Scores
+	%h1= @student.name
+	= link_for @student
+	= link_for :fullscreen, TestScore
 
 .scroller
-	- if resource.errors.any?
-		%ul.errors
-			- resource.errors.messages[:base].each do |message|
-				%li= message
+	.left_column
+		= image_tag @student.image
+		%table
+			%tr
+				%th Name
+				%td= @student.name
+			%tr
+				%th Grade
+				%td= @student.grade
+			%tr
+				%th School
+				%td= link_to @student.school.name, @student.school
+			%tr
+				%th Teachers
+				%td
+					- @student.users.each do |user|
+						= link_to user.name, user
+			%tr
+				%th Hispanic
+				%td= @student.hispanic
+			%tr
+				%th English Learner
+				%td= @student.english_learner
 	
-	.fields
-		- fields(:show)[:fields].each do |field|
-			= field_content resource, field
-		
-		- resource.dynamic_methods.each do |field|
-			= field_content resource, field
-			
-	.relations
-		- fields(:show)[:relations].each do |field|
-			= relation_content resource, field
+	.right_column
+		- arranged_scores(@student.test_scores).each do |group, scores|
+			.group
+				%h2= group.name
+				- scores.each do |score, values|
+					.score
+						.score_title
+							%h3= "#{score.name} (#{score.term})"
+							- if permitted_to?(:delete, score)
+								= link_for :destroy, score
+							- if permitted_to?(:edit, score)
+								= link_for :edit, score
+						%table
+							%tr
+								- values.each do |value|
+									%th= value.test_attribute.name
+							%tr
+								- values.each do |value|
+									%td{class: value.level, title: value.level.humanize}= value.value
+						

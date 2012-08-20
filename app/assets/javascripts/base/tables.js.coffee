@@ -74,12 +74,20 @@ parse_table = (table) ->
 
 # Creates a comparison function for the given index.
 comparator = (index) ->
-	(a, b) ->
-		a = a[index] || ''
-		b = b[index] || ''
+	(x, y) ->
+		a = x[index] || ''
+		b = y[index] || ''
 		a = parseFloat(a) || a.toLowerCase()
 		b = parseFloat(b) || b.toLowerCase()
-		if a > b then 1 else if a < b then -1 else 0
+		if a > b
+			1
+		else if a < b
+			-1
+		else
+			if x[1] > y[1]
+				1
+			else
+				-1
 
 $ ->
 

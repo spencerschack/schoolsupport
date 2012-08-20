@@ -6,9 +6,11 @@ handle_view_option_click = ->
 
 window.load_test_score_view = (page, data) ->
 	wrapper = page.children('.wrapper')
-	url = page.attr('data-path') + '/' + page.find('.title .view_options a.chosen').text()
+	url = page.attr('data-path')
+	url += '/compare' if page.find('.title .chosen').is('.compare')
 	load_content wrapper, data, url, (data) ->
 		wrapper.children('div.scroller').replaceWith($(data).find('div.scroller'))
+		select_path(page)
 
 $ ->
 	$('#container').delegate '.title .view_options a', 'click.view_option', handle_view_option_click

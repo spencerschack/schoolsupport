@@ -5,6 +5,36 @@
 		div.table
 			width: auto
 			min-width: 100%
+			
+			a.group
+				height: 20px
+			
+				div
+					position: absolute
+					left: 0
+					right: 0
+					display: block
+					padding-left: $spacing
+					background: $gray-active
+					line-height: 20px
+					font-size: 12px
+					font-weight: bold
+					color: #FFF
+
+				&.advanced div
+					background: $advanced
+
+				&.proficient div
+					background: $proficient
+
+				&.basic div
+					background: $basic
+
+				&.below_basic div
+					background: $below_basic
+
+				&.far_below_basic div
+					background: $far_below_basic
 	
 			a span.image img
 				position: absolute

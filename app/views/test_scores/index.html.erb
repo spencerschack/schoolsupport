@@ -27,7 +27,8 @@
       <span class="spacer"></span>
     </div>
     <% collection.each do |student| %>
-      <a href="<%= "#{request.path}/#{student.id}" %>" data-id="<%= student.id %>">
+      <% next unless student.test_scores.any? %>
+      <a href="<%= "#{request.path}/#{student.test_scores.first.id}" %>" data-id="<%= student.id %>">
         <span class="spacer"></span>
         <span class="image"><%= image_tag student.image(:thumbnail) %></span>
         <span><%= student.last_name %>,<br /><%= student.first_name %></span>

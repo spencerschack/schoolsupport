@@ -16,7 +16,7 @@ handle_table_sort = ->
 					group.hide()
 				$(this).closest('a').before(group)
 				unless table.data('leveled')
-					group.slideDown(TINY_DURATION)
+					group.slideDown(SHORT_DURATION)
 	table.data('leveled', leveled)
 
 window.hide_test_score_groups = (table, skip_reset) ->

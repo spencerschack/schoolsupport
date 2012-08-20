@@ -1,14 +1,16 @@
 .page
-	&.fullscreen .test_scores.student
-		width: auto
+	&.fullscreen
+		.test_scores.show
+			width: auto
 	
-	.test_scores.student
-		width: 1000px
+	.test_scores
+		
+		&.show, &.edit, &.update, &.new, &.create
+			width: 1000px
 	
 		.left_column
 			width: 350px
 			margin: $spacing
-			float: left
 		
 			img
 				width: 120px
@@ -24,28 +26,65 @@
 	
 		.right_column
 			position: absolute
-			left: 410px
-			right: $spacing
-			float: right
-		
-			h2
-				margin: $spacing 0 10px 0
-				font-size: 16px
-				font-weight: bold
-		
-			h3
-				margin: 5px 0
-				padding: 5px
-				background: $gray-stripe
-				font-size: 14px
-				font-weight: bold
-		
-			table
-				width: 100%
+			top: 0
+			left: 400px
+			right: 0
 			
-				th
-					+ellipsis
+			div.group
+		
+				h2
+					margin: $spacing 10px 10px 10px
+					font-size: 18px
 					font-weight: bold
 				
-				td, th
-					color: #000
+				div.score
+			
+					div.score_title
+						height: 30px
+						background: $gray-stripe
+						line-height: 30px
+				
+						h3
+							float: left
+							padding: 0 10px
+							font-size: 14px
+							font-weight: bold
+				
+						a
+							float: right
+							margin-right: $spacing
+					
+							&.confirm
+								color: $red
+			
+					table
+						width: 100%
+
+						th
+							+ellipsis
+							font-weight: bold
+
+						td, th
+							padding: 0 10px
+							color: #000
+				
+						th
+							padding-top: 5px
+				
+						td
+							padding-bottom: 5px
+					
+							&.advanced
+								color: $advanced
+					
+							&.proficient
+								color: $proficient
+					
+							&.basic
+								color: $basic
+					
+							&.below_basic
+								color: $below_basic
+					
+							&.far_below_basic
+								color: $far_below_basic

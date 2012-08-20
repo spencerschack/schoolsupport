@@ -8,7 +8,7 @@ class TestScoresController < ApplicationController
     TestScore.without_dynamic_methods { set_collection scope.uniq.to_a }
     
     test_model_ids = if params[:test_model_ids].is_a?(Array)
-      params[:test_model_ids].map!(&:to_i).uniq!
+      params[:test_model_ids]
     else
       collection.map(&:test_scores).flatten.map(&:test_model_id).uniq
     end
@@ -48,6 +48,28 @@ class TestScoresController < ApplicationController
         end
       }
     end
+  end
+  
+  def create
+    params[:id] = resource.id if resource.save
+    set_student
+    respond_with resource
+  end
+  
+  def show
+    set_student
+    respond_with resource
+  end
+  
+  def edit
+    set_student
+    respond_with resource
+  end
+  
+  def update
+    resource.update_attributes params[params_key], as: current_role
+    set_student
+    respond_with resource
   end
   
   def compare
@@ -121,13 +143,13 @@ class TestScoresController < ApplicationController
     render '_dynamic_fields', layout: false
   end
   
-  def student
+  private
+  
+  def set_student
     @student = Student.includes(:users, :school, test_scores: [
       { test_values: :test_attribute }, { test_model: :test_group }
-    ]).find(params[:student_id])
+    ]).find(@test_score.student_id)
   end
-  
-  private
   
   def cutoffs_for attribute
     {

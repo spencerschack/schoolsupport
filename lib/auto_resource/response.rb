@@ -46,7 +46,7 @@ module Response
       hash[:page] = render_to_string(view_for(true))
       hash[:path] = parent_path(record) unless action_name == 'import'
       
-      if action_name == 'update' || action_name == 'create'
+      if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
           ['All', record.term]
         elsif [Student, User].include?(record.class)

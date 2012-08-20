@@ -24,11 +24,11 @@ module LinkHelper
 	    
     when :show
       link_to_if permitted_to?(action, model_or_record),
-        model_or_record.name.titleize, parent_path(model_or_record), options
+        "View #{model_or_record.class}", parent_path(model_or_record), options
         
     when :edit
       return unless permitted_to? action, model_or_record
-        link_to 'Edit', js_link, options
+        link_to 'Edit', parent_path(model_or_record, action: :edit), options
       
     when :update
       link_to 'Save', js_link, options
@@ -42,8 +42,7 @@ module LinkHelper
       
     when :destroy
       return unless permitted_to? action, model_or_record
-      link_to 'Delete', js_link, options.merge(data: {
-        path: parent_path(model_or_record)})
+      link_to 'Delete', parent_path(model_or_record), options
       
     when :cancel
       link_to 'Cancel', js_link, options

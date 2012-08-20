@@ -11,12 +11,13 @@ handle_cancel_click = (event) ->
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
 handle_edit_click = (event) ->
+	event.preventDefault()
 	button = $(this)
 	
 	unless button.is('.loading')
 		button.display_loading_message()
 		page = button.closest('.page')
-		url = [page.attr('data-path'), 'edit'].join('/')
+		url = button.attr('href')
 		
 		$.get url, (data) ->
 			button.hide_loading_message()
@@ -28,34 +29,45 @@ handle_edit_click = (event) ->
 # button. After a second click, destroy the record and remove the page. If
 # the user clicks somewhere else, put the button in its previous state.
 handle_destroy_click = (event) ->
+	event.preventDefault()
+	self = $(this)
+	destroy_confirm.apply(this, [(data) ->
+		if data.success
+			index = self.closest('.page').next('.page')
+			push_state index.attr('data-path')
+			remove_row(index.find('div.table'), data.id)
+			
+		else
+			page = $(data.page)
+			page.find('.inline-errors, .errors').hide()
+			wrapper = self.closest('.wrapper')
+			wrapper.replaceWith(page)
+			page.trigger('loaded').find('.inline-errors, .errors')
+				.slideDown(SHORT_DURATION)
+	])
+
+# Abstract some destroy logic so it can be reused.
+window.destroy_confirm = (callback) ->
 	self = $(this)
 	self.text('Are you sure?').addClass('confirm')
 	self.bind 'click.confirm', (event) ->
 		
 		event.stopImmediatePropagation()
+		event.preventDefault()
+		
 		self.unbind('click.confirm').display_loading_message('Deleting')
 		$(this).find('.inline-errors, .errors').slideUp(SHORT_DURATION)
 		
 		$('body').unbind('click.unconfirm')
-		path = self.attr('data-path')
+		path = self.attr('href')
 		
-		destroy_path path, (data) ->
+		destroy_path path, callback
 			
-			if data.success
-				index = self.closest('.page').next('.page')
-				push_state index.attr('data-path')
-				remove_row(index.find('div.table'), data.id)
-				
-			else
-				page = $(data.page)
-				page.find('.inline-errors, .errors').hide()
-				wrapper = self.closest('.wrapper')
-				wrapper.replaceWith(page)
-				page.trigger('loaded').find('.inline-errors, .errors')
-					.slideDown(SHORT_DURATION)
 					
 	$('body').bind 'click.unconfirm', (event) ->
-		unless $(event.target).is(self)
+		if $(event.target).is(self)
+			event.preventDefault()
+		else
 			self.unbind('click.confirm').removeClass('confirm').text('Delete')
 			$('body').unbind('click.unconfirm')
 
@@ -84,4 +96,4 @@ $ ->
 		handle_submit_click
 	
 	# Handle destroy button clicks.
-	$('#container').delegate 'a.destroy', 'click.destroy', handle_destroy_click
+	$('#container').delegate '.title a.destroy', 'click.destroy', handle_destroy_click
