@@ -30,7 +30,7 @@
       <% next unless student.test_scores.any? %>
       <a href="<%= "#{request.path}/#{student.test_scores.first.id}" %>" data-id="<%= student.id %>">
         <span class="spacer"></span>
-        <span class="image"><%= image_tag student.image(:thumbnail) %></span>
+        <span class="image"><%= image_tag student.image(:thumbnail) if student.image? %></span>
         <span><%= student.last_name %>,<br /><%= student.first_name %></span>
         <% arranged_values(student.test_scores).each_with_index do |test_values, index| %>
           <span <%= @cell_attributes[index] %>>

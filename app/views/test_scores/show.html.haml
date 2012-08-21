@@ -6,7 +6,7 @@
 
 .scroller
 	.left_column
-		= image_tag @student.image
+		= image_tag @student.image if @student.image?
 		%table
 			%tr
 				%th Name
