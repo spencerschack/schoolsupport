@@ -44,7 +44,7 @@
 						%table
 							%tr
 								- values.each do |value|
-									%th= value.test_attribute.name
+									%th{title: value.test_attribute.name}= value.test_attribute.name
 							%tr
 								- values.each do |value|
 									%td{class: value.level, title: value.level.humanize}= value.value

@@ -36,60 +36,78 @@ handle_form_submit = (event) ->
 		success: (data) ->
 			try
 				data = $.parseJSON(data)
-				if data.success
-					page = wrapper.parent()
-					index = page.next('.page')
-
-					if data.path
-						old_path = page.attr('data-path').split('/')[0..-2].join('/')
-						if old_path == data.path.split('/')[0..-2].join('/')
-							page.attr('data-path', data.path)
-						push_state(data.path)
-
-					unless index.is('.destroyed')
-						if data.term_filter
-							term_filter = index.find('.title h2')
-							prev_value = term_filter.find('select').val()
-							term_filter.html(data.term_filter)
-							term_filter.find('select').val(prev_value)
-
-						if data.row
-							if !data.terms || prev_value in data.terms
-								insert_row(index.find('div.table'), data.row)
-								select_path(index)
-								index.find('.scroller').scrollTo('.selected')
-							else
-								term = data.terms.sort()[data.terms.length - 1]
-								term_filter.find('select').val(term).trigger('change')
-
-						if data.page
-							wrapper.next('.show.wrapper').trigger('unloaded').remove()
-							table = $(data.page).insertAfter(wrapper).trigger('loaded').find('div.table')
-							wrapper.animate {
-								marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
-									$(this).remove()
-
-				else
-					page = $(data.page)
-					errors = page.find('.inline-errors, .errors').hide()
-					page.insertBefore(wrapper).trigger('loaded')
-					wrapper.trigger('unloaded').remove()
-					errors.slideDown(SHORT_DURATION)
-					
 			catch e
-				wrapper.find('a.create, a.update').hide_loading_message()
-				form.find(':submit').hide_loading_message()
+			
+			if $.isPlainObject(data)
+				unescape_values(data)
+			
+			if data.success == true
+				page = wrapper.parent()
+				index = page.next('.page')
 
-				page = $("<div class='page' data-path='#{form.attr('action')}' />")
-				page.html(data).css(marginLeft: '-200px').prependTo('#container')
-				push_state(form.attr('action'))
-				width = page.children().width()
-				page.animate { width: width, marginLeft: 0 },
-					{ duration: SHORT_DURATION, step: ensure_visible_header }
-				animate_container_width_to(width)
+				if data.path
+					old_path = page.attr('data-path').split('/')[0..-2].join('/')
+					if old_path == data.path.split('/')[0..-2].join('/')
+						page.attr('data-path', data.path)
+					push_state(data.path)
+
+				unless index.is('.destroyed')
+					if data.term_filter
+						term_filter = index.find('.title h2')
+						prev_value = term_filter.find('select').val()
+						term_filter.html(data.term_filter)
+						term_filter.find('select').val(prev_value)
+
+					if data.row
+						if !data.terms || prev_value in data.terms
+							insert_row(index.find('div.table'), data.row)
+							select_path(index)
+							index.find('.scroller').scrollTo('.selected')
+						else
+							term = data.terms.sort()[data.terms.length - 1]
+							term_filter.find('select').val(term).trigger('change')
+
+					if data.page
+						wrapper.next('.show.wrapper').trigger('unloaded').remove()
+						$(data.page).insertAfter(wrapper).trigger('loaded')
+						wrapper.animate {
+							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+								$(this).remove()
+
+			else if data.success == false
+				page = $(data.page)
+				errors = page.find('.inline-errors, .errors').hide()
+				page.insertBefore(wrapper).trigger('loaded')
+				wrapper.trigger('unloaded').remove()
+				errors.slideDown(SHORT_DURATION)
+					
+			else
+				wrapper.find('a.create, a.update, a.upload').hide_loading_message()
+				form.find(':submit').hide_loading_message()
+				
+				if wrapper.is('.import')
+					wrapper.next('.index.wrapper').trigger('unloaded').remove()
+					$(data).insertAfter(wrapper).trigger('loaded')
+					wrapper.animate {
+						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+							$(this).remove()
+					
+				else
+					page = $("<div class='page' data-path='#{form.attr('action')}' />")
+					page.html(data).css(marginLeft: '-200px').prependTo('#container')
+					push_state(form.attr('action'))
+					width = page.children().width()
+					page.animate { width: width, marginLeft: 0 },
+						{ duration: SHORT_DURATION, step: ensure_visible_header }
+					animate_container_width_to(width)
 	
 	event.preventDefault()
 	return false
+
+window.unescape_values = (hash) ->
+	for key, value of hash
+		if typeof value == 'string'
+			hash[key] = $('<div />').html(value).text()
 	
 $ ->
 	

@@ -19,7 +19,11 @@ module Methods
         defaults: params_with_parents(controller_model)
       }))
       @import.save
-      respond_with @import
+      if @import.errors.any?
+        respond_with @import
+      else
+        redirect_to request.path.gsub(/\/import$/, '?xhr=true')
+      end
     else
       @import = Import.new(
         update_ids: params[:selected].try(:first).try(:last),

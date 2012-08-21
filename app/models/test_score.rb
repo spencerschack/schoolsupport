@@ -20,7 +20,7 @@ class TestScore < ActiveRecord::Base
   
   has_import identify_with: { test_model_id: [:term, :student_id] },
     associate: { student: :identifier, test_model: :name },
-    prompts: proc { [[:test_model, collection: TestModel.with_permissions_to(:show)],
+    prompts: proc { [[:test_model, collection: TestModel.with_permissions_to(:show).map(&:name)],
       [:term, collection: Term.choices]] }
   
   validates_presence_of :student, :test_model
@@ -98,8 +98,7 @@ class TestScore < ActiveRecord::Base
         define_dynamic_method test_value.test_attribute.name, test_value
       end
     end
-    self.class.attr_accessible *@dynamic_methods, as: [:developer,
-      :superintendent, :principal, :teacher]
+    self.class.attr_accessible *@dynamic_methods, as: [:developer, :superintendent, :principal, :teacher]
     @dynamic_methods
   end
   

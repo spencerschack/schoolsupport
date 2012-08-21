@@ -36,6 +36,8 @@ class Import
     end
   rescue => error
     errors.add :base, "File error: #{error.message}"
+    Rails.logger.info "[import file error] #{error.message}"
+    Rails.logger.info error.backtrace.join("\n")
   end
   
   class Row

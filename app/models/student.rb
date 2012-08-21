@@ -26,7 +26,7 @@ class Student < ActiveRecord::Base
   has_one :district, through: :school
   has_and_belongs_to_many :periods, extend: WithTermExtension
   has_many :users, through: :periods, extend: WithTermExtension
-  has_many :test_scores
+  has_many :test_scores, dependent: :destroy
   has_many :test_models, through: :test_scores
   
   has_attached_file :image,

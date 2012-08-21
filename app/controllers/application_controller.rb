@@ -20,13 +20,17 @@ class ApplicationController < ActionController::Base
   def handle_non_xhr
     file_upload = params['X-Requested-With'] == 'IFrame'
     export = params[:export] && request.post? && !request.xhr?
-    unless export || request.xhr? || file_upload
+    skip = params[:xhr] == 'true'
+    unless export || request.xhr? || file_upload || skip
       if request.path != root_path
         path = current_user ? corrected_path : root_path
         redirect_to root_url, flash: { initial_path: path }
       else
         render 'blank', layout: 'application'
       end
+    end
+    if skip
+      headers['Content-Type'] = 'text/plain'
     end
   end
   

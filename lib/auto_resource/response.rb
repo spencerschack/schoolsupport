@@ -43,7 +43,7 @@ module Response
   def success_hash record
     {}.tap do |hash|
       hash[:success] = true
-      hash[:page] = render_to_string(view_for(true))
+      hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
       hash[:path] = parent_path(record) unless action_name == 'import'
       
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
@@ -54,9 +54,9 @@ module Response
         end
         
         if [Period, Student, User].include?(record.class)
-          hash[:term_filter] = render_to_string('_term_filter', layout: false)
+          hash[:term_filter] = ERB::Util.html_escape render_to_string('_term_filter', layout: false)
         end
-        hash[:row] = render_to_string('_row', layout: false)
+        hash[:row] = ERB::Util.html_escape(render_to_string('_row', layout: false))
       end
     end
   end
@@ -64,7 +64,7 @@ module Response
   # The object to return in case of a failure.
   def failure_hash
     {
-      page: render_to_string(view_for(false)),
+      page: ERB::Util.html_escape(render_to_string(view_for(false))),
       success: false
     }
   end
@@ -81,7 +81,7 @@ module Response
   def destroy_failure_hash record
     {
       success: false,
-      page: render_to_string('show')
+      page: ERB::Util.html_escape(render_to_string('show'))
     }
   end
   

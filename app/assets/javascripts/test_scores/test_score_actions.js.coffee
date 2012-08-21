@@ -12,7 +12,7 @@ handle_destroy_score_click = (event) ->
 				if group.siblings('.group').length
 					group.slideUp TINY_DURATION, -> $(this).remove()
 				else
-					destroy_page(group.closest('.page'))
+					push_state group.closest('.page').next('.page').attr('data-path')
 			else
 				score.slideUp TINY_DURATION, -> $(this).remove()
 	])
