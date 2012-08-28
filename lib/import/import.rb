@@ -17,6 +17,9 @@ class Import
   def initialize options = nil
     if options
       options[:update_ids] ||= []
+      if options[:prompt_values].is_a?(Hash)
+        options[:prompt_values].reject! { |key, value| value.blank? }
+      end
       [:model, :file, :defaults, :update_ids, :prompt_values].each do |option|
         send("#{option}=", options[option])
       end
@@ -77,7 +80,7 @@ class Import
     current_role = current_user.role_symbols.first
     parser.read(path) do |hash|
       begin
-        Thread.current[:current_user] = current_user
+        Authorization.current_user = current_user
         process(hash = hash.with_indifferent_access)
         record = new_record(hash)
         record.assign_attributes(hash, as: current_role)

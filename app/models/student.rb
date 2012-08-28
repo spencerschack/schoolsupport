@@ -108,11 +108,11 @@ class Student < ActiveRecord::Base
   def set_teacher name, term
     user = User.find_by_name!(name)
     unless period = user.periods.first
-      period = user.periods.build
-      period.assign_attributes({
+      period = Period.new({
         name: Period.default_name_for(user),
         term: term,
-        school_id: school_id
+        school_id: school_id,
+        user_ids: [user.id]
       }, as: mass_assignment_role)
       period.save!
     end
@@ -139,17 +139,21 @@ class Student < ActiveRecord::Base
     sorts.map { |option| [option.titleize, option] }
   end
   
-  # Which columns can be sorted on during export.
-  def self.sorts
-    @sorts ||= column_names.reject do |column|
+  def self.default_columns
+    @default_columns ||= column_names.reject do |column|
       case column; when 'created_at', 'updated_at', 'id', /^image.+/, /_id$/; true end
     end
+  end
+  
+  # Which columns can be sorted on during export.
+  def self.sorts
+    ['teacher'] + default_columns
   end
   
   # Which columns are available for templates.
   def self.template_column_options
     [
-      ['Student', (sorts + %w(grade_with_label last_name_first_name first_name_last_name image))],
+      ['Student', (default_columns + %w(grade_with_label last_name_first_name first_name_last_name image))],
       ['School', %w(school_mascot_image school_name)],
       ['Bus', %w(bus_route_name bus_stop_name bus_route_color_value)],
       ['Other', %w(type barcode prompt)]

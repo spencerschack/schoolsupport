@@ -100,7 +100,14 @@ class Export < Tableless
   
   # Return all students associated with this print job.
   def students
-    @students ||= Student.order(sort_by).find(student_ids)
+    @students ||= begin
+      collection = Student.where(id: student_ids)
+      if sort_by == 'teacher'
+        collection.includes(:users).order('users.last_name, users.first_name, students.last_name, students.first_name')
+      else
+        collection.order(sort_by)
+      end
+    end
   end
   
   # Store student ids and initialize when nil.

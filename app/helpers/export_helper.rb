@@ -40,7 +40,7 @@ module ExportHelper
   
   # Which templates to show to the current user as options.
   def available_types
-    School.with_permissions_to(:show).includes(:types).order('types.name').map(&:types).flatten
+    @available_types ||= School.with_permissions_to(:show).includes(:types).order('types.name').map(&:types).flatten
   end
   
 end

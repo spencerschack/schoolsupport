@@ -70,7 +70,7 @@ class Period < ActiveRecord::Base
   # error.
   def students_in_school
     if students.map(&:school_id).any?{|id| id != school_id }
-      errors.add(:student_ids, 'must be in the same school as the period')
+      errors.add(:students, 'must be in the same school as the period')
     end
   end
   
@@ -78,7 +78,7 @@ class Period < ActiveRecord::Base
   # error.
   def users_in_school
     if users.map(&:school_id).any?{|id| id != school_id }
-      errors.add(:user_ids, 'must be in the same school as the period')
+      errors.add(:users, 'must be in the same school as the period')
     end
   end
   
