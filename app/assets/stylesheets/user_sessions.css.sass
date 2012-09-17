@@ -1,3 +1,26 @@
 div.user_sessions.new, div.user_sessions.create
 	top: -75px
 	width: 300px
+	
+	.exit_button
+		position: relative
+		
+		a
+			height: 35px
+			position: absolute
+			left: $spacing
+			right: $spacing
+			display: block
+			background: $blue
+			+border-radius($radius)
+			color: #FFF
+			text-decoration: none
+			font-weight: bold
+			text-align: center
+			line-height: 35px
+		
+		&:hover
+			background-color: $blue-hover
+		
+		&:active
+			background-color: $blue-active

@@ -7,3 +7,18 @@
 		= f.input :password, input_html: { autocomplete: 'off' }
 	= f.actions do
 		= f.action :submit, label: 'Login'
+
+	%p
+		Shoob Photography school support allows schools to print ID
+		cards and achievement certificates.
+
+	%p
+		It also allows administrators and teachers to analyze test
+		results and manage RTI information.
+
+	%p
+		Please contact #{mail_to 'alex@shoobphoto.com'} for a login to
+		this service.
+	
+	.exit_button
+		= link_to 'Exit', 'http://shoobphoto.com/school_support/', class: 'exit_button'
