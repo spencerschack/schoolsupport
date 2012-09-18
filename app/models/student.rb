@@ -106,7 +106,7 @@ class Student < ActiveRecord::Base
   # Used by Import to create a period to associate a user with a student.
   # All actions are taken with bangs to stop the import if unsuccessful.
   def set_teacher name, term
-    user = User.find_by_name!(name)
+    user = User.where(school_id: school_id).find_by_name!(name)
     unless period = user.periods.first
       period = Period.new({
         name: Period.default_name_for(user),
