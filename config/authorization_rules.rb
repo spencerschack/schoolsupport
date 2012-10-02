@@ -178,7 +178,7 @@ privileges do
 
 	# Includes every action.
 	privilege :manage do
-		includes :index, :print, :show, :edit, :update, :new, :create, :delete
+		includes :index, :print, :show, :edit, :update, :new, :create, :delete, :export
 	end
 
 end
