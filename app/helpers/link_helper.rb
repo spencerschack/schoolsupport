@@ -58,8 +58,9 @@ module LinkHelper
       end
     
     when :export
+      Rails.logger.debug("permitted_to?(#{action})");
       if permitted_to?(action, model_or_record) && Export.for?(model_or_record)
-        link_to "Print#{' All' if model_or_record.is_a?(Class)}",
+        link_to "Print#{' All' if model_or_record.respond_to?(:new_record?) && model_or_record.new_record?}",
           parent_path(model_or_record, { action: :export }), options
       end
       
