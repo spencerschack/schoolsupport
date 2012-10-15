@@ -48,6 +48,11 @@ class Student < ActiveRecord::Base
     { name: to_label, id: id }
   end
   
+  # Never overwrite image_file_name with a blank value.
+  def image_file_name= value
+    super if value.present?
+  end
+  
   # Returns comma separated last name first name.
   def name
     "#{last_name}, #{first_name}"
