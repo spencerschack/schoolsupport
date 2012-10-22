@@ -49,7 +49,7 @@ module Methods
       
       if params[:commit]
         if @export.valid? && params[:export_kind] == 'request'
-          RequestMailer.request(@export).deliver
+          RequestMailer.request_form(@export).deliver
         end
         respond_with @export
       else

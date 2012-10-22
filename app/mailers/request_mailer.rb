@@ -1,6 +1,6 @@
 class RequestMailer < ActionMailer::Base
   
-  def request export
+  def request_form export
     @export = export
     @user = Authorization.current_user
     attachments["#{@export.certificate_title}.csv"] = generate_csv
