@@ -21,12 +21,20 @@ module Response
       end
     when 'export'
       if record.errors.any?
-        render text: record.errors.full_messages.join("\n")
+        if record.kind == 'request'
+          render json: failure_hash, content_type: 'text/plain'
+        else
+          render text: record.errors.full_messages.join("\n")
+        end
       else
-        render "exports/#{record.kind}",
-          formats: [record.format],
-          content_type: record.content_type,
-          layout: false
+        if record.kind == 'request'
+          render json: success_hash(record), content_type: 'text/plain'
+        else
+          render "exports/#{record.kind}",
+            formats: [record.format],
+            content_type: record.content_type,
+            layout: false
+        end
       end
     when 'destroy'
       if record.errors.any?
@@ -44,7 +52,7 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
-      hash[:path] = parent_path(record) unless action_name == 'import'
+      hash[:path] = parent_path(record) unless %w(import export).include?(action_name)
       
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
@@ -94,6 +102,8 @@ module Response
       success ? 'show' : 'new'
     when 'import'
       success ? 'index' : 'import'
+    when 'export'
+      success ? 'exports/request' : 'application/export'
     end
   end
   

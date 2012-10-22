@@ -29,15 +29,15 @@ window.update_io_buttons = (table) ->
 	export_button = wrapper.find('a.export')
 	import_button = wrapper.find('a.import')
 	if $(table).find('a span input:checked:visible').length
-		export_button.text('Print Selected').addClass('selecting')
+		export_button.text('Export Selected').addClass('selecting')
 		import_button.text('Update').addClass('selecting')
 	else
 		export_button.removeClass('selecting')
 		import_button.text('Import').removeClass('selecting')
 		if export_button.hasClass('searching')
-			export_button.text('Print Search')
+			export_button.text('Export Search')
 		else
-			export_button.text('Print All')
+			export_button.text('Export All')
 
 $ ->
 	

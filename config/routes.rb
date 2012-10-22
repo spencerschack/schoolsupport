@@ -12,6 +12,7 @@ Schoolsupport::Application.routes.draw do
   
   # Extract export routes.
   def exportable
+    match 'export/view_request', action: 'view_request', on: :collection
     match 'export(/:export_kind(/:export_id))', action: 'export',
       on: :collection, as: 'export'
     match 'export(/:export_kind(/:export_id))', action: 'export',

@@ -46,14 +46,22 @@ module Methods
           kind: params[:export_kind],
           type_id: params[:export_id]
       }), as: current_role)
-      @export.valid?
       
       if params[:commit]
+        if @export.valid? && params[:export_kind] == 'request'
+          RequestMailer.request(@export).deliver
+        end
         respond_with @export
       else
         render 'application/export'
       end
     end
+  end
+  
+  # View confirmation of print request
+  def view_request
+    @request = params[:export]
+    render 'exports/view_request'
   end
 
   # Show action.

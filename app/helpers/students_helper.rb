@@ -3,7 +3,7 @@ module StudentsHelper
   PARENTS[:students] = [Period, User, School, District]
   
   FIELDS[:students] = {
-    index: [:identifier, :name, :bus, :school],
+    index: [:identifier, :name, :grade],
     show: { fields: [:identifier, :grade, :bus_rfid, :hispanic, :english_learner, :dropped],
       relations: [:bus_route, :bus_stop, :test_scores, :periods, :users, :school, :district]},
     form: { fields: [:identifier, :first_name, :last_name, :grade, [:hispanic, as: :radio], [:english_learner, as: :radio],

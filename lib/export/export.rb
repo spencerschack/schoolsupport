@@ -9,7 +9,7 @@ class Export < Tableless
   
   # What kind are accepted.
   def self.kinds
-    %w(print zpass)
+    %w(print request zpass)
   end
   
   # What template columns are images.
@@ -24,11 +24,12 @@ class Export < Tableless
   
   column :type_id, :integer
   
-  attr_accessor :kind, :prompt_values, :sort_by
+  attr_accessor :kind, :prompt_values, :sort_by, :certificate_title,
+    :distribution_date, :additional_information
   
   attr_accessible :students, :student_ids, :type_id, :period_ids,
-    :user_ids, :kind, :prompt_values, :sort_by, as: [:developer,
-    :superintendent, :principal, :teacher]
+    :user_ids, :kind, :prompt_values, :sort_by, :certificate_title,
+    :distribution_date, :additional_information, as: [:developer, :superintendent, :principal, :teacher]
   attr_accessible :school_ids, as: [:developer, :superintendent,
     :principal]
   attr_accessible :district_ids, as: [:developer, :superintendent]
@@ -38,6 +39,7 @@ class Export < Tableless
   has_many :schools, through: :students
   
   validates_presence_of :kind
+  validates_presence_of :certificate_title, :distribution_date, if: :is_request?
   validates_presence_of :type, if: :is_print?
   validates_inclusion_of :sort_by, in: Student.sorts, allow_blank: true
   validate :students_in_scope

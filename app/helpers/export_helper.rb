@@ -1,5 +1,13 @@
 module ExportHelper
   
+  def export_form_attributes
+    hash = {url: export_path}
+    if %w(print zpass).include? params[:export_kind]
+      hash[:html] = { target: '_blank' }
+    end
+    hash
+  end
+  
   # The field name for the check boxes next to table rows on index pages.
   def export_attr model = controller_model
     @export_attr ||= "selected[#{model.name.underscore}_ids][]"
@@ -8,7 +16,6 @@ module ExportHelper
   # The title to display under 'PRINT'.
   def export_title
     if params[:export_kind]
-      Rails.logger.debug @export
       if @export.kind == 'print'
         @export.type.name
       else
@@ -26,14 +33,18 @@ module ExportHelper
   # Curry parent_path for exports.
   def export_path options = {}
     path = parent_path(resource || controller_model, { action: :export })
-    if kind = defined?(@export) ? @export.kind : options[:kind]
-      path << "/#{kind}"
-    end
-    if id = defined?(@export) ? @export.type.try(:id) : options[:id]
-      path << "/#{id}"
-    end
-    if format = defined?(@export) ? @export.format : options[:format]
-      path << ".#{format}"
+    if options[:request]
+      path << '/view_request'
+    else
+      if kind = defined?(@export) ? @export.kind : options[:kind]
+        path << "/#{kind}"
+      end
+      if id = defined?(@export) ? @export.type.try(:id) : options[:id]
+        path << "/#{id}"
+      end
+      if format = defined?(@export) ? @export.format : options[:format]
+        path << ".#{format}"
+      end
     end
     path
   end
