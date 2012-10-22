@@ -44,12 +44,12 @@
 						= f.action :submit
 				
 	- else
+		%h6 Request
+		= link_to 'Send a Request', export_path(kind: 'request')
 		- if available_types.any?
 			%h6 Templates
 			- available_types.each do |type|
 				= link_to type.name, export_path(kind: 'print', id: type.id)
-		%h6 Request
-		= link_to 'Send a Request', export_path(kind: 'request')
 		- if permitted_to?(:zpass, controller_model)
 			%h6 Zpass
 			= link_to 'Zpass', export_path(kind: 'zpass')

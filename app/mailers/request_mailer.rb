@@ -10,6 +10,7 @@ class RequestMailer < ActionMailer::Base
   end
   
   def generate_csv
+    require 'csv'
     CSV.generate do |csv|
       csv << ['ID', 'Last Name', 'First Name', 'Grade', 'Teacher']
       @export.students.each do |student|
