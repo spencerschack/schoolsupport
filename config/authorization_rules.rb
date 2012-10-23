@@ -147,17 +147,17 @@ authorization do
   
   # Access to print jobs.
   role :export do
-    has_permission_on :districts, to: :export do
+    has_permission_on :districts, to: [:export, :view_request] do
       if_attribute zpass: true
       if_attribute schools: { type_ids: is_not { [] } }
     end
-    has_permission_on [:schools, :periods, :students, :users], to: :export do
+    has_permission_on [:schools, :periods, :students, :users], to: [:export, :view_request] do
       if_permitted_to :zpass, :district 
     end
-    has_permission_on :schools, to: :export do
+    has_permission_on :schools, to: [:export, :view_request] do
       if_attribute type_ids: is_not { [] }
     end
-    has_permission_on [:periods, :students, :users], to: :export do
+    has_permission_on [:periods, :students, :users], to: [:export, :view_request] do
       if_permitted_to :export, :school
     end
   end
