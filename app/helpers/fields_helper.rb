@@ -8,7 +8,7 @@ module FieldsHelper
       :align, :spacing], relations: [:template] },
     form: { fields: [:name, [:column, collection: Student.template_column_options],
       [:x, hint: 'from the left'], [:y, hint: 'from the bottom'], :width,
-      :height, :font, :text_size, :color,
+      :height, :font, :text_size, [:color, hint: 'without the "#"'],
       [:align, collection: Field.align_options], :spacing], relations: [:template] }
   }
   
