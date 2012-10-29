@@ -123,11 +123,11 @@ class Import
       if hash[identifier]
         finder = model
         Array.wrap(scopes).compact.each do |scope|
-          if !hash[scope]
+          if scope_value = (hash[scope] || hash["#{scope}_id"])
             raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
               " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"
           else
-            finder = finder.where(scope.to_sym => hash[scope])
+            finder = finder.where(scope.to_sym => scope_value)
           end
         end
         record = finder.send("find_by_#{identifier}", hash[identifier])
