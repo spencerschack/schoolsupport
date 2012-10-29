@@ -75,10 +75,9 @@ class Import
   private
   
   def create_records path
-    index = 1
     current_user = Authorization.current_user
     current_role = current_user.role_symbols.first
-    parser.read(path) do |hash|
+    parser.read(path) do |hash, index|
       begin
         Authorization.current_user = current_user
         process(hash = hash.with_indifferent_access)
@@ -90,7 +89,6 @@ class Import
         row.errors.add :"row_#{index}", error.message
       ensure
         ActiveRecord::Base.connection.close
-        index += 1
       end
     end
   end
