@@ -40,7 +40,7 @@ class Student < ActiveRecord::Base
   after_initialize :set_school
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
-  validates_uniqueness_of :identifier, scope: :school
+  validates_uniqueness_of :identifier, scope: :school_id
   validate :periods_in_school
   validate :bus_in_district
 
