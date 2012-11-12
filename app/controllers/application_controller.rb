@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   # If visiting schoolsupport.herokuapp.com, redirect to schoolsupport.shoobphoto.com
   def to_shoobphoto
     if request.host =~ /herokuapp/i
-      Rails.logger.debug "#{request.protocol}#{request.host.sub(/herokuapp/, 'shoobphoto')}:#{request.port}#{request.fullpath}"
+      redirect_to "#{request.protocol}#{request.host.sub(/herokuapp/, 'shoobphoto')}:#{request.port}#{request.fullpath}"
     end
   end
   
