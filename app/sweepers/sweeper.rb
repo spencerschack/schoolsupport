@@ -19,7 +19,29 @@ class Sweeper < ActionController::Caching::Sweeper
   private
   
   def expire_cache_for record
-    expire_action(controller: record.class.model_name.underscore.pluralize, action: 'index')
+    expired_models = [record.class]
+    expired_models += case record
+    when District
+      [School, BusRoute, BusStop]
+    when Pdf
+      [Type]
+    when Role
+      [User]
+    when School
+      [Period]
+    when Template
+      [Pdf, Type]
+    when TestGroup
+      [TestModel]
+    end || []
+    
+    expired_models.each do |model|
+      expire_action(controller: controller_for(model), action: 'index')
+    end
+  end
+  
+  def controller_for record
+    record.model_name.underscore.pluralize
   end
   
 end
