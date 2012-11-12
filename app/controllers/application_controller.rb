@@ -18,13 +18,6 @@ class ApplicationController < ActionController::Base
 
   private
   
-  # If visiting schoolsupport.herokuapp.com, redirect to schoolsupport.shoobphoto.com
-  def to_shoobphoto
-    if request.host ~= /herokuapp/i
-      redirect_to request.path.sub(/herokuapp/, 'shoobphoto')
-    end
-  end
-  
   # If the request is not xhr, render only the layout.
   def handle_non_xhr
     file_upload = params['X-Requested-With'] == 'IFrame'
