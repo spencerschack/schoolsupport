@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   include Response
   include Auth
   include Errors
+  include Caching
 
   private
   
