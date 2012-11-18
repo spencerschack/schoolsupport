@@ -10,6 +10,7 @@
 			%ul.errors
 				%li= @error
 		= f.inputs do
-			= f.input :file, as: :file, hint: 'line delimited student state ids'
+			= f.input :school_id, collection: School.with_permissions_to(:show)
+			= f.input :file, as: :file, hint: 'line delimited student ids'
 		= f.actions do
 			= f.action :submit, label: 'Upload'

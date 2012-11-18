@@ -7,7 +7,7 @@ class TypesController < ApplicationController
         
         require 'csv'
         identifiers = CSV.parse(params[:student_select][:file].read).flatten
-        students = Student.find_all_by_identifier(identifiers)
+        students = Student.where(school_id: params[:student_select][:school_id], identifier: identifiers)
         raise 'No students could be found.' unless students.any?
         
         params[:export_type] = 'print'

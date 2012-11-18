@@ -123,6 +123,7 @@ class Import
       if hash[identifier]
         finder = model
         Array.wrap(scopes).compact.each do |scope|
+          Rails.logger.debug hash.inspect
           if !hash[scope]
             raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
               " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"

@@ -33,7 +33,7 @@ class Student < ActiveRecord::Base
     path: '/student_images/:basename:style_unless_original.:extension',
     styles: { original: ['', :jpg], thumbnail: ['70x70', :jpg] }
   
-  has_import identify_with: { identifier: :school }, associate: { school: :identifier,
+  has_import identify_with: { identifier: :school_id }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name },
     prompts: proc { [[:school, collection: School.with_permissions_to(:show)]] }
   
