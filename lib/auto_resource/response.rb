@@ -24,7 +24,11 @@ module Response
         if record.kind == 'request'
           render json: failure_hash, content_type: 'text/plain'
         else
-          render text: record.errors.full_messages.join("\n")
+          @print_errors = record.errors.full_messages
+          render 'exports/print_error',
+            format: [:pdf],
+            content_type: 'application/pdf',
+            layout: false
         end
       else
         if record.kind == 'request'
