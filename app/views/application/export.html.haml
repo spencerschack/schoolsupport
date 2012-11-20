@@ -7,7 +7,7 @@
 
 	- if params[:export_kind]
 		= semantic_form_for @export, export_form_attributes do |f|
-			- if @export.errors.any? && params[:export_kind] != 'request'
+			- if @export.valid? && params[:export_kind] != 'request'
 				%p This export cannot be used:
 				%ul.errors
 					- @export.errors.full_messages.each do |error|
