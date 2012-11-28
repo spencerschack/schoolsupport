@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::BCrypt
+    c.logged_in_timeout = 60.minutes
   end
 
   belongs_to :school
