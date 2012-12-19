@@ -14,6 +14,10 @@ class Export < Tableless
   
   # What template columns are images.
   def self.image_columns
+    %w(image school_mascot_image image_if_present)
+  end
+  
+  def self.necessary_image_columns
     %w(image school_mascot_image)
   end
   
@@ -83,6 +87,8 @@ class Export < Tableless
     template.fonts.map { |font| urls[font.file.url] = true }
     if columns.include? 'image'
       students.map { |student| urls[student.image.url] = true }
+    elsif columns.include? 'image_if_present'
+      students.map { |student| urls[student.image.url] = true if student.image? }
     end
     if columns.include? 'school_mascot_image'
       schools.map { |school| urls[school.mascot_image.url] = true }
@@ -160,7 +166,7 @@ class Export < Tableless
   # If columns includes image or school mascot image, ensure each student has
   # an image and their school has a mascot image.
   def image_presence
-    if (columns | Export.image_columns).present?
+    if (columns | Export.necessary_image_columns).present?
       image_present = columns.include?('image')
       mascot_present = columns.include?('school_mascot_image')
       

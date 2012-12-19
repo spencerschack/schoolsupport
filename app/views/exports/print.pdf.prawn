@@ -20,8 +20,12 @@ begin
   
       # Handle image inserts.
       if Export.image_columns.include? field.column
-        pdf.image Thread.current[:export_files][student.send(field.column).url],
-          at: [field.x, field.y], width: field.width, height: field.height
+        if url = student.send(field.column).try(:url)
+          pdf.image Thread.current[:export_files][url],
+            at: [field.x, field.y],
+            width: field.width,
+            height: field.height
+        end
     
       # Handle colors.
       elsif Export.color_columns.include? field.column
