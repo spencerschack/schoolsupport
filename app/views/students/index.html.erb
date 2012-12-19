@@ -1,0 +1,39 @@
+<div class="title">
+  <h2><%= term_filter || 'All' %></h2>
+  <h1><%= plural_title %></h1>
+  <%= link_for :new, new_resource %>
+  <%= link_for :search, controller_model %>
+  <%= link_for :import, controller_model %>
+  <%= link_for :export, new_resource %>
+</div>
+  
+<div class="scroller">
+  <div class="table">
+    <div>
+      <span class="spacer"></span>
+      <span class="select">
+        <%= check_box_tag(nil, true) %>
+      </span>
+      <span class="image"></span>
+      <% fields(:index).each do |field| %>
+        <span><%= header_content(field) %></span>
+      <% end %>
+      <span class="spacer"></span>
+    </div>
+    <% collection.each do |row| %>
+      <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
+        <span class="spacer"></span>
+        <span class="select">
+          <input type="checkbox" value="<%= row.id %>" name="<%= export_attr %>">
+        </span>
+        <span class="image">
+          <%= image_tag(row.image(:index), width: 35, height: 35) if row.image? %>
+        </span>
+        <% fields(:index).each do |field| %>
+          <span><%= cell_content(row, field) %></span>
+        <% end %>
+        <span class="spacer"></span>
+      </a>
+    <% end %>
+  </div>
+</div>
