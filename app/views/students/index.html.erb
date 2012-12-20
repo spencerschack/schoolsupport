@@ -27,7 +27,7 @@
           <input type="checkbox" value="<%= row.id %>" name="<%= export_attr %>">
         </span>
         <span class="image">
-          <%= image_tag(row.image(:index), width: 35, height: 35) if row.image? %>
+          <%= image_tag(row.image, width: 35, height: 35) if row.image? %>
         </span>
         <% fields(:index).each do |field| %>
           <span><%= cell_content(row, field) %></span>

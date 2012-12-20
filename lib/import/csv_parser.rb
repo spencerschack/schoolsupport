@@ -7,7 +7,7 @@ class CsvParser
     CSV.foreach(path, { headers: true }) do |row|
       array << [row.to_hash, index += 1]
     end
-    array.peach(&block)
+    array.pmap(&block)
   end
   
 end

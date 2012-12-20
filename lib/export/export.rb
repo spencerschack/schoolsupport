@@ -88,7 +88,11 @@ class Export < Tableless
     if columns.include? 'image'
       students.map { |student| urls[student.image.url] = true }
     elsif columns.include? 'image_if_present'
-      students.map { |student| urls[student.image.url] = true if student.image? }
+      students.map do |student|
+        if student.image?
+          urls[student.image.url] = true
+        end
+      end
     end
     if columns.include? 'school_mascot_image'
       schools.map { |school| urls[school.mascot_image.url] = true }

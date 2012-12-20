@@ -7,6 +7,8 @@ gem 'rails', '3.2.6'
 gem 'pg'
 gem 'unicorn'
 
+gem 'resque'
+
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'compass-rails'
