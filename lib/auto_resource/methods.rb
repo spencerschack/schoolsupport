@@ -24,6 +24,16 @@ module Methods
       else
         redirect_to request.path.gsub(/\/import$/, '?xhr=true')
       end
+      # @import_data = ImportData.new(params[:import].merge({
+      #   model: controller_model,
+      #   defaults: params_with_parents(controller_model)
+      # }))
+      # if @import_data.save
+      #   Resque.enqueue(ImportJob, @import_data.id)
+      #   redirect_to '/imports'
+      # else
+      #   respond_with @import_data
+      # end
     else
       @import = Import.new(
         update_ids: params[:selected].try(:first).try(:last),
