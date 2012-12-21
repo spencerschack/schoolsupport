@@ -13,7 +13,6 @@ window.url_to_path = (url) ->
 window.load_initial_path = ->
 	initial_path = History.getHash() || $('head meta[name="initial_path"]').attr('content')
 	initial_path = initial_path.replace(/^\./, '')
-	initial_path = $('#navigation li.account a').attr('href') if initial_path == '/'
 	window.location.hash = ''
 	push_state(initial_path)
 

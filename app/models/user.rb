@@ -25,10 +25,9 @@ class User < ActiveRecord::Base
   has_one :district, through: :school
   belongs_to :role
   has_and_belongs_to_many :periods, extend: WithTermExtension
-  has_many :students, through: :periods
-  has_many :test_scores, through: :students
-  has_many :test_models, through: :test_scores
   has_many :import_data
+  
+  after_initialize :associate_students
   
   has_import identify_with: { email: nil, name: :school_id },
     associate: { school: :identifier, role: :name }
@@ -42,6 +41,22 @@ class User < ActiveRecord::Base
   validate :presence_of_role
   validate :periods_in_school
   validate :school_in_district
+  
+  def associate_students
+    scope = case role_symbol
+    when :principal
+      :school
+    when :superintendent
+      :district
+    else
+      :periods
+    end
+    
+    self.class.has_many :students, through: scope
+    # These must be defined after the "students" relation is defined.
+    self.class.has_many :test_scores, through: :students
+    self.class.has_many :test_models, through: :test_scores
+  end
   
   def as_json options = {}
     { name: name, id: id }
@@ -75,7 +90,7 @@ class User < ActiveRecord::Base
   
   # Return underscored symbol form of role name or nil.
   def role_symbol
-    role.name.underscore.to_sym
+    role ? role.name.underscore.to_sym : :default
   end
   
   private

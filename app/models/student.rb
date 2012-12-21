@@ -39,7 +39,7 @@ class Student < ActiveRecord::Base
   
   has_import identify_with: { identifier: :school_id }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name },
-    prompts: proc { [[:school, collection: School.with_permissions_to(:show)]] }
+    prompts: proc { [[:school, collection: School.with_permissions_to(:show).order('name')]] }
   
   after_initialize :set_school
   
@@ -141,6 +141,11 @@ class Student < ActiveRecord::Base
   # Set the teacher for the current term.
   def teacher= name
     set_teacher(name, Term.current)
+  end
+  
+  # Return first user
+  def teacher
+    users.first
   end
   
   # Method for students index.html

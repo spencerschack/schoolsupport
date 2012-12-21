@@ -34,8 +34,9 @@
 
 	- if permitted_to? :index, :fonts
 		%li.fonts= link_to 'Fonts', fonts_path
-
-	%li.account= link_to 'Account', current_user
+	
+	- if current_role == :developer
+		%li.account= link_to 'Account', current_user
 	
 	%li.help= link_to 'Help', help_path
 	
