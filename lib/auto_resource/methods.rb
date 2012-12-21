@@ -122,7 +122,7 @@ module Methods
           worker.job['payload']['args'].first
         end
       end.compact
-      ImportData.with_permissions_to(:read).find(pending_ids)
+      ImportData.with_permissions_to(:read).where(id: pending_ids)
     else
       []
     end
