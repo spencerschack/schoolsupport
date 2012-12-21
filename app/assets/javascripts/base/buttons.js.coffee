@@ -8,6 +8,18 @@ handle_cancel_click = (event) ->
 			.animate { marginTop: "-#{$('#container').height()}px" }, SHORT_DURATION, ->
 				$(this).remove()
 
+handle_back_click = (event) ->
+	wrapper = $(this).closest('.wrapper')
+	if wrapper.is('.import')
+		$(this).display_loading_message();
+		url = wrapper.closest('.page').attr('data-path')
+		wrapper.next('.wrapper').trigger('unloaded').remove()
+		$.get url, (data) ->
+			$(data).insertAfter(wrapper).trigger('loaded')
+			wrapper.animate {
+				marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+					$(this).remove()
+
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
 handle_edit_click = (event) ->
@@ -87,6 +99,9 @@ $ ->
 	
 	# Handle cancel button clicks.
 	$('#container').delegate 'a.cancel', 'click.cancel', handle_cancel_click
+	
+	# Handle back button clicks.
+	$('#container').delegate 'a.back', 'click.back', handle_back_click
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click

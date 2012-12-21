@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
   has_many :students, through: :periods
   has_many :test_scores, through: :students
   has_many :test_models, through: :test_scores
+  has_many :import_data
   
   has_import identify_with: { email: nil, name: :school_id },
     associate: { school: :identifier, role: :name }

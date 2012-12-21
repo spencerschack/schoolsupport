@@ -13,32 +13,25 @@ module Methods
   
   # Import action.
   def import
-    if params[:import]
-      @import = Import.new(params[:import].merge({
+    if params[:import_data]
+      @import_data = ImportData.new(params[:import_data].merge({
         model: controller_model,
-        defaults: params_with_parents(controller_model)
-      }))
-      @import.save
-      if @import.errors.any?
-        respond_with @import
-      else
-        redirect_to request.path.gsub(/\/import$/, '?xhr=true')
+        defaults: params_with_parents(controller_model),
+        user_id: current_user.id
+      }), as: current_role)
+      if @import_data.save
+        @import_success = true
+        Resque.enqueue(ImportJob, @import_data.id)
       end
-      # @import_data = ImportData.new(params[:import].merge({
-      #   model: controller_model,
-      #   defaults: params_with_parents(controller_model)
-      # }))
-      # if @import_data.save
-      #   Resque.enqueue(ImportJob, @import_data.id)
-      #   redirect_to '/imports'
-      # else
-      #   respond_with @import_data
-      # end
+      load_jobs
+      respond_with @import_data
     else
-      @import = Import.new(
+      load_jobs
+      @import_data = ImportData.new({
         update_ids: params[:selected].try(:first).try(:last),
-        model: controller_model
-      )
+        model: controller_model,
+        user_id: current_user.id
+      }, as: current_role)
     end
   end
   
@@ -117,6 +110,36 @@ module Methods
   #   params_key # => :user
   def params_key
     controller_name.singularize.to_sym
+  end
+  
+  def load_jobs
+    @pending_jobs = if Resque.peek('import') || Resque.working.any?
+      pending_ids = Resque.peek('import', 0, 1000).map do |job|
+        job['args'].first
+      end
+      pending_ids += Resque.working.map do |worker|
+        if worker.job['queue'] == 'import'
+          worker.job['payload']['args'].first
+        end
+      end.compact
+      ImportData.with_permissions_to(:read).find(pending_ids)
+    else
+      []
+    end
+    
+    @failed_jobs = if Resque::Failure.count > 0
+      @failure_data = {}
+      failed_ids = Resque::Failure.all(0, 1000).map do |job|
+        if job['queue'] == 'import'
+          id = job['payload']['args'].first
+          @failure_data[id] = "#{job['exception']}: #{job['error']}"
+          id
+        end
+      end.compact
+      ImportData.with_permissions_to(:read).where(id: failed_ids)
+    else
+      []
+    end
   end
   
 end

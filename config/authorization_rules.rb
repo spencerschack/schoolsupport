@@ -47,6 +47,9 @@ authorization do
     # Access to zpass.
     includes :zpass
     
+    # Access to import jobs.
+    includes :imports
+    
 	end
 
 	# School level access.
@@ -90,6 +93,9 @@ authorization do
     
     # Access to zpass.
     includes :zpass
+    
+    # Access to import jobs.
+    includes :imports
     
 	end
 
@@ -135,6 +141,9 @@ authorization do
     # Access to zpass.
     includes :zpass
     
+    # Access to import jobs.
+    includes :imports
+    
 	end
 
 	# Default.
@@ -169,6 +178,13 @@ authorization do
     end
     has_permission_on [:schools, :periods, :students, :users], to: :zpass do
       if_attribute district: { zpass: true }
+    end
+  end
+  
+  # Access to view one's import jobs.
+  role :imports do
+    has_permission_on :import_data, to: :manage do
+      if_attribute user_id: is { user.id }
     end
   end
 

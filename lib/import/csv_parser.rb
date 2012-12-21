@@ -1,10 +1,10 @@
 class CsvParser
 
-  def self.read path, &block
+  def self.read file, &block
     require 'csv'
     array = []
     index = 0
-    CSV.foreach(path, { headers: true }) do |row|
+    CSV.new(file, { headers: true }).each do |row|
       array << [row.to_hash, index += 1]
     end
     array.pmap(&block)

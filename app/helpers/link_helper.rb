@@ -46,6 +46,9 @@ module LinkHelper
       
     when :cancel
       link_to 'Cancel', js_link, options
+    
+    when :back
+      link_to 'Back', js_link, options
       
     when :search
       if (model_or_record.is_a?(Class) ? model_or_record : model_or_record.class).respond_to?(:search)
@@ -53,7 +56,7 @@ module LinkHelper
       end
       
     when :import
-      if permitted_to?(action, model_or_record) && Import.for?(model_or_record)
+      if permitted_to?(action, model_or_record) && ImportData.for?(model_or_record)
         link_to 'Import', js_link, options
       end
     

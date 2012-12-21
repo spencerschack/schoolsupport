@@ -69,6 +69,7 @@ handle_form_submit = (event) ->
 
 					if data.page
 						wrapper.next('.show.wrapper').trigger('unloaded').remove()
+						page = $(data.page)
 						$(data.page).insertAfter(wrapper).trigger('loaded')
 						wrapper.animate {
 							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->

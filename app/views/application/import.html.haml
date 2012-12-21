@@ -1,28 +1,66 @@
 .title
 	%h2 Import
 	%h1= plural_title
-	= link_for :cancel, controller_model
+	- if @import_success
+		= link_for :back, controller_model
+	- else
+		= link_for :cancel, controller_model
 	= link_for :upload, controller_model
 	
 .scroller
-	= semantic_form_for @import, url: parent_path(controller_model, action: :import) do |f|
+	- if @import_success
+		%p The import has started successfully, look for current status below.
+	
+	= semantic_form_for @import_data, url: parent_path(controller_model, action: :import) do |f|
 		= f.semantic_errors
-		.errors
-			- @import.row.errors.each do |attribute, error|
-				%p.show_content
-					%b= attribute.to_s.titleize
-					= error
 		= f.inputs class: 'fields' do
-			- if @import.update_ids.any?
+			- if @import_data.update_ids.try(:any?)
 				%li
 					Records that were selected on the previous page but are not present
 					in the import file will be marked as dropped.
-				- @import.update_ids.each do |update_id|
+				- @import_data.update_ids.each do |update_id|
 					= hidden_field_tag 'import[update_ids][]', update_id
 			= f.input :file, as: :file
 		= f.inputs class: 'relations' do
 			= f.semantic_fields_for :prompt_values do |a|
-				- @import.prompts.each do |field|
+				- @import_data.prompts.each do |field|
 					= a.input *import_prompt_options(field)
 		= f.actions do
 			= f.action :submit, label: 'Upload'
+	
+	#import_status
+		%p
+			%b Pending Imports
+	
+		%p
+			- if @pending_jobs.any?
+				%table#pending_table
+					%tr
+						%th Type
+						%th Filename
+						%th Start Time
+						- @pending_jobs.each do |job|
+							%tr
+								%td= job.model || none
+								%td= job.file_file_name || none
+								%td= job.created_at.in_time_zone('Pacific Time (US & Canada)').strftime('%Y %b %e %r')
+				
+			- else
+				All imports have completed.
+	
+		%p
+			%b Failed Imports
+		%p
+			- if @failed_jobs.any?
+				%table
+					%tr
+						%th Type
+						%th Filename
+						%th Error
+					- @failed_jobs.each do |job|
+						%tr
+							%td= job.model || none
+							%td= job.file_file_name || none
+							%td= @failure_data[job.id] || none
+			- else
+				All imports have succeeded.

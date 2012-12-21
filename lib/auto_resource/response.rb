@@ -105,7 +105,7 @@ module Response
     when 'create'
       success ? 'show' : 'new'
     when 'import'
-      success ? 'index' : 'import'
+      'import'
     when 'export'
       success ? 'exports/request' : 'application/export'
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120819051129) do
+ActiveRecord::Schema.define(:version => 20121221005839) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -68,6 +68,20 @@ ActiveRecord::Schema.define(:version => 20120819051129) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+  end
+
+  create_table "import_data", :force => true do |t|
+    t.string   "model"
+    t.text     "defaults"
+    t.text     "prompt_values"
+    t.text     "update_ids"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer  "user_id"
   end
 
   create_table "pdfs", :force => true do |t|
