@@ -33,7 +33,9 @@ class ImportJob
     Authorization.ignore_access_control(true)
     
     ImportData.where('created_at < ?', 1.day.ago).destroy_all
-    Resque.redis.ltrim(:failed, -1, -100)
+    if Resque::Failure.count > 100
+      Resque.redis.ltrim(:failed, -1, -100)
+    end
     
     Authorization.ignore_access_control(prev)
   end
