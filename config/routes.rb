@@ -1,4 +1,6 @@
 Schoolsupport::Application.routes.draw do
+  
+  mount Resque::Server.new, at: '/resque'
 
   # Helper function that adds 'import' and 'export' actions in addition to
   # resources.
