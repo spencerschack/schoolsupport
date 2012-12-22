@@ -35,6 +35,7 @@ class Period < ActiveRecord::Base
   
   def as_json options = {}
     { name: to_label, id: id }
+    super(options.reverse_merge(only: [:id])).reverse_merge(name: to_label)
   end
   
   # Used by formtastic.

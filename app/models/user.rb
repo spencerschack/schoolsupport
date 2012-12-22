@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   end
   
   def as_json options = {}
-    { name: name, id: id }
+    super options.reverse_merge(only: [:name, :id])
   end
   
   def self.find_by_name name

@@ -20,20 +20,17 @@
       <% end %>
       <span class="spacer"></span>
     </div>
-    <% collection.each do |row| %>
-      <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
-        <span class="spacer"></span>
-        <span class="select">
-          <input type="checkbox" value="<%= row.id %>" name="<%= export_attr %>">
-        </span>
-        <span class="image">
-          <%= image_tag(row.image(:index), width: 28, height: 35) if row.image? %>
-        </span>
-        <% fields(:index).each do |field| %>
-          <span><%= cell_content(row, field) %></span>
-        <% end %>
-        <span class="spacer"></span>
-      </a>
-    <% end %>
+    <script type="text/javascript">
+      window.rowData = <%= collection.as_json(index: true).to_json.html_safe %>;
+      window.rowGenerator = function(row) {
+        return '<a href="<%= "#{request.path}/" %>' + row.id + '" data-id="' + row.id +
+          '"><span class="spacer"></span><span class="select"><input type="checkbox" value="' +
+          row.id + '" name="<%= "#{export_attr}" %>"></span><span class="image">' +
+          (row.index_image ? '<img src="' + row.index_image +'" width=28 height=35 />' : '') +
+          '</span><span>' + row.identifier + '</span><span>' + row.name +
+          '</span><span>' + row.grade + '</span><span>' + (row.teacher_name || '<%= none %>') +
+          '</span><span class="spacer"></span></a>';
+      };
+    </script>
   </div>
 </div>

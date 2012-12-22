@@ -26,7 +26,7 @@ class School < ActiveRecord::Base
   validates_uniqueness_of :identifier
   
   def as_json options = {}
-    { name: to_label, id: id, district_id: district_id }
+    super(options.reverse_merge(only: [:id, :district_id])).reverse_merge(name: to_label)
   end
   
   def to_label
