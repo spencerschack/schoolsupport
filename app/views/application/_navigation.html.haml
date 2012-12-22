@@ -36,7 +36,7 @@
 		%li.fonts= link_to 'Fonts', fonts_path
 	
 	- if current_role == :developer
-		%li.account= link_to 'Account', current_user
+		%li.account= link_to 'Settings', settings_path
 	
 	%li.help= link_to 'Help', help_path
 	

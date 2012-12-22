@@ -113,7 +113,7 @@ Schoolsupport::Application.routes.draw do
   helper :bus_stops
   helper :bus_routes
   
-  # Templates, Pdfs, Types, Fields, and Fonts
+  # Templates, Pdfs, Types, Fields, Fonts, and Settings.
   resources :templates do
     resources :pdfs do
       resources :types do
@@ -124,6 +124,7 @@ Schoolsupport::Application.routes.draw do
     resources :fields
   end
   resources :fonts
+  resources :settings
   
   # Help
   match 'help' => 'help#index'
