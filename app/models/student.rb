@@ -49,19 +49,7 @@ class Student < ActiveRecord::Base
   validate :bus_in_district
 
   def as_json options = {}
-    if options[:index]
-      super(only: [:id, :identifier, :grade], methods: [:name, :index_image, :teacher_name])
-    else
-      super(options.reverse_merge(only: [:id, :name, :identifier]))
-    end
-  end
-  
-  def index_image
-    image? ? image(:index) : nil
-  end
-  
-  def teacher_name
-    teacher.try(:name)
+    super(options.reverse_merge(only: [:id, :name, :identifier]))
   end
   
   # Never overwrite image_file_name with a blank value.
