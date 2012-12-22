@@ -83,7 +83,18 @@ module Schoolsupport
     
     # Action mailer configuration for gmail. After initialize so Setting class
     # can be loaded.
-
+    config.after_initialize do
+      config.action_mailer.delivery_method = :smtp
+      config.action_mailer.smtp_settings = {
+        :enable_starttls_auto => true,
+        :address => 'smtp.gmail.com',
+        :port => 587,
+        :domain => 'shoobphoto.com',
+        :authentication => 'plain',
+        :user_name => Setting.value_of('Print Request Email Address'),
+        :password => Setting.value_of('Print Request Email Password')
+      }
+    end
     
   end
 end
