@@ -5,7 +5,7 @@ class RequestMailer < ActionMailer::Base
     @user = Authorization.current_user
     attachments["#{@export.certificate_title}.csv"] = generate_csv
     mail(subject: 'Print Request from School Support',
-      to: 'cynthia@shoobphoto.com',
+      to: Setting.value_of('Print Request Email Address'),
       from: "#{@user.name} <#{@user.email}>")
   end
   
