@@ -132,7 +132,7 @@ module Methods
       failed_ids = Resque::Failure.all(0, 100).reverse.map do |job|
         if job['queue'] == 'import'
           id = job['payload']['args'].first
-          @failure_data[id] = "#{job['exception']}: #{job['error']}"
+          @failure_data[id] = job['error']
           id
         end
       end.compact

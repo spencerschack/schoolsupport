@@ -121,7 +121,9 @@ class Student < ActiveRecord::Base
   # All actions are taken with bangs to stop the import if unsuccessful.
   def set_teacher name, term
     user = User.where(school_id: school_id).find_by_name!(name)
-    unless period = user.periods.first
+    if period = user.periods.first
+      periods << period unless periods.include? period
+    else
       period = Period.new({
         name: Period.default_name_for(user),
         term: term,
@@ -129,8 +131,8 @@ class Student < ActiveRecord::Base
         user_ids: [user.id]
       }, as: mass_assignment_role)
       period.save!
+      periods << period
     end
-    periods << period
   end
   
   # Set the teacher for the previous term.
