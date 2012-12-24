@@ -7,6 +7,7 @@ module Caching
   # - incorrect presentation when records have been deleted
   # - incorrect presentation when records have been updated
   # - incorrect presentation when records are not present in the set
+=begin
   def self.included base
     base.caches_action :index,
       layout: false,
@@ -16,5 +17,6 @@ module Caching
         "#{collection.cache_key}-#{digest}"
       }
   end
+=end
   
 end
