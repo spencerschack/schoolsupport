@@ -59,6 +59,7 @@ class ImportJob
   
   def create_records
     current_role = user.role_symbols.first
+    errors = []
     parser.read(file) do |hash, index|
       begin
         Authorization.current_user = user
@@ -68,11 +69,12 @@ class ImportJob
         record.save!
         dropped_ids.delete(record.id)
       rescue => error
-        raise error.exception("Row #{index}: #{error.message}")
+        errors << "Row #{index}: #{error.message}"
       ensure
         ActiveRecord::Base.connection.close
       end
     end
+    raise errors.join("\n") if errors.any?
   end
   
   def drop_records

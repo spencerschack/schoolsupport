@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121221233207) do
+ActiveRecord::Schema.define(:version => 20121224005238) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -228,20 +228,21 @@ ActiveRecord::Schema.define(:version => 20121221233207) do
     t.string   "crypted_password"
     t.string   "password_salt"
     t.string   "persistence_token"
-    t.string   "perishable_token"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.integer  "school_id"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "role_id"
-    t.integer  "login_count",        :default => 0
-    t.integer  "failed_login_count", :default => 0
-    t.datetime "last_request_at"
+    t.datetime "user_updated_at"
+    t.string   "perishable_token"
+    t.integer  "login_count"
+    t.integer  "failed_login_count"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
-    t.string   "current_login_ip"
     t.string   "last_login_ip"
+    t.string   "current_login_ip"
+    t.datetime "last_request_at"
   end
 
 end

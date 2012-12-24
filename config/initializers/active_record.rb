@@ -1,25 +1,44 @@
-class ActiveRecord::Base
+module ActiveRecord
   
-  # Creates a singleton function called search that uses LIKE to search
-  # through the given columns.
-  def self.searches *columns
-    define_singleton_method :search do |query|
-      statement = columns.map do |column|
-        "LOWER(\"#{table_name}\".\"#{column}\") LIKE LOWER(?)"
-      end.join(' OR ')
-      where(statement, *["%#{query}%"] * columns.length)
+  class Base
+    
+    # Specify a default, look below at cache_key for details.
+    def self.cache_key_timestamp_column
+      :updated_at
     end
-  end
   
-  # Relations that can be termed extend this.
-  module WithTermExtension
-    def with_term term = Term.current
-      if proxy_association.reflection.klass == Period
-        where(term: term)
-      else
-        joins(:periods).where(periods: { term: term })
+    # Creates a singleton function called search that uses LIKE to search
+    # through the given columns.
+    def self.searches *columns
+      define_singleton_method :search do |query|
+        statement = columns.map do |column|
+          "LOWER(\"#{table_name}\".\"#{column}\") LIKE LOWER(?)"
+        end.join(' OR ')
+        where(statement, *["%#{query}%"] * columns.length)
       end
     end
+  
+    # Relations that can be termed extend this.
+    module WithTermExtension
+      def with_term term = Term.current
+        if proxy_association.reflection.klass == Period
+          where(term: term)
+        else
+          joins(:periods).where(periods: { term: term })
+        end
+      end
+    end
+  
+  end
+  
+  class Relation
+    
+    # Returns a cache key for the given relation. Calculated by retreiving the
+    # most recent updated at timestamp.
+    def cache_key
+      "#{model_name.cache_key}-#{maximum(cache_key_timestamp_column).try(:to_s, :number)}"
+    end
+    
   end
   
 end

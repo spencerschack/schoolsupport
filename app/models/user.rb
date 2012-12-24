@@ -20,6 +20,11 @@ class User < ActiveRecord::Base
     c.crypto_provider = Authlogic::CryptoProviders::BCrypt
     c.logged_in_timeout = 3.hours
   end
+  
+  AUTHLOGIC_MAGIC_COLUMNS = %w(login_count failed_login_count 
+                                last_login_at current_login_at
+                                current_login_ip last_login_ip
+                                last_request_at perishable_token)
 
   belongs_to :school
   has_one :district, through: :school
@@ -28,6 +33,7 @@ class User < ActiveRecord::Base
   has_many :import_data
   
   after_initialize :associate_students
+  before_save :update_appropriate_timestamps
   
   has_import identify_with: { email: nil, name: :school_id },
     associate: { school: :identifier, role: :name }
@@ -62,6 +68,12 @@ class User < ActiveRecord::Base
     super options.reverse_merge(only: [:name, :id])
   end
   
+  # Specify which column to use to check whether a collection has changed.
+  # Necessary because Authlogic updates updated_at at every request.
+  def self.cache_key_timestamp_column
+    :user_updated_at
+  end
+  
   def self.find_by_name name
     first, last = extract_name_parts(name)
     where(first_name: first, last_name: last).first
@@ -93,7 +105,18 @@ class User < ActiveRecord::Base
     role ? role.name.underscore.to_sym : :default
   end
   
+  # Override to read from the correct timestamp column
+  def cache_key
+    "users/#{id}-#{user_updated_at.to_s(:number)}"
+  end
+  
   private
+  
+  def update_appropriate_timestamps
+    if (changed - AUTHLOGIC_MAGIC_COLUMNS).any?
+      self.user_updated_at = self.updated_at
+    end
+  end
   
   # Return the first and last name from the given string.
   def self.extract_name_parts name

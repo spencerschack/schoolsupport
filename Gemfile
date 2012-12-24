@@ -9,10 +9,6 @@ gem 'unicorn'
 
 gem 'resque'
 
-#group :development do
-#  gem 'oink'
-#end
-
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'compass-rails'
