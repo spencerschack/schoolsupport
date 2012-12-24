@@ -23,7 +23,7 @@ module Caching
   end
   
   def offset_amount
-    250
+    @offset_amount ||= ENV['PAGE_OFFSET_AMOUNT'].to_i
   end
 
 end

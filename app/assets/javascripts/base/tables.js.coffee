@@ -120,7 +120,7 @@ handle_index_loaded = ->
   loading = false
   old_offset = 0
   scroller.on 'scroll.infiniscroll', (event) ->
-    if !loading && scroller.scrollTop() / table.height() > 0.667
+    if !loading && scroller.scrollTop() / table.height() > 0.5
       loading = true
       load_more_records wrapper, table, (new_offset) ->
         if old_offset == new_offset
