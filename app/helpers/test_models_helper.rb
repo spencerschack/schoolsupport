@@ -2,6 +2,8 @@ module TestModelsHelper
   
   PARENTS[:test_models] = [TestGroup, District]
   
+  SORTS[:test_models] = {}
+  
   FIELDS[:test_models] = {
     index: [:name, :test_group],
     show: { fields: [:name], relations: [:test_group, :test_attributes] },

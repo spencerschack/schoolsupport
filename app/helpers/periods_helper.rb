@@ -2,6 +2,8 @@ module PeriodsHelper
   
   PARENTS[:periods] = [Student, User, School, District]
   
+  SORTS[:periods] = {}
+  
   FIELDS[:periods] = {
     index: [:name, :school],
     show: { fields: [:name, :term], relations: [:school, :students, :users, :test_scores]},

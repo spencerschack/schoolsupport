@@ -2,6 +2,8 @@ module TypesHelper
   
   PARENTS[:types] = [Pdf, Template]
   
+  SORTS[:types] = {}
+  
   FIELDS[:types] = {
     index: [:name, :pdf],
     show: { fields: [:name], relations: [:pdf] },

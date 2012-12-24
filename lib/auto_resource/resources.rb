@@ -11,11 +11,23 @@ module Resources
   # the corresponding children, if not return the model for the current
   # controller.
   def find_collection model = controller_model
-    @find_collection ||= if first_parent = find_first_parent(model)
-      collection = first_parent.send(type_of(model))
-    else
-      model
-    end.with_permissions_to(:show)
+    parent = find_first_parent
+    collection = parent ? parent.send(type_of(model)) : model
+    collection = collection.with_permissions_to(:show)
+    collection = collection.limit(offset_amount).offset(params[:offset].to_i)
+    
+    if params[:order].present? &&
+      (match = /(\w+)\.(\w+) (asc|desc)/.match(params[:order])) &&
+      match[1] == controller_model.table_name &&
+      controller_model.column_names.include?(match[2])
+        collection = collection.reorder(params[:order])
+    end
+    
+    if params[:search].present? && collection.respond_to?(:search)
+      collection = collection.search(params[:search])
+    end
+    
+    collection
   end
   
   # Find the first available parent.

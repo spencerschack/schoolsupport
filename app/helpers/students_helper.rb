@@ -2,6 +2,10 @@ module StudentsHelper
   
   PARENTS[:students] = [Period, User, School, District]
   
+  SORTS[:students] = {
+    name: 'students.last_name'
+  }
+  
   FIELDS[:students] = {
     index: [:identifier, :name, :grade, :teacher],
     show: { fields: [:identifier, :grade, :bus_rfid, :hispanic, :english_learner, :dropped],

@@ -6,4 +6,6 @@ module TemplatesHelper
     form: { fields: [:name], relations: [] }
   }
   
+  SORTS[:templates] = {}
+  
 end

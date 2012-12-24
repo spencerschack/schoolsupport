@@ -2,6 +2,8 @@ module TestAttributesHelper
   
   PARENTS[:test_attributes] = [TestModel, District]
   
+  SORTS[:test_attributes] = {}
+  
   FIELDS[:test_attributes] = {
     index: [:name, :parent, :test_model],
     show: { fields: [:name, :maximum_value, :advanced_proficient_boundary,

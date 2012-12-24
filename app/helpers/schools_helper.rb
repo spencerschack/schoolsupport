@@ -2,6 +2,8 @@ module SchoolsHelper
   
   PARENTS[:schools] = [Type, Pdf, Template, District]
   
+  SORTS[:schools] = {}
+  
   FIELDS[:schools] = {
     index: [:identifier, :name, :district],
     show: { fields: [:identifier, :name],

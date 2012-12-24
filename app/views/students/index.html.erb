@@ -8,7 +8,7 @@
 </div>
   
 <div class="scroller">
-  <div class="table">
+  <div class="table" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
       <span class="select">
@@ -16,7 +16,7 @@
       </span>
       <span class="image"></span>
       <% fields(:index).each do |field| %>
-        <span><%= header_content(field) %></span>
+        <span<%= order_by_for(field) %>><%= header_content(field) %></span>
       <% end %>
       <span class="spacer"></span>
     </div>

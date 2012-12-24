@@ -1,5 +1,7 @@
 module DistrictsHelper
   
+  SORTS[:districts] = {}
+  
   FIELDS[:districts] = {
     index: [:identifier, :name],
     show: { fields: [:identifier, :name],

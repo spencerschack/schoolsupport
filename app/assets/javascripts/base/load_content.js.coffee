@@ -15,7 +15,7 @@ window.load_content = (wrapper, data, url, callback) ->
 		data = $.param data
 		url += "?#{data}" if data
 	
-	scroller.empty()
+	scroller.find('a').remove()
 	loading_message.appendTo(wrapper.find('.scroller'))
 	buttons.fadeTo(TINY_DURATION, 0.5).on 'click.term_disable', (event) ->
 		event.stopImmediatePropagation()

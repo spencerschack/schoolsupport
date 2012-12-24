@@ -3,11 +3,7 @@ module Methods
   
   # Index action. Finds the collection and sets the collection variable.
   def index
-    records = find_collection
-    if params[:search] && records.respond_to?(:search)
-      records = records.search(params[:search])
-    end
-    set_collection records
+    set_collection find_collection
     respond_with collection
   end
   

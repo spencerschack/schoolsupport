@@ -2,6 +2,10 @@ module UsersHelper
   
   PARENTS[:users] = [Student, Period, School, District]
   
+  SORTS[:users] = {
+    name: 'users.last_name'
+  }
+  
   FIELDS[:users] = {
     index: [:name, :school, :role],
     show: { fields: [:email, :role],

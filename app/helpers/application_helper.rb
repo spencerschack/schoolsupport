@@ -8,6 +8,8 @@ module ApplicationHelper
   # records.
   ::FIELDS = {}
   
+  ::SORTS = {}
+  
   # Title to display on collection pages.
   def plural_title model = controller_model
     singular_title(model).pluralize
@@ -77,6 +79,14 @@ module ApplicationHelper
 	# Method for table headers.
 	def header_content field
 	 field.to_s.titleize
+	end
+	
+	# Method for the order by statement for a specific column.
+	def order_by_for field
+	  if (order = SORTS[controller_name.to_sym][field]) || controller_model.column_names.include?(field.to_s)
+	    order ||= "#{controller_model.table_name}.#{field}"
+	    " data-order-by=\"#{order}\" class=\"sortable\"".html_safe
+    end
 	end
 	
 	# For the given field on the given record, return the value or the value of

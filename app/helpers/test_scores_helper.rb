@@ -2,6 +2,8 @@ module TestScoresHelper
   
   PARENTS[:test_scores] = [TestModel, Student, Period, User, School, District]
   
+  SORTS[:test_scores] = {}
+  
   FIELDS[:test_scores] = {
     show: { fields: [:term], relations: [:student, :test_model] }
   }

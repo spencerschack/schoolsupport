@@ -36,7 +36,9 @@ module ActiveRecord
     # Returns a cache key for the given relation. Calculated by retreiving the
     # most recent updated at timestamp.
     def cache_key
-      "#{model_name.cache_key}-#{maximum(cache_key_timestamp_column).try(:to_s, :number)}"
+      column_name = "#{table_name}.#{cache_key_timestamp_column}"
+      latest_time = order(column_name).limit(1).pluck(:updated_at).first
+      "#{model_name.cache_key}-#{latest_time.try(:to_s, :number)}"
     end
     
   end
