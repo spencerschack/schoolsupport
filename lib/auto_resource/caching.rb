@@ -16,7 +16,10 @@ module Caching
     base.caches_action :index,
       layout: false,
       cache_path: proc { |controller|
-        "#{collection.cache_key}-#{Digest::SHA1.hexdigest(collection.pluck(:id).to_s)}"
+        column = controller_model.respond_to?(:cache_key_timestamp_column) ? controller_model.cache_key_timestamp_column : :updated_at
+        sql = collection.select([:id, column]).to_sql
+        string = ActiveRecord::Base.connection.execute(sql).to_a.to_s
+        "#{controller_model.model_name.cache_key}-#{Digest::SHA1.hexdigest(string)}"
       }
 
     base.helper_method :offset_amount
