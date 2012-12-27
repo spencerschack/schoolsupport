@@ -6,9 +6,10 @@ handle_login_form_submit = (event) ->
 	$(this).find('.inline-errors, .errors').slideUp(SHORT_DURATION)
 		
 	$.post this.action, $(this).serialize(), (data) ->
-		data = $(data)
-		if data.is('#navigation') # Form success.
-			$('#header').append(data).animate({width: '200px'}, SHORT_DURATION)
+		page = $(data.page)
+		if page.is('#navigation') # Form success.
+			update_export_list_styles(data.export_list_styles)
+			$('#header').append(page).animate({width: '200px'}, SHORT_DURATION)
 			animate_container_width_to(200, true)
 			navigation_height = $('#header #navigation').outerHeight()
 			$('#header #navigation').css(marginTop: "-#{navigation_height}px")
@@ -19,10 +20,9 @@ handle_login_form_submit = (event) ->
 			$('#header #navigation').animate {marginTop: 0}, MEDIUM_DURATION, ->
 				load_initial_path()
 		else # Form failure.
-			form = $(data)
-			errors = form.find('.inline_errors, .errors').hide()
+			errors = page.find('.inline_errors, .errors').hide()
 			$('#header .wrapper').remove()
-			$('#header').append(form)
+			$('#header').append(page)
 			errors.slideDown(SHORT_DURATION)
 
 	event.preventDefault()

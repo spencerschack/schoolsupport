@@ -1,15 +1,16 @@
 <div class="title">
-  <h2><%= term_filter || 'All' %></h2>
-  <h1><%= plural_title %></h1>
-  <%= link_for :new, new_resource %>
-  <%= link_for :search, controller_model %>
-  <%= link_for :import, controller_model %>
+  <h2>Your</h2>
+  <h1>Export List</h1>
+  <%= link_to 'Export', js_link, class: 'export_list' %>
+  <%= link_to 'Clear', js_link, class: 'clear_export_list' %>
 </div>
   
 <div class="scroller">
   <div class="table" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
+      <span></span>
+      <span class="image"></span>
       <% fields(:index).each do |field| %>
         <span<%= order_by_for(field) %>><%= header_content(field) %></span>
       <% end %>
@@ -18,6 +19,10 @@
     <% collection.each do |row| %>
       <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
         <span class="spacer"></span>
+        <span title="Add to export list" class="export_list_button <%= student_select_class(row.id) %>"></span>
+        <span class="image">
+          <%= image_tag(row.image(:index), width: 28, height: 35) if row.image? %>
+        </span>
         <% fields(:index).each do |field| %>
           <span><%= cell_content(row, field) %></span>
         <% end %>

@@ -1,0 +1,17 @@
+.table a
+	span.export_list_button
+		width: 20px
+		background-image: url(image-path("icons.png"))
+		background-position: 10px -2028px
+		background-repeat: no-repeat
+	
+		&:hover
+			background-position: 10px -2058px
+		
+	&:active, &.selected
+		span.select
+			background-position: 10px -2088px
+
+.table div
+	span.export_all_button
+		cursor: pointer

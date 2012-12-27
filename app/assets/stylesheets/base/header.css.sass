@@ -26,6 +26,7 @@
 	
 		li
 			a
+				width: 200px - ($spacing + 20px)
 				height: 35px
 				padding: 0 ($spacing + 20px)
 				display: block
@@ -97,6 +98,37 @@
 
 				&:active, &.selected
 					background-position: $spacing -409px
+			
+			&.export a
+				background-position: $spacing -2028px
+				
+				&:hover
+					background-position: $spacing -2058px
+					
+					span
+						background: $gray-text
+				
+				&:active, &.selected
+					background-position: $spacing -2088px
+					
+					span
+						background: #FFF
+						color: $gray-active
+				
+				&.selected span
+					color: $blue
+				
+				span
+					height: 15px
+					padding: 0 5px
+					margin: 10px $spacing 0 0
+					float: right
+					background: $gray-active
+					+border-radius($radius)
+					font-weight: bold
+					font-size: 12px
+					line-height: 15px
+					color: #FFF
 			
 			&.test_groups a
 				background-position: $spacing -1609px

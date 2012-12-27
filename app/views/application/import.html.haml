@@ -38,12 +38,12 @@
 					%tr
 						%th Type
 						%th Filename
-						%th Start Time
+						%th Elapsed Time
 						- @pending_jobs.each do |job|
 							%tr
 								%td= job.model || none
 								%td= job.file_file_name || none
-								%td= job.created_at.in_time_zone('Pacific Time (US & Canada)').strftime('%Y %b %e %r')
+								%td= (Time.now.utc - job.created_at.to_i).strftime('%T')
 				
 			- else
 				All imports have completed.

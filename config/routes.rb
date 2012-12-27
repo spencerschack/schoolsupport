@@ -7,18 +7,17 @@ Schoolsupport::Application.routes.draw do
   def helper *args
     resources *args do
       importable
-      exportable
       yield if block_given?
     end
   end
   
   # Extract export routes.
   def exportable
-    match 'export/view_request', action: 'view_request', on: :collection
-    match 'export(/:export_kind(/:export_id))', action: 'export',
-      on: :collection, as: 'export'
-    match 'export(/:export_kind(/:export_id))', action: 'export',
-      on: :member, as: 'export'
+    #match 'export/view_request', action: 'view_request', on: :collection
+    #match 'export(/:export_kind(/:export_id))', action: 'export',
+    #  on: :collection, as: 'export'
+    #match 'export(/:export_kind(/:export_id))', action: 'export',
+    #  on: :member, as: 'export'
   end
   
   # Extract import routes.
@@ -47,6 +46,7 @@ Schoolsupport::Application.routes.draw do
   end
   def students
     helper :students do
+      post 'export', on: :collection
       helper :periods do
         helper :users
       end
@@ -57,6 +57,7 @@ Schoolsupport::Application.routes.draw do
   def periods
     helper :periods do
       helper :students do
+        post 'export', on: :collection
         helper :users
         test_scores
       end
@@ -68,11 +69,13 @@ Schoolsupport::Application.routes.draw do
     helper :users do
       helper :periods do
         helper :students do
+          post 'export', on: :collection
           test_scores
         end
         test_scores
       end
       helper :students do
+        post 'export', on: :collection
         helper :periods do
           test_scores
         end
@@ -113,7 +116,7 @@ Schoolsupport::Application.routes.draw do
   helper :bus_stops
   helper :bus_routes
   
-  # Templates, Pdfs, Types, Fields, Fonts, and Settings.
+  # Templates, Pdfs, Types, Fields, Fonts, and Settings
   resources :templates do
     resources :pdfs do
       resources :types do
@@ -125,6 +128,11 @@ Schoolsupport::Application.routes.draw do
   end
   resources :fonts
   resources :settings
+  
+  # Export List Items
+  match 'export_list_items' => 'export_list_items#index'
+  match 'export_list_items/clear' => 'export_list_items#clear', via: 'POST'
+  match 'export_list_items/toggle' => 'export_list_items#toggle', via: 'POST'
   
   # Help
   match 'help' => 'help#index'

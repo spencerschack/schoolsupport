@@ -28,6 +28,7 @@ class Student < ActiveRecord::Base
   has_many :users, through: :periods, extend: WithTermExtension
   has_many :test_scores, dependent: :destroy
   has_many :test_models, through: :test_scores
+  has_many :export_list_items
   
   has_attached_file :image,
     path: '/student_images/:basename:style_unless_original.:extension',

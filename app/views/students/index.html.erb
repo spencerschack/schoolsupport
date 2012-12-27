@@ -4,16 +4,13 @@
   <%= link_for :new, new_resource %>
   <%= link_for :search, controller_model %>
   <%= link_for :import, controller_model %>
-  <%= link_for :export, new_resource %>
 </div>
   
 <div class="scroller">
   <div class="table" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
-      <span class="select">
-        <%= check_box_tag(nil, true) %>
-      </span>
+      <span title="Add all to export list" class="export_all_button">All</span>
       <span class="image"></span>
       <% fields(:index).each do |field| %>
         <span<%= order_by_for(field) %>><%= header_content(field) %></span>
@@ -23,9 +20,7 @@
     <% collection.each do |row| %>
       <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
         <span class="spacer"></span>
-        <span class="select">
-          <input type="checkbox" value="<%= row.id %>" name="<%= export_attr %>">
-        </span>
+        <span title="Add to export list" class="export_list_button <%= student_select_class(row.id) %>"></span>
         <span class="image">
           <%= image_tag(row.image(:index), width: 28, height: 35) if row.image? %>
         </span>

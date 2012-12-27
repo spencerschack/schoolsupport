@@ -1,0 +1,55 @@
+handle_export_list_click = ->
+  throw "NOT IMPLEMENTED"
+
+handle_clear_export_list_click = ->
+  button = $(this)
+  button.display_loading_message('Clearing')
+  $.post '/export_list_items/clear', csrf_param(), ->
+    button.closest('.wrapper').find('.table a').remove()
+    update_export_list_count(0)
+    update_export_list_styles('')
+    button.hide_loading_message()
+
+update_export_list_count_and_styles = (data) ->
+  if data.export_list_styles
+    update_export_list_styles(data.export_list_styles)
+  if data.export_list_count isnt undefined
+    update_export_list_count(data.export_list_count)
+
+update_export_list_count = (count) ->
+  $('#navigation .export span').text(count)
+
+window.update_export_list_styles = (styles) ->
+  $('#export_list_styles').text(styles)
+
+handle_export_all = (event) ->
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  button = $(this)
+  button.display_loading_message()
+  url = button.closest('.page').attr('data-path') + '/export'
+  $.post url, (data) ->
+    button.hide_loading_message()
+    update_export_list_count_and_styles(data)
+
+handle_toggle_export_list_item = (event) ->
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  button = $(this)
+  classes = button.attr('class')
+  if matches = classes.match(/students-select-(\d+)/)
+    id = matches[1]
+    data = $.extend(csrf_param(), { student_id: id })
+    $.post '/export_list_items/toggle', data, (data) ->
+      update_export_list_count_and_styles(data)
+      if data.removed && button.closest('.wrapper').is('.export_list_items')
+        button.closest('a').remove()
+
+$ ->
+  
+  $('#container').delegate 'span.export_list_button', 'click.toggle_export_list_item', handle_toggle_export_list_item
+  $('#container').delegate 'span.export_all_button', 'click.export_all', handle_export_all
+  
+  $('#container').delegate 'a.export_list', 'click.export_list', handle_export_list_click
+  
+  $('#container').delegate 'a.clear_export_list', 'click.clear_export_list', handle_clear_export_list_click

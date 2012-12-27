@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121224005238) do
+ActiveRecord::Schema.define(:version => 20121225072305) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -40,6 +40,13 @@ ActiveRecord::Schema.define(:version => 20121224005238) do
   create_table "districts_test_groups", :id => false, :force => true do |t|
     t.integer "district_id"
     t.integer "test_group_id"
+  end
+
+  create_table "export_list_items", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "student_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "fields", :force => true do |t|

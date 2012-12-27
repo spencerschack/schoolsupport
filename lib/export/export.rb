@@ -137,14 +137,6 @@ class Export < Tableless
     @student_ids |= Array(ids).map(&:to_i) - [0]
   end
   
-  # Setter method for district ids. When called, adds all student ids from the
-  # corresponding model.
-  [District, School, Period, User].each do |model|
-    define_method "#{model.name.underscore}_ids=" do |ids|
-      send :student_ids=, model.find(Array(ids)).map(&:student_ids).reduce(:+)
-    end
-  end
-  
   # Returns all columns in the template.
   def columns
     template ? template.fields.map(&:column) : []

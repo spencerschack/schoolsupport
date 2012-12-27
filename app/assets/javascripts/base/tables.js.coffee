@@ -142,7 +142,7 @@ load_more_records = (wrapper, table, callback) ->
 $ ->
 
 	# Handle table header clicks.
-	$('body').delegate 'div.table div span:not(.spacer, .select, .image, .parent, .add, .image)',
+	$('body').delegate 'div.table div span.sortable',
 		'click.sort', handle_table_header_click
 
 	# Handle search button clicks.

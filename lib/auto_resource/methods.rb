@@ -31,32 +31,6 @@ module Methods
     end
   end
   
-  # Export action.
-  def export
-    if params[:export_kind]
-      unless params[:commit]
-        params[:selected] ||=
-          { :"#{controller_name.singularize}_ids" => params[:id] }
-      end
-      
-      @export = Export.new
-      @export.assign_attributes(
-        (params[:selected] || {}).merge(params[:export] || {}).merge({
-          kind: params[:export_kind],
-          type_id: params[:export_id]
-      }), as: current_role)
-      
-      if params[:commit]
-        if @export.valid? && params[:export_kind] == 'request'
-          RequestMailer.request_form(@export).deliver
-        end
-        respond_with @export
-      else
-        render 'application/export'
-      end
-    end
-  end
-  
   # View confirmation of print request
   def view_request
     @request = params[:export]

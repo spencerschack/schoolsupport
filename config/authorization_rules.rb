@@ -187,6 +187,13 @@ authorization do
       if_attribute user_id: is { user.id }
     end
   end
+  
+  # Access to view one's export list.
+  role :export_list do
+    has_permission_on :export_list_items, to: [:manage, :clear] do
+      if_attribute user_id: is { user.id }
+    end
+  end
 
 end
 

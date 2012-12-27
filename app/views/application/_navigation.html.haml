@@ -17,6 +17,11 @@
 
 	%li.group Tools
 	
+	%li.export
+		= link_to export_list_items_path do
+			Export List
+			%span= current_user.export_list_students.count
+	
 	- if permitted_to? :index, :test_groups
 		%li.test_groups= link_to 'Test Groups', test_groups_path
 	
