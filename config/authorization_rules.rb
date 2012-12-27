@@ -189,8 +189,11 @@ authorization do
   end
   
   # Access to view one's export list.
-  role :export_list do
-    has_permission_on :export_list_items, to: [:manage, :clear] do
+  role :exports do
+    has_permission_on :export_list_items, to: [:manage, :clear, :toggle, :select, :form, :waiting] do
+      if_attribute user_id: is { user.id }
+    end
+    has_permission_on :export_data, to: :manage do
       if_attribute user_id: is { user.id }
     end
   end

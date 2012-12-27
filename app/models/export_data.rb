@@ -1,5 +1,7 @@
 class ExportData < ActiveRecord::Base
   
+  using_access_control
+  
   attr_accessible :additional_information, :certificate_title, :student_ids,
     :distribution_date, :kind, :prompt_values, :sort_by, :type_id, :user_id,
     as: [:developer, :superintendent, :principal, :teacher]
