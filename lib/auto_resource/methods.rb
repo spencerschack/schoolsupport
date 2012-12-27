@@ -9,32 +9,20 @@ module Methods
   
   # Import action.
   def import
-    if params[:import_data]
-      @import_data = ImportData.new(params[:import_data].merge({
-        model: controller_model,
-        defaults: params_with_parents(controller_model),
-        user_id: current_user.id
-      }), as: current_role)
-      if @import_data.save
-        @import_success = true
-        Resque.enqueue(ImportJob, @import_data.id)
-      end
-      load_jobs
-      respond_with @import_data
-    else
-      load_jobs
-      @import_data = ImportData.new({
-        update_ids: params[:selected].try(:first).try(:last),
-        model: controller_model,
-        user_id: current_user.id
-      }, as: current_role)
+    @import_data = ImportData.new((params[:import_data] || {}).merge({
+      model: controller_model,
+      defaults: params_with_parents(controller_model),
+      user_id: current_user.id
+    }), as: current_role)
+    if params[:import_data] && @import_data.save
+      @import_success = true
+      Resque.enqueue(ImportJob, @import_data.id)
+      load_import_jobs
+      render json: {
+        page: ERB::Util.html_escape(render_to_string('import'))
+      }
     end
-  end
-  
-  # View confirmation of print request
-  def view_request
-    @request = params[:export]
-    render 'exports/view_request'
+    load_import_jobs
   end
 
   # Show action.
@@ -82,8 +70,8 @@ module Methods
     controller_name.singularize.to_sym
   end
   
-  def load_jobs
-    @pending_jobs = if Resque.peek('import') || Resque.working.any?
+  def load_import_jobs
+    @pending_jobs ||= if Resque.peek('import') || Resque.working.any?
       pending_ids = Resque.peek('import', 0, 1000).map do |job|
         job['args'].first
       end
@@ -97,7 +85,7 @@ module Methods
       []
     end
     
-    @failed_jobs = if Resque::Failure.count > 0
+    @failed_jobs ||= if Resque::Failure.count > 0
       @failure_data = {}
       failed_ids = Resque::Failure.all(0, 100).reverse.map do |job|
         if job['queue'] == 'import'

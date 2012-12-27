@@ -15,7 +15,6 @@ class ImportJob
     Authorization.current_user = user
     import_data.model.transaction do
       create_records
-      drop_records
     end
     import_data.destroy
   rescue => error
@@ -33,8 +32,8 @@ class ImportJob
     Authorization.ignore_access_control(true)
     
     ImportData.where('created_at < ?', 1.day.ago).destroy_all
-    if Resque::Failure.count > 100
-      Resque.redis.ltrim(:failed, -1, -100)
+    if Resque::Failure.count > 200
+      Resque.redis.ltrim(:failed, -1, -200)
     end
     
     Authorization.ignore_access_control(prev)
@@ -67,7 +66,6 @@ class ImportJob
         record = new_record(hash)
         record.assign_attributes(hash, as: current_role)
         record.save!
-        dropped_ids.delete(record.id)
       rescue => error
         errors << "Row #{index}: #{error.message}"
       ensure
@@ -75,18 +73,6 @@ class ImportJob
       end
     end
     raise errors.join("\n") if errors.any?
-  end
-  
-  def drop_records
-    if dropped_ids.any? && model.respond_to?(:drop_ids)
-      model.drop_ids(dropped_ids, as: user.role_symbols.first)
-    end
-  end
-  
-  def dropped_ids
-    @dropped_ids ||= Set.new.tap do |set|
-      update_ids.each { |id| set.add(id.to_i) }
-    end
   end
   
   def process hash

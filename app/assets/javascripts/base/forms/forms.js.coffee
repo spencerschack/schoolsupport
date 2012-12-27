@@ -11,7 +11,7 @@ handle_form_submit = (event) ->
 		message = 'Saving'
 	else if wrapper.is('.import')
 		message = 'Uploading'
-	else if wrapper.is('.export')
+	else if wrapper.is('.export_list_items')
 		message = 'Exporting'
 	else
 		message = 'Creating'
@@ -86,9 +86,9 @@ handle_form_submit = (event) ->
 				wrapper.find('a.create, a.update, a.upload').hide_loading_message()
 				form.find(':submit').hide_loading_message()
 				
-				if wrapper.is('.import')
+				if wrapper.is('.import') || wrapper.is('.export_list_items')
 					wrapper.next('.index.wrapper').trigger('unloaded').remove()
-					$(data).insertAfter(wrapper).trigger('loaded')
+					$(data.page).insertAfter(wrapper).trigger('loaded')
 					wrapper.animate {
 						marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 							$(this).remove()

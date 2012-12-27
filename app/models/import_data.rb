@@ -2,13 +2,12 @@ class ImportData < ActiveRecord::Base
   
   using_access_control
   
-  attr_accessible :defaults, :model, :prompt_values, :update_ids, :user_id, :file,
+  attr_accessible :defaults, :model, :prompt_values, :user_id, :file,
     as: [:developer, :superintendent, :principal, :teacher]
   
   serialize :model, Class
   serialize :prompt_values, Hash
   serialize :defaults, Hash
-  serialize :update_ids, Array
   
   belongs_to :user
   

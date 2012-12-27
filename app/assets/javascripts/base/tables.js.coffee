@@ -20,7 +20,6 @@ window.insert_row = (table, row) ->
 		same_id.html(row.html())
 	else
 		table.append(row)
-	sort(table)
 	update_count(table)
 	table.find('input.search').trigger('keyup.search')
 
@@ -105,7 +104,6 @@ load_results = (wrapper) ->
 	load_content wrapper, data, url, (data) ->
 		table = wrapper.find('div.table')
 		table.append($(data).find('.table a'))
-		update_select_all(table)
 
 		select_path(wrapper.closest('.page'))
 		selected = table.find('.selected')

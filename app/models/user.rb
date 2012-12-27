@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   belongs_to :role
   has_and_belongs_to_many :periods, extend: WithTermExtension
   has_many :import_data
+  has_many :export_data
   has_many :export_list_items
   has_many :export_list_students, through: :export_list_items, source: :student
   

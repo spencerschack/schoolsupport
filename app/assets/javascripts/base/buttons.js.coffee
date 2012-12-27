@@ -1,7 +1,7 @@
 # If cancel is clicked on a new or create page, simply focus its parent
 # page. If it is an edit page, hide the form and bring up the show wrapper.
 handle_cancel_click = (event) ->
-	if $(this).closest('.wrapper').is('.new, .create, .export')
+	if $(this).closest('.wrapper').is('.new, .create, .export_list_items')
 		push_state $(this).closest('.page').next('.page').attr('data-path')
 	else
 		$(this).closest('.wrapper').trigger('unloaded')

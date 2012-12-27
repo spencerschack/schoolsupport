@@ -4,7 +4,6 @@ module TTFunk
     # Override to accept external files.
     def self.open(file)
       if file =~ /^https?:\/\//
-        require 'open-uri'
         new(Thread.current[:export_files][file].read)
       else
         new(::File.open(file, "rb") { |f| f.read })

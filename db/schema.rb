@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121225072305) do
+ActiveRecord::Schema.define(:version => 20121227051154) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -40,6 +40,28 @@ ActiveRecord::Schema.define(:version => 20121225072305) do
   create_table "districts_test_groups", :id => false, :force => true do |t|
     t.integer "district_id"
     t.integer "test_group_id"
+  end
+
+  create_table "export_data", :force => true do |t|
+    t.string   "kind"
+    t.integer  "type_id"
+    t.text     "prompt_values"
+    t.string   "sort_by"
+    t.string   "certificate_title"
+    t.string   "distribution_date"
+    t.text     "additional_information"
+    t.integer  "user_id"
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
+  create_table "export_data_students", :id => false, :force => true do |t|
+    t.integer "student_id"
+    t.integer "export_data_id"
   end
 
   create_table "export_list_items", :force => true do |t|
@@ -81,7 +103,6 @@ ActiveRecord::Schema.define(:version => 20121225072305) do
     t.string   "model"
     t.text     "defaults"
     t.text     "prompt_values"
-    t.text     "update_ids"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.string   "file_file_name"

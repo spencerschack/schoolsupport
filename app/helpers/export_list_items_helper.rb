@@ -10,4 +10,26 @@ module ExportListItemsHelper
     index: [:identifier, :name, :grade, :teacher]
   }
   
+  # The title to display under 'PRINT'.
+  def export_title
+    if params[:export_kind]
+      if @export_data.kind == 'print'
+        @export_data.type.name
+      else
+        @export_data.kind.titleize
+      end
+    else
+      if params[:id]
+        controller_name.singularize
+      else
+        controller_name
+      end.titleize
+    end
+  end
+  
+  # Which templates to show to the current user as options.
+  def available_types
+    @available_types ||= School.with_permissions_to(:show).includes(:types).order('types.name').map(&:types).flatten
+  end
+  
 end

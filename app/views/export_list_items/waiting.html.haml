@@ -1,0 +1,16 @@
+.title
+	%h2 Export
+	%h1 Working
+	= link_for :cancel, controller_model
+
+.scroller
+	%p
+		- if @pending
+			Your export is being created. Please wait on this page until the
+			download link appears below.
+			= link_to 'Loading', js_link, class: 'waiting_link'
+		- elsif @finished.try(:file?)
+			Your export is complete.
+			= link_to 'Download', @finished.file.url, class: 'download_link', target: '_blank'
+		- else
+			Your export could not be created. Please try again.

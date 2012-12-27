@@ -59,15 +59,10 @@ module LinkHelper
       if permitted_to?(action, model_or_record) && ImportData.for?(model_or_record)
         link_to 'Import', js_link, options
       end
-    
-    when :export
-      if Export.for?(model_or_record)
-        link_to "Export#{' All' if model_or_record.respond_to?(:new_record?) && model_or_record.new_record?}",
-          parent_path(model_or_record, { action: :export }), options
-      end
       
     when :upload
       link_to 'Upload', js_link, options
+    
     when :fullscreen
       link_to 'Fullscreen', js_link, options
     end

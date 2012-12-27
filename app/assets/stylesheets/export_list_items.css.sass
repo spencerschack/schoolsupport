@@ -15,3 +15,39 @@
 .table div
 	span.export_all_button
 		cursor: pointer
+
+.export_list_items.select
+	h6
+		padding: 0 $spacing
+		background: $gray-active
+		font-size: 12px
+		font-weight: bold
+		color: #FFF
+	
+	.scroller a
+		+traverse_link
+
+.export_list_items .waiting_link, .export_list_items .download_link
+	height: 35px
+	width: 290px
+	display: block
+	padding: 0 10px
+	margin: $spacing 0
+	background: $blue-medium
+	+border-radius($radius)
+	font-weight: bold
+	color: #FFF
+	line-height: 35px
+	text-decoration: none
+	text-align: center
+
+.export_list_items .waiting_link
+	cursor: default
+
+.export_list_items .download_link
+	
+	&:hover
+		background-color: $blue-hover
+	
+	&:active
+		background-color: $blue-active

@@ -1,11 +1,5 @@
 loading_message = $('<div class="loading_message">Loading</div>')
 
-window.update_export_button = (wrapper) ->
-	search_field = wrapper.find('.title input.search')
-	export_button = search_field.parent().siblings('.export').addClass('searching')
-	export_button.removeClass('searching') unless search_field.val()
-	update_io_buttons(wrapper.find('div.table'))
-
 window.load_content = (wrapper, data, url, callback) ->
 	scroller = wrapper.children('div.scroller')
 	buttons = wrapper.find('.title a')
@@ -20,7 +14,6 @@ window.load_content = (wrapper, data, url, callback) ->
 	buttons.fadeTo(TINY_DURATION, 0.5).on 'click.term_disable', (event) ->
 		event.stopImmediatePropagation()
 		event.preventDefault()
-	update_export_button(wrapper)
 	
 	wrapper.data('load_content_xhr').abort() if wrapper.data('load_content_xhr')
 	xhr = $.get url, (data) ->

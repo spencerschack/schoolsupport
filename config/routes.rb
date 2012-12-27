@@ -11,15 +11,6 @@ Schoolsupport::Application.routes.draw do
     end
   end
   
-  # Extract export routes.
-  def exportable
-    #match 'export/view_request', action: 'view_request', on: :collection
-    #match 'export(/:export_kind(/:export_id))', action: 'export',
-    #  on: :collection, as: 'export'
-    #match 'export(/:export_kind(/:export_id))', action: 'export',
-    #  on: :member, as: 'export'
-  end
-  
   # Extract import routes.
   def importable
     match 'import', on: :collection
@@ -121,7 +112,6 @@ Schoolsupport::Application.routes.draw do
     resources :pdfs do
       resources :types do
         resources :schools
-        exportable
       end
     end
     resources :fields
@@ -133,6 +123,10 @@ Schoolsupport::Application.routes.draw do
   match 'export_list_items' => 'export_list_items#index'
   match 'export_list_items/clear' => 'export_list_items#clear', via: 'POST'
   match 'export_list_items/toggle' => 'export_list_items#toggle', via: 'POST'
+  match 'export_list_items/export/view_request' => 'export_list_items#view_request'
+  match 'export_list_items/export' => 'export_list_items#select'
+  match 'export_list_items/export/waiting' => 'export_list_items#waiting'
+  match 'export_list_items/export/:export_kind(/:export_id)' => 'export_list_items#form'
   
   # Help
   match 'help' => 'help#index'

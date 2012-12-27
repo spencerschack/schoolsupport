@@ -4,7 +4,6 @@ module Response
   # Necessary for respond_with to work.
   def self.included base
     base.respond_to :html, :json
-    base.prawn_options = { skip_page_creation: true }
   end
   
   private
@@ -13,32 +12,11 @@ module Response
   # respond with the appropriate json.
   def respond_with record
     case action_name
-    when 'create', 'update', 'import'
+    when 'create', 'update'
       if record.errors.any?
         render json: failure_hash, content_type: 'text/plain'
       else
         render json: success_hash(record), content_type: 'text/plain'
-      end
-    when 'export'
-      if record.errors.any?
-        if record.kind == 'request'
-          render json: failure_hash, content_type: 'text/plain'
-        else
-          @print_errors = record.errors.full_messages
-          render 'exports/print_error',
-            format: [:pdf],
-            content_type: 'application/pdf',
-            layout: false
-        end
-      else
-        if record.kind == 'request'
-          render json: success_hash(record), content_type: 'text/plain'
-        else
-          render "exports/#{record.kind}",
-            formats: [record.format],
-            content_type: record.content_type,
-            layout: false
-        end
       end
     when 'destroy'
       if record.errors.any?
@@ -56,7 +34,7 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
-      hash[:path] = parent_path(record) unless %w(import export).include?(action_name)
+      hash[:path] = parent_path(record)
       
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
@@ -104,10 +82,6 @@ module Response
       success ? 'show' : 'edit'
     when 'create'
       success ? 'show' : 'new'
-    when 'import'
-      'import'
-    when 'export'
-      success ? 'exports/request' : 'application/export'
     end
   end
   

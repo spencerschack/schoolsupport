@@ -1,7 +1,7 @@
 <div class="title">
   <h2>Your</h2>
   <h1>Export List</h1>
-  <%= link_to 'Export', js_link, class: 'export_list' %>
+  <%= link_to 'Export', '/export_list_items/export', class: 'export_list' %>
   <%= link_to 'Clear', js_link, class: 'clear_export_list' %>
 </div>
   
@@ -17,7 +17,7 @@
       <span class="spacer"></span>
     </div>
     <% collection.each do |row| %>
-      <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
+      <a data-id="<%= row.id %>">
         <span class="spacer"></span>
         <span title="Add to export list" class="export_list_button <%= student_select_class(row.id) %>"></span>
         <span class="image">

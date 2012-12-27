@@ -1,6 +1,3 @@
-handle_export_list_click = ->
-  throw "NOT IMPLEMENTED"
-
 handle_clear_export_list_click = ->
   button = $(this)
   button.display_loading_message('Clearing')
@@ -45,11 +42,24 @@ handle_toggle_export_list_item = (event) ->
       if data.removed && button.closest('.wrapper').is('.export_list_items')
         button.closest('a').remove()
 
+handle_export_load = ->
+  update_waiting_link($(this))
+  $(this).find('.waiting_link').display_loading_message()
+
+update_waiting_link = (wrapper) ->
+  if (button = wrapper.find('.waiting_link')).length
+    $.get '/export_list_items/export/waiting', (data) ->
+      data = $(data)
+      if data.find('.download_link').length
+        wrapper.find('.scroller').replaceWith(data.find('.scroller'))
+      else
+        setTimeout((-> update_waiting_link(wrapper)), 500)
+
 $ ->
   
   $('#container').delegate 'span.export_list_button', 'click.toggle_export_list_item', handle_toggle_export_list_item
   $('#container').delegate 'span.export_all_button', 'click.export_all', handle_export_all
   
-  $('#container').delegate 'a.export_list', 'click.export_list', handle_export_list_click
-  
   $('#container').delegate 'a.clear_export_list', 'click.clear_export_list', handle_clear_export_list_click
+
+  $('#container').delegate '.wrapper.export_list_items, .wrapper.export_list_items', 'loaded.refresh', handle_export_load
