@@ -4,8 +4,12 @@ window.load_content = (wrapper, data, url, callback) ->
 	scroller = wrapper.children('div.scroller')
 	buttons = wrapper.find('.title a')
 	if data
-		term = wrapper.find('.title h2 select').val()
+		term = wrapper.find('.term_filter select').val()
 		data['term'] = term if term
+		
+		grade = wrapper.find('.grade_filter select').val()
+		data['grade'] = grade if grade
+		
 		data = $.param data
 		url += "?#{data}" if data
 	

@@ -78,8 +78,12 @@ handle_search_click = (event) ->
 					$(this).after(self)
 					$(this).remove()
 
-handle_term_filter_change = ->
+handle_options_filter_change = ->
 	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
+	if $(this).closest('div').is('.term_filter')
+		selected_text = 'Term: ' + selected_text
+	else
+		selected_text = 'Grade: ' + selected_text
 	$(this).siblings('span').text(selected_text)
 	load_results($(this).closest('.wrapper'))
 
@@ -131,8 +135,13 @@ handle_index_loaded = ->
 load_more_records = (wrapper, table, callback) ->
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
-  term = wrapper.find('.title h2 select').val()
+  
+  term = wrapper.find('.term_filter select').val()
   data['term'] = term if term
+  
+  grade = wrapper.find('.grade_filter select').val()
+  data['grade'] = grade if grade
+  
   infiniscroll_loading.insertAfter(table)
   $.get table.closest('.page').attr('data-path'), data, (data) ->
     data = $(data)
@@ -154,6 +163,6 @@ $ ->
 	$('#container').delegate 'a.search', 'click.search', handle_search_click
 
 	# Prepare term filter.
-	$('#container').delegate '.term_filter select', 'change.term_filter', handle_term_filter_change
+	$('#container').delegate '.term_filter select, .grade_filter select', 'change.options_filter', handle_options_filter_change
 	
 	$('#container').delegate '.index.wrapper', 'loaded.prepare_infiniscroll', handle_index_loaded

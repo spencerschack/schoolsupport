@@ -29,33 +29,34 @@ module ApplicationHelper
 	
 	# Which terms can be selected.
 	def term_options
-	  other_options = ['All']
-	  scope = find_first_parent ? find_first_parent.send(controller_name) : controller_model
-	  scope = scope.with_permissions_to(:show)
-	  if controller_model == Period
-      terms = scope.uniq.pluck("#{controller_name}.term")
-    elsif [Student, User].include?(controller_model)
-      other_options << 'With No Period'
-      terms = scope.joins(:periods).uniq.pluck('periods.term')
-    end
-    if controller_model == Student
-      grades = scope.uniq.pluck('students.grade').map(&:to_i)
-    end
-    selected = if !params[:term]
-      'All'
-    else
-      terms << params[:term] unless terms.include? params[:term]
-      params[:selected]
-    end
+	  @term_options ||= begin
+  	  other_options = ['All']
+  	  scope = options_scope.with_permissions_to(:show)
+  	  if controller_model == Period
+        terms = scope.uniq.pluck("#{controller_name}.term")
+      elsif [Student, User].include?(controller_model)
+        other_options << 'With No Period'
+        terms = scope.joins(:periods).uniq.pluck('periods.term')
+      end
+      selected = if !params[:term]
+        'All'
+      else
+        terms << params[:term] unless terms.include? params[:term]
+        params[:selected]
+      end
     
-    options = options_for_select(other_options) <<
-    grouped_options_for_select([['By year', terms.sort]], selected)
-    
-    if controller_model == Student
-      options << grouped_options_for_select([['By grade', grades.sort]], selected)
+      options_for_select(other_options) <<
+      options_for_select(terms.sort, selected)
     end
-    
-    options
+	end
+	
+	def grade_options
+	 @grade_options ||= if controller_model == Student
+	   grades = options_scope.uniq.pluck('students.grade')
+	   selected = params[:grade].present? ? params[:grade] : 'All'
+	   grades.sort_by!(&:to_i)
+	   options_for_select(['All'] + grades, selected)
+   end
 	end
 	
 	# Includes an include_blank option.
@@ -146,4 +147,11 @@ module ApplicationHelper
 	  model = field.to_s.singularize.camelize.constantize
 	  pluralize ? plural_title(model) : singular_title(model)
 	end
+	
+	private
+	
+	def options_scope
+	 find_first_parent ? find_first_parent.send(controller_name) : controller_model
+	end
+	
 end
