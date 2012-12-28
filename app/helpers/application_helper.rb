@@ -52,7 +52,7 @@ module ApplicationHelper
 	
 	def grade_options
 	 @grade_options ||= if controller_model == Student
-	   grades = options_scope.uniq.pluck('students.grade')
+	   grades = options_scope.with_permissions_to(:show).uniq.pluck('students.grade')
 	   selected = params[:grade].present? ? params[:grade] : 'All'
 	   grades.sort_by!(&:to_i)
 	   options_for_select(['All'] + grades, selected)
