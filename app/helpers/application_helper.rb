@@ -31,12 +31,11 @@ module ApplicationHelper
 	def term_options
 	  @term_options ||= begin
   	  other_options = ['All']
-  	  scope = options_scope.with_permissions_to(:show)
   	  if controller_model == Period
-        terms = scope.uniq.pluck("#{controller_name}.term")
+        terms = options_scope.uniq.pluck("#{controller_name}.term")
       elsif [Student, User].include?(controller_model)
         other_options << 'With No Period'
-        terms = scope.joins(:periods).uniq.pluck('periods.term')
+        terms = options_scope.joins(:periods).uniq.pluck('periods.term')
       end
       selected = if !params[:term]
         'All'
@@ -52,7 +51,7 @@ module ApplicationHelper
 	
 	def grade_options
 	 @grade_options ||= if controller_model == Student
-	   grades = options_scope.with_permissions_to(:show).uniq.pluck('students.grade')
+	   grades = options_scope.uniq.pluck('students.grade')
 	   selected = params[:grade].present? ? params[:grade] : 'All'
 	   grades.sort_by!(&:to_i)
 	   options_for_select(['All'] + grades, selected)
@@ -151,7 +150,11 @@ module ApplicationHelper
 	private
 	
 	def options_scope
-	 find_first_parent ? find_first_parent.send(controller_name) : controller_model
+	 @options_scope ||= if find_first_parent
+	   find_first_parent.send(controller_name)
+	  else
+	    controller_model
+    end.with_permissions_to(:show)
 	end
 	
 end
