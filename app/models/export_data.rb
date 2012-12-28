@@ -22,6 +22,23 @@ class ExportData < ActiveRecord::Base
   validate :students_in_scope, :students_count
   validate :type_in_scope, :image_presence, :color_presence, if: :is_print?
   
+  # Override to optimize insert statements into one statement.
+  def autosave_associated_records_for_students
+    if association = association_instance_get(:students)
+      if records = associated_records_to_validate_or_save(association, @new_record_before_save, false)
+        begin
+          values = records.map do |record|
+            "(#{record.id},#{id})"
+          end.join(',')
+          Student.connection.execute(%(INSERT INTO export_data_students ("student_id", "export_data_id") VALUES #{values}))
+        rescue
+          raise ActiveRecord::Rollback
+        end
+      end
+      association.send(:reset_scope) if association.respond_to?(:reset_scope)
+    end
+  end
+  
   def template
     pdf.try(:template)
   end
@@ -42,10 +59,11 @@ class ExportData < ActiveRecord::Base
   end
   
   def students
+    collection = Student.where(id: student_ids)
     if sort_by == 'teacher'
-      super.includes(:users).order('users.last_name')
+      collection.includes(:users).order('users.last_name')
     else
-      super.order(sort_by)
+      collection.order(sort_by)
     end
   end
   

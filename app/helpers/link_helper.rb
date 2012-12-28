@@ -61,7 +61,13 @@ module LinkHelper
       end
       
     when :upload
-      link_to 'Upload', js_link, options
+      if model_or_record == ExportListItem
+        if permitted_to?(action, model_or_record)
+          link_to 'Upload', js_link, options
+        end
+      else
+        link_to 'Upload', js_link, options
+      end
     
     when :fullscreen
       link_to 'Fullscreen', js_link, options

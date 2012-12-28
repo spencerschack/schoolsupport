@@ -31,11 +31,15 @@ module ApplicationHelper
 	def term_options
 	  other_options = ['All']
 	  scope = find_first_parent ? find_first_parent.send(controller_name) : controller_model
+	  scope = scope.with_permissions_to(:show)
 	  if controller_model == Period
-      terms = scope.with_permissions_to(:show).uniq.pluck("#{controller_name}.term")
+      terms = scope.uniq.pluck("#{controller_name}.term")
     elsif [Student, User].include?(controller_model)
       other_options << 'With No Period'
-      terms = scope.joins(:periods).with_permissions_to(:show).uniq.pluck('periods.term')
+      terms = scope.joins(:periods).uniq.pluck('periods.term')
+    end
+    if controller_model == Student
+      grades = scope.uniq.pluck('students.grade').map(&:to_i)
     end
     selected = if !params[:term]
       'All'
@@ -43,8 +47,15 @@ module ApplicationHelper
       terms << params[:term] unless terms.include? params[:term]
       params[:selected]
     end
-    options_for_select(other_options) <<
+    
+    options = options_for_select(other_options) <<
     grouped_options_for_select([['By year', terms.sort]], selected)
+    
+    if controller_model == Student
+      options << grouped_options_for_select([['By grade', grades.sort]], selected)
+    end
+    
+    options
 	end
 	
 	# Includes an include_blank option.

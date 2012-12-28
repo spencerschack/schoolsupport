@@ -125,7 +125,8 @@ Schoolsupport::Application.routes.draw do
   match 'export_list_items/toggle' => 'export_list_items#toggle', via: 'POST'
   match 'export_list_items/export/view_request' => 'export_list_items#view_request'
   match 'export_list_items/export' => 'export_list_items#select'
-  match 'export_list_items/export/waiting' => 'export_list_items#waiting'
+  match 'export_list_items/upload' => 'export_list_items#upload'
+  match 'export_list_items/waiting' => 'export_list_items#waiting'
   match 'export_list_items/export/:export_kind(/:export_id)' => 'export_list_items#form'
   
   # Help

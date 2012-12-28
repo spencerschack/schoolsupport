@@ -10,6 +10,13 @@ module ExportListItemsHelper
     index: [:identifier, :name, :grade, :teacher]
   }
   
+  def export_form_options
+    options = {}
+    options[:url] = request.path
+    options[:html] = { target: '_blank' } unless @export_data.is_request?
+    options
+  end
+  
   # The title to display under 'PRINT'.
   def export_title
     if params[:export_kind]

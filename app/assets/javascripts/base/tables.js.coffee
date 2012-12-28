@@ -81,7 +81,7 @@ handle_search_click = (event) ->
 handle_term_filter_change = ->
 	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
 	$(this).siblings('span').text(selected_text)
-	load_results($(this).closest('.wrapper').find('div.table'))
+	load_results($(this).closest('.wrapper'))
 
 search_and_sort_data = (wrapper, table) ->
   data = {}
@@ -123,6 +123,7 @@ handle_index_loaded = ->
       load_more_records wrapper, table, (new_offset) ->
         if old_offset == new_offset
           scroller.off 'scroll.infiniscroll'
+          infiniscroll_loading.detach()
         else
           loading = false
           old_offset = new_offset
@@ -130,12 +131,18 @@ handle_index_loaded = ->
 load_more_records = (wrapper, table, callback) ->
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
+  term = wrapper.find('.title h2 select').val()
+  data['term'] = term if term
+  infiniscroll_loading.insertAfter(table)
   $.get table.closest('.page').attr('data-path'), data, (data) ->
     data = $(data)
+    infiniscroll_loading.detach()
     table.append(data.find('.table a'))
     new_offset = data.find('.table').attr('data-offset')
     table.attr('data-offset', new_offset)
     callback(new_offset)
+
+infiniscroll_loading = $('<div/>').addClass('infiniscroll_loading')
 
 $ ->
 

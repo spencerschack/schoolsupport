@@ -7,36 +7,84 @@ class ExportListItemsController < ApplicationController
       type_id: params[:export_id],
       user_id: current_user.id
     }), as: current_role)
-    
-    view = @export_data.is_request? ? 'request' : 'waiting'
-    
-    # Shortcircuit submission process if there is nothing to input.
-    if @export_data.is_zpass? || (@export_data.is_print? && @export_data.template.prompts.empty?)
-      if @export_data.save
-        Resque.enqueue(ExportJob, @export_data.id)
-        session[:pending_export_data_id] = @export_data.id
-        load_export_jobs if view == 'waiting'
-        render view
-      end
-    elsif request.post?
-      if @export_data.save
-        Resque.enqueue(ExportJob, @export_data.id)
-        session[:pending_export_data_id] = @export_data.id
-        load_export_jobs if view == 'waiting'
-        render json: {
+
+    if request.post?
+      queued = @export_data.save && Resque.enqueue(ExportJob, @export_data.id)
+      if @export_data.is_request?
+        json_object = queued ? {} : { success: false }
+        view = queued ? 'request' : 'form'
+        render json: json_object.merge({
           page: ERB::Util.html_escape(render_to_string(view))
-        }
+        })
       else
-        render json: {
-          success: false,
-          page: ERB::Util.html_escape(render_to_string('form'))
-        }
+        redirect_to "/load_import_jobs?export_data_id=#{@export_data.id}"
       end
     end
+    
+    @export_data.valid? unless @export_data.is_request?
   end
   
   def waiting
-    load_export_jobs
+    @pending = false
+    params[:export_data_id] = params[:export_data_id].to_i
+    
+    if Resque.peek('export') || Resque.working.any?
+      Resque.peek('export', 0, 1000).each do |job|
+        if params[:export_data_id] == job['args'].first
+          @pending = true
+          break
+        end
+      end
+      Resque.working.each do |worker|
+        if worker.job['queue'] == 'export'
+          if params[:export_data_id] == worker.job['payload']['args'].first
+            @pending = true
+            break
+          end
+        end
+      end
+    end
+    
+    unless @pending
+      finished = ExportData.find(params[:export_data_id])
+      if finished.try(:file?)
+        redirect_to finished.file.url
+      else
+        render layout: false
+      end
+    else
+      render layout: false
+    end
+  end
+  
+  def upload
+    if request.post?
+      if params[:upload][:file].respond_to?(:read)
+        identifiers = params[:upload][:file].read.split("\n")
+        if school = School.where(id: params[:upload][:school_id].to_i).first
+          student_ids = school.students.where(identifier: identifiers).pluck(:id)
+          if student_ids.any?
+            insert_student_ids_into_export_list_items student_ids
+            render json: {
+              page: ERB::Util.html_escape(render_to_string('index'))
+            }.merge(export_list_count_and_styles)
+          else
+            @error = 'Could not find any students with the given identifiers.'
+          end
+        else
+          @error = 'Could not find selected school.'
+        end
+      else
+        @error = 'Could not read file.'
+      end
+      if @error
+        @error = "Upload failed. #{@error}"
+        render json: {
+          success: false,
+          page: ERB::Util.html_escape(render_to_string('upload'))
+        }
+      end
+    end
   end
   
   def select
@@ -74,34 +122,6 @@ class ExportListItemsController < ApplicationController
         coll = coll.reorder(params[:order])
     end
     coll
-  end
-  
-  private
-  
-  def load_export_jobs
-    @pending = false
-    if Resque.peek('export') || Resque.working.any?
-      Resque.peek('export', 0, 1000).each do |job|
-        if session[:pending_export_data_id] == job['args'].first
-          @pending = true
-          break
-        end
-      end
-      Resque.working.each do |worker|
-        if worker.job['queue'] == 'export'
-          if session[:pending_export_data_id] == worker.job['payload']['args'].first
-            @pending = true
-            break
-          end
-        end
-      end
-      return false
-    end
-    
-    unless @pending
-      @finished = ExportData.find(session[:pending_export_data_id])
-    end
-    
   end
 
 end

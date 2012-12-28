@@ -87,6 +87,7 @@ handle_form_submit = (event) ->
 				form.find(':submit').hide_loading_message()
 				
 				if wrapper.is('.import') || wrapper.is('.export_list_items')
+					update_export_list_count_and_styles data
 					wrapper.next('.index.wrapper').trigger('unloaded').remove()
 					$(data.page).insertAfter(wrapper).trigger('loaded')
 					wrapper.animate {

@@ -60,8 +60,8 @@ ActiveRecord::Schema.define(:version => 20121227051154) do
   end
 
   create_table "export_data_students", :id => false, :force => true do |t|
-    t.integer "student_id"
     t.integer "export_data_id"
+    t.integer "student_id"
   end
 
   create_table "export_list_items", :force => true do |t|

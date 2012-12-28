@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <% if @pending %>
+      <script type="text/javascript">
+        setTimeout(function(){
+  				window.location.reload()
+  			}, 500);
+      </script>
+    <% end %>
+    <style type="text/css" media="screen">
+      #container {
+				width: 500px;
+				height: 200px;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -100px 0 0 -250px;
+				font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+				font-size: 16px;
+				text-align: center;
+			}
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <% if @pending %>
+				Your export is being created. This page will redirect you to
+				your export once it has been created. Please do not navigate
+				away from this page.
+			<% else %>
+				Your export could not be created. Please try again.
+			<% end %>
+    </div>
+  </body>
+</html>

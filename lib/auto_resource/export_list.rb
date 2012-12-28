@@ -22,4 +22,12 @@ module ExportList
     }
   end
   
+  def insert_student_ids_into_export_list_items student_ids
+    timestamp = "'#{Time.now.utc.to_s(:db)}'"
+    values = student_ids.map do |id|
+      %((#{timestamp},#{timestamp},#{id},#{current_user.id}))
+    end.join(',')
+    Student.connection.execute(%(INSERT INTO export_list_items ("created_at", "updated_at", "student_id", "user_id") VALUES #{values}))
+  end
+  
 end

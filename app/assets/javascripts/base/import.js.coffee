@@ -6,10 +6,7 @@ handle_import_click = ->
 		wrapper = page.children('.wrapper')
 		url = [page.attr('data-path'), 'import'].join('/')
 		
-		visible_inputs = wrapper.find('div.table a span input:visible')
-		data = [$.param(csrf_param()), visible_inputs.serialize()].join('&')
-		
-		$.post url, data, (data) ->
+		$.get url, (data) ->
 			button.hide_loading_message()
 			data = $(data)
 			data.css(marginTop: "-#{$('#container').height()}px")

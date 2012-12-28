@@ -1,3 +1,17 @@
+handle_upload_click = ->
+	button = $(this)
+	unless button.is('.loading')
+		button.display_loading_message()
+		page = button.closest('.page')
+		wrapper = page.children('.wrapper')
+		
+		$.get '/export_list_items/upload', (data) ->
+			button.hide_loading_message()
+			data = $(data)
+			data.css(marginTop: "-#{$('#container').height()}px")
+			$(data).prependTo(page).trigger('loaded').animate {
+				marginTop: 0 }, MEDIUM_DURATION
+
 handle_clear_export_list_click = ->
   button = $(this)
   button.display_loading_message('Clearing')
@@ -7,7 +21,7 @@ handle_clear_export_list_click = ->
     update_export_list_styles('')
     button.hide_loading_message()
 
-update_export_list_count_and_styles = (data) ->
+window.update_export_list_count_and_styles = (data) ->
   if data.export_list_styles
     update_export_list_styles(data.export_list_styles)
   if data.export_list_count isnt undefined
@@ -48,7 +62,7 @@ handle_export_load = ->
 
 update_waiting_link = (wrapper) ->
   if (button = wrapper.find('.waiting_link')).length
-    $.get '/export_list_items/export/waiting', (data) ->
+    $.get '/load_import_jobs', (data) ->
       data = $(data)
       if data.find('.download_link').length
         wrapper.find('.scroller').replaceWith(data.find('.scroller'))
@@ -63,3 +77,5 @@ $ ->
   $('#container').delegate 'a.clear_export_list', 'click.clear_export_list', handle_clear_export_list_click
 
   $('#container').delegate '.wrapper.export_list_items, .wrapper.export_list_items', 'loaded.refresh', handle_export_load
+  
+  $('#container').delegate 'a.upload', 'click.upload', handle_upload_click

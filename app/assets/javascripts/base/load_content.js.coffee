@@ -5,7 +5,7 @@ window.load_content = (wrapper, data, url, callback) ->
 	buttons = wrapper.find('.title a')
 	if data
 		term = wrapper.find('.title h2 select').val()
-		$.extend(data, term: term) if term
+		data['term'] = term if term
 		data = $.param data
 		url += "?#{data}" if data
 	
