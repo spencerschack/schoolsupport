@@ -11,7 +11,7 @@ class Term < ActiveModel::Validator
   
   # Returns whether the given term is a valid representation of a term.
   def self.valid? term
-    !!(term =~ /(\d{4})-(\d{4})/ && $1.to_i + 1 == $2.to_i)
+    !!(term.to_s =~ /(\d{4})-(\d{4})/ && $1.to_i + 1 == $2.to_i)
   end
   
   # Return the first year of the current term.

@@ -3,17 +3,7 @@ module TestScoresHelper
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
   def data_columns
-    @data_columns ||= begin
-      data = TestScore.select("test_scores.test_name, test_scores.term, skeys(test_scores.data)")
-        .where(student_id: @default_student_ids)
-      data_columns = {}
-      data.each do |result|
-        next if params[:test].present? && params[:test] != 'All' && result['test_name'] != params[:test]
-        data_columns[result['test_name'] + ' ' + result['term']] ||= Set.new
-        data_columns[result['test_name'] + ' ' + result['term']] << result['skeys']
-      end
-      data_columns
-    end
+    TestScore.data_columns
   end
   
   def score_columns

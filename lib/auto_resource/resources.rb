@@ -54,14 +54,15 @@ module Resources
   private
   
   def valid_order_column? model, order_statement
-    order_statement_regex.match(order_statement) &&
-      ($1 == model.table_name && model.column_names.include?($2)) ||
-      ((reflection = model.reflect_on_association($1.to_sym)) &&
+    match = order_statement_regex.match(order_statement) &&
+      (match[:table] == model.table_name &&
+        model.column_names.include?(match[:column])) ||
+      ((reflection = model.reflect_on_association(match[:table].to_sym)) &&
         valid_order_column?(reflection.klass, order_statement))
   end
   
   def order_statement_regex
-    /\(?(\w+)\.(\w+)(( -> '\w+')(\)::int)?)? (asc|desc)/
+    /(?<table>\w+)\.(?<column>\w+) (?<direction>asc|desc)/
   end
   
 end
