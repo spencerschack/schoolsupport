@@ -22,13 +22,14 @@ module ApplicationHelper
 	
 	# Return a render if applicable.
 	def term_filter
-	  if [Period, Student, User].include?(controller_model) && !find_first_parent.is_a?(Period)
+	  if [Period, Student, User, TestScore].include?(controller_model)
 	    render 'term_filter'
     end
 	end
 	
 	# Which terms can be selected.
 	def term_options
+	  return if find_first_parent.is_a?(Period)
 	  @term_options ||= begin
   	  other_options = ['All']
   	  if controller_model == Period
@@ -36,6 +37,8 @@ module ApplicationHelper
       elsif [Student, User].include?(controller_model)
         other_options << 'With No Period'
         terms = options_scope.joins(:periods).uniq.pluck('periods.term')
+      elsif controller_model == TestScore
+        terms = options_scope.uniq.pluck('test_scores.term')
       end
       selected = if !params[:term]
         'All'
@@ -50,18 +53,30 @@ module ApplicationHelper
 	end
 	
 	def grade_options
-	 @grade_options ||= if controller_model == Student
-	   grades = options_scope.uniq.pluck('students.grade')
-	   selected = params[:grade].present? ? params[:grade] : 'All'
+	 @grade_options ||= if controller_model == Student || controller_model == TestScore
+	   grades = if controller_model == Student
+	     options_scope.uniq.pluck('students.grade')
+	   elsif controller_model == TestScore
+	     options_scope.joins(:student).uniq.pluck('students.grade')
+     end
+     selected = params[:grade].present? ? params[:grade] : 'All'
 	   grades.sort_by!(&:to_i)
 	   options_for_select(['All'] + grades, selected)
    end
 	end
 	
+	def test_options
+	  @test_options ||= if controller_model == TestScore
+	    tests = options_scope.uniq.pluck('test_scores.test_name')
+	    selected = params[:test].present? ? params[:test] : 'All'
+	    options_for_select(['All'] + tests.sort, selected)
+    end
+	end
+	
 	# Includes an include_blank option.
 	def import_prompt_options args
 	  options = args.extract_options!
-	  options.merge! include_blank: true
+	  options.reverse_merge! include_blank: true
 	  [*args, options]
 	end
 	

@@ -9,12 +9,25 @@ module ActiveRecord
   
     # Creates a singleton function called search that uses LIKE to search
     # through the given columns.
-    def self.searches *columns
+    def self.searches *columns, join_columns
       define_singleton_method :search do |query|
+
+        finder = self
+        column_count = columns.length + join_columns.values.flatten.length
+        
         statement = columns.map do |column|
-          "LOWER(\"#{table_name}\".\"#{column}\") LIKE LOWER(?)"
+          "\"#{table_name}\".\"#{column}\" ILIKE ?"
         end.join(' OR ')
-        where(statement, *["%#{query}%"] * columns.length)
+        
+        statement += join_columns.map do |table, columns|
+          finder = finder.joins(table)
+          table = reflect_on_association(table).plural_name
+          columns.map do |column|
+            "\"#{table}\".\"#{column}\" ILIKE ?"
+          end.join(' OR ')
+        end.join(' OR ')
+        
+        finder.where(statement, *["%#{query}%"] * column_count)
       end
     end
   

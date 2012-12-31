@@ -27,7 +27,6 @@ class Student < ActiveRecord::Base
   has_and_belongs_to_many :periods, extend: WithTermExtension
   has_many :users, through: :periods, extend: WithTermExtension
   has_many :test_scores, dependent: :destroy
-  has_many :test_models, through: :test_scores
   has_many :export_list_items
   has_and_belongs_to_many :export_data
   
@@ -43,7 +42,7 @@ class Student < ActiveRecord::Base
     bus_route: :name, bus_stop: :name },
     prompts: proc { [[:school, collection: School.with_permissions_to(:show).order('name')]] }
   
-  after_initialize :set_school
+  before_validation :set_school
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier, scope: :school_id

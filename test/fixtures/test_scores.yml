@@ -2,10 +2,12 @@
 
 one:
   student_id: 1
-  test_model_id: 1
+  test_name: MyString
   term: MyString
+  data: 
 
 two:
   student_id: 1
-  test_model_id: 1
+  test_name: MyString
   term: MyString
+  data: 

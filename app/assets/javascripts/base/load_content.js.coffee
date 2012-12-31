@@ -10,6 +10,9 @@ window.load_content = (wrapper, data, url, callback) ->
 		grade = wrapper.find('.grade_filter select').val()
 		data['grade'] = grade if grade
 		
+		test = wrapper.find('.test_filter select').val()
+		data['test'] = test if test
+		
 		data = $.param data
 		url += "?#{data}" if data
 	

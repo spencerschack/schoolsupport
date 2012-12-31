@@ -26,9 +26,9 @@
 	
 		li
 			a
-				width: 200px - ($spacing + 20px)
+				width: 200px - (2 * $spacing + 20px)
 				height: 35px
-				padding: 0 ($spacing + 20px)
+				padding: 0 $spacing 0 ($spacing + 20px)
 				display: block
 				background: url(image-path("icons.png")) no-repeat
 				font-weight: bold
@@ -99,6 +99,15 @@
 				&:active, &.selected
 					background-position: $spacing -409px
 			
+			&.test_scores a
+				background-position: $spacing -2148px
+				
+				&:hover
+					background-position: $spacing -2178px
+				
+				&:active, &.selected
+					background-position: $spacing -2208px
+			
 			&.export a
 				background-position: $spacing -2028px
 				
@@ -121,7 +130,7 @@
 				span
 					height: 15px
 					padding: 0 5px
-					margin: 10px $spacing 0 0
+					margin: 10px 0 0 0
 					float: right
 					background: $gray-active
 					+border-radius($radius)

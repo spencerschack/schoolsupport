@@ -13,7 +13,6 @@ class Period < ActiveRecord::Base
   has_one :district, through: :school
   has_and_belongs_to_many :students
   has_many :test_scores, through: :students
-  has_many :test_models, through: :test_scores
   has_and_belongs_to_many :users
   
   has_import identify_with: { identifier: :school_id, name: :school_id },

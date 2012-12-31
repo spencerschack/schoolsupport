@@ -34,7 +34,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
+    has_permission_on :test_scores, to: :manage do
       if_permitted_to :show, :student
     end
     
@@ -42,7 +42,7 @@ authorization do
     has_permission_on :user_sessions, to: :destroy
     
     # Access to export.
-    includes :export
+    includes :exports
     
     # Access to zpass.
     includes :zpass
@@ -81,7 +81,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
+    has_permission_on :test_scores, to: :manage do
       if_permitted_to :show, :student
     end
     
@@ -89,7 +89,7 @@ authorization do
     has_permission_on :user_sessions, to: :destroy
     
     # Access to export.
-    includes :export
+    includes :exports
     
     # Access to zpass.
     includes :zpass
@@ -128,7 +128,7 @@ authorization do
     end
     
     # Access to test scores of students.
-    has_permission_on :test_scores, to: [:manage, :dynamic_fields] do
+    has_permission_on :test_scores, to: :manage do
       if_permitted_to :show, :student
     end
     
@@ -136,7 +136,7 @@ authorization do
     has_permission_on :user_sessions, to: :destroy
     
     # Access to export.
-    includes :export
+    includes :exports
     
     # Access to zpass.
     includes :zpass

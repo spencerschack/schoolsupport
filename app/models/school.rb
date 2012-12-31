@@ -14,7 +14,6 @@ class School < ActiveRecord::Base
   has_many :periods, dependent: :destroy, extend: WithTermExtension
   has_many :students, dependent: :destroy, extend: WithTermExtension
   has_many :test_scores, through: :students
-  has_many :test_models, through: :test_scores
   has_and_belongs_to_many :types
   
   has_attached_file :mascot_image, path: '/school_mascots/:id/:basename_:style.:extension',

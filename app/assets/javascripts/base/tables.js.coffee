@@ -82,8 +82,10 @@ handle_options_filter_change = ->
 	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
 	if $(this).closest('div').is('.term_filter')
 		selected_text = 'Term: ' + selected_text
-	else
+	else if $(this).closest('div').is('.grade_filter')
 		selected_text = 'Grade: ' + selected_text
+	else
+		selected_text = 'Test: ' + selected_text
 	$(this).siblings('span').text(selected_text)
 	load_results($(this).closest('.wrapper'))
 
@@ -106,14 +108,16 @@ load_results = (wrapper) ->
 	data = search_and_sort_data(wrapper, table)
 	
 	load_content wrapper, data, url, (data) ->
+		data = $(data)
 		table = wrapper.find('div.table')
-		table.append($(data).find('.table a'))
+		table.append(data.find('.table a'))
+		table.find('div span.replace').remove()
+		data.find('.table div span.replace').insertAfter(table.find('div span.replace_target'))
 
 		select_path(wrapper.closest('.page'))
 		selected = table.find('.selected')
 		wrapper.find('div.scroller').scrollTo(selected) if selected.length
 		wrapper.trigger('loaded')
-		update_count(table)
 
 handle_index_loaded = ->
   wrapper = $(this)
@@ -141,6 +145,9 @@ load_more_records = (wrapper, table, callback) ->
   
   grade = wrapper.find('.grade_filter select').val()
   data['grade'] = grade if grade
+
+  test = wrapper.find('.test_filter select').val()
+  data['test'] = test if test
   
   infiniscroll_loading.insertAfter(table)
   $.get table.closest('.page').attr('data-path'), data, (data) ->
@@ -163,6 +170,6 @@ $ ->
 	$('#container').delegate 'a.search', 'click.search', handle_search_click
 
 	# Prepare term filter.
-	$('#container').delegate '.term_filter select, .grade_filter select', 'change.options_filter', handle_options_filter_change
+	$('#container').delegate '.term_filter select, .grade_filter select, .test_filter select', 'change.options_filter', handle_options_filter_change
 	
 	$('#container').delegate '.index.wrapper', 'loaded.prepare_infiniscroll', handle_index_loaded

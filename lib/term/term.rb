@@ -35,6 +35,10 @@ class Term < ActiveModel::Validator
     ((year - 50)..(year + 10)).map { |year| Term.for(year) }
   end
   
+  def self.options_for_select
+    @options_for_select ||= Class.new.extend(ActionView::Helpers::FormOptionsHelper).options_for_select(choices, Term.current)
+  end
+  
   # Return the string representation of the term for the given year.
   def self.for year
     "#{year}-#{year + 1}"

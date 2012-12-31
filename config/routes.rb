@@ -1,5 +1,5 @@
 Schoolsupport::Application.routes.draw do
-  
+
   mount Resque::Server.new, at: '/resque'
 
   # Helper function that adds 'import' and 'export' actions in addition to
@@ -16,33 +16,18 @@ Schoolsupport::Application.routes.draw do
     match 'import', on: :collection
   end
   
-  # Districts, Schools, Periods, Students, Users, and Tests
-  
+  # Districts, Schools, Periods, Students, Users, Tests
   def test_scores
-    resources :test_scores do
-      importable
-      match 'dynamic_fields(/:test_model_id)', on: :collection, action: :dynamic_fields
-      match 'compare', on: :collection
-    end
-  end
-  def test_models
-    resources :test_models do
-      resources :test_attributes
-    end
-  end
-  def test_groups
-    resources :test_groups do
-      test_models
-    end
+    helper :test_scores
   end
   def students
     helper :students do
       post 'export', on: :collection
       helper :periods do
         helper :users
+        test_scores
       end
       helper :users
-      test_scores
     end
   end
   def periods
@@ -50,7 +35,6 @@ Schoolsupport::Application.routes.draw do
       helper :students do
         post 'export', on: :collection
         helper :users
-        test_scores
       end
       helper :users
       test_scores
@@ -61,16 +45,12 @@ Schoolsupport::Application.routes.draw do
       helper :periods do
         helper :students do
           post 'export', on: :collection
-          test_scores
         end
         test_scores
       end
       helper :students do
         post 'export', on: :collection
-        helper :periods do
-          test_scores
-        end
-        test_scores
+        helper :periods
       end
       test_scores
     end
@@ -91,7 +71,6 @@ Schoolsupport::Application.routes.draw do
       users
       students
       test_scores
-      test_groups
     end
   end
 
@@ -100,8 +79,7 @@ Schoolsupport::Application.routes.draw do
   periods
   students
   users
-  test_models
-  test_groups
+  test_scores
   
   # Bus Routes and Stops
   helper :bus_stops

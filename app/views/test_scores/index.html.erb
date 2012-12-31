@@ -1,58 +1,46 @@
 <div class="title">
-  <h2>All</h2>
+  <h2><%= term_filter %></h2>
   <h1>Test Scores</h1>
-  <%= link_for :new, new_resource %>
-  <%= link_for :import, TestScore %>
-  <div class="view_options">
-    <%= link_to 'table', js_link, class: 'table chosen', title: 'Table' %>
-    <%= link_to 'compare', js_link, class: 'compare', title: 'Compare' %>
-  </div>
-  <%= link_for :fullscreen, TestScore %>
+  <%= link_for :fullscreen, controller_model %>
+  <%= link_for :import, controller_model %>
+  <%= link_for :search, controller_model %>
 </div>
   
 <div class="scroller">
-  <div class="table">
+  <div class="table" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
-      <span class="image"></span>
-      <span>Student</span>
-      <% arranged_attributes(@test_models).each_with_index do |test_attribute, index| %>
-        <span title="<%= test_attribute.name %>" <%= @cell_attributes[index] %><%= group_name(test_attribute) %>>
-          <%= test_attribute.name %>
-        </span>
+      <span class="thumbnail"></span>
+      <span data-order-by="students.identifier" class="sortable">Identifier</span>
+      <span data-order-by="students.last_name" class="sortable">Name</span>
+      <span data-order-by="students.grade" class="sortable replace_target">Grade</span>
+      <% score_columns.each do |test_and_term, keys| %>
+        <% keys.each do |key| %>
+          <span <%= data_column_attributes(key) %>>
+            <em><%= test_and_term %></em>
+            <i><%= key.titleize %></i>
+          </span>
+        <% end %>
       <% end %>
-      <span class="add" title="Add a test">
-        <%= add_test_column_select %>
-      </span>
       <span class="spacer"></span>
     </div>
     <% collection.each do |student| %>
-      <% next unless student.test_scores.any? %>
-      <a href="<%= "#{request.path}/#{student.test_scores.first.id}" %>" data-id="<%= student.id %>">
+      <a href="<%= "#{request.path}/#{student.id}" %>" data-id="<%= student.id %>">
         <span class="spacer"></span>
-        <span class="image"><%= image_tag student.image(:thumbnail) if student.image? %></span>
-        <span><%= student.last_name %>,<br /><%= student.first_name %></span>
-        <% arranged_values(student.test_scores).each_with_index do |test_values, index| %>
-          <span <%= @cell_attributes[index] %>>
-            <% if test_values.respond_to?(:each) %>
-              <ul>
-              <% test_values.each do |test_value| %>
-                <li class="<%= test_value.level %>" title="<%= test_value.level.titleize %>">
-                  <%= test_value.name %>:
-                  <i><%= test_value.value %></i>
-                </li>
-              <% end %>
-              </ul>
-            <% elsif test_values.respond_to?(:value) %>
-              <i class="<%= test_values.level %>" title="<%= test_values.level.titleize %>">
-                <%= test_values.value %>
-              </i>
-            <% else %>
-              <i title="No Score"><%= none %></i>
-            <% end %>
-          </span>
+        <span class="thumbnail">
+          <%= image_tag(student.image(:thumbnail)) if student.image? %>
+        </span>
+        <span><%= student.identifier %></span>
+        <span><%= student.name %></span>
+        <span><%= student.grade %></span>
+        <% ordered_test_scores(student.test_scores) do |score| %>
+          <% score_columns[score.name].try(:each) do |key| %>
+            <span class="<%= score.data["#{key}_lv"].try(:downcase) %>">
+              <%= score.data[key] || none %>
+              <i><%= score.data["#{key}_lv"] %></i>
+            </span>
+          <% end %>
         <% end %>
-        <span class="add"></span>
         <span class="spacer"></span>
       </a>
     <% end %>

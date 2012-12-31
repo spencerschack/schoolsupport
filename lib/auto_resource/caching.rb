@@ -12,6 +12,7 @@ module Caching
   # 
 
   def self.included base
+=begin
     base.caches_action :index,
       layout: false,
       cache_path: proc { |controller|
@@ -20,11 +21,12 @@ module Caching
         string = ActiveRecord::Base.connection.execute(sql).to_a.to_s
         "#{controller_model.model_name.cache_key}-#{Digest::SHA1.hexdigest(string)}"
       }
+=end
     base.helper_method :offset_amount
   end
   
   def offset_amount
-    @offset_amount ||= ENV['PAGE_OFFSET_AMOUNT'].to_i
+    ENV['PAGE_OFFSET_AMOUNT'].to_i
   end
 
 end

@@ -27,20 +27,20 @@ class ImportJob
   
   def cleanup
     Authorization.current_user = nil
-    
-    prev = Authorization.ignore_access_control
-    Authorization.ignore_access_control(true)
-    
-    ImportData.where('created_at < ?', 1.day.ago).destroy_all
-    if Resque::Failure.count > 200
-      Resque.redis.ltrim(:failed, -1, -200)
+    without_access_control do
+      ImportData.where('created_at < ?', 1.day.ago).destroy_all
+      if Resque::Failure.count > 200
+        Resque.redis.ltrim(:failed, -1, -200)
+      end
     end
-    
-    Authorization.ignore_access_control(prev)
   end
   
   def parser
     options[:parser] || CsvParser
+  end
+  
+  def processor
+    options[:processor]
   end
   
   def options
@@ -55,6 +55,13 @@ class ImportJob
   end
   
   private
+  
+  def defaults_and_prompt_values
+    @defaults_and_prompt_values ||= {}.tap do |options|
+      options.merge!(defaults) if defaults
+      options.merge!(prompt_values) if prompt_values
+    end
+  end
   
   def create_records
     current_role = user.role_symbols.first
@@ -76,15 +83,17 @@ class ImportJob
   end
   
   def process hash
-    hash.reverse_merge!(defaults) if defaults
-    hash.reverse_merge!(prompt_values) if prompt_values
-    options[:associate].each do |record, field|
-      if value = hash.delete(record)
-        finder = record.to_s.camelize.constantize
-        attempted = finder.send("find_by_#{field}!", value)
-        hash[:"#{record}_id"] = attempted.id
+    hash.reverse_merge!(defaults_and_prompt_values)
+    processor.call(hash, model) if processor.respond_to?(:call)
+    if options[:associate].present?
+      options[:associate].each do |record, field|
+        if value = hash.delete(record)
+          finder = record.to_s.camelize.constantize
+          attempted = finder.where(field => value).first!
+          hash[:"#{record}_id"] = attempted.id
+        end
       end
-    end if options[:associate].present?
+    end
   end
   
   def new_record hash
@@ -99,7 +108,7 @@ class ImportJob
             finder = finder.where(scope.to_sym => hash[scope])
           end
         end
-        record = finder.send("find_by_#{identifier}", hash[identifier])
+        record = finder.where(identifier => hash[identifier]).first
         return record if record
       end
     end

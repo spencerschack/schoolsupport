@@ -18,7 +18,7 @@ class TestScoresControllerTest < ActionController::TestCase
 
   test "should create test_score" do
     assert_difference('TestScore.count') do
-      post :create, test_score: { student_id: @test_score.student_id, term: @test_score.term, test_model_id: @test_score.test_model_id }
+      post :create, test_score: { data: @test_score.data, student_id: @test_score.student_id, term: @test_score.term, test_name: @test_score.test_name }
     end
 
     assert_redirected_to test_score_path(assigns(:test_score))
@@ -35,7 +35,7 @@ class TestScoresControllerTest < ActionController::TestCase
   end
 
   test "should update test_score" do
-    put :update, id: @test_score, test_score: { student_id: @test_score.student_id, term: @test_score.term, test_model_id: @test_score.test_model_id }
+    put :update, id: @test_score, test_score: { data: @test_score.data, student_id: @test_score.student_id, term: @test_score.term, test_name: @test_score.test_name }
     assert_redirected_to test_score_path(assigns(:test_score))
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121227051154) do
+ActiveRecord::Schema.define(:version => 20121228021045) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -200,48 +200,13 @@ ActiveRecord::Schema.define(:version => 20121227051154) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "test_attributes", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
-    t.integer  "test_model_id"
-    t.decimal  "maximum_value"
-    t.decimal  "advanced_proficient_boundary"
-    t.decimal  "proficient_basic_boundary"
-    t.decimal  "basic_below_basic_boundary"
-    t.decimal  "below_basic_far_below_basic_boundary"
-    t.decimal  "minimum_value"
-    t.boolean  "overall",                              :default => false
-    t.integer  "parent_id"
-  end
-
-  create_table "test_groups", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "test_models", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.integer  "test_group_id"
-  end
-
   create_table "test_scores", :force => true do |t|
     t.integer  "student_id"
-    t.integer  "test_model_id"
+    t.string   "test_name"
     t.string   "term"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  create_table "test_values", :force => true do |t|
-    t.integer  "test_score_id"
-    t.integer  "test_attribute_id"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.decimal  "value",             :default => 0.0
+    t.hstore   "data"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "types", :force => true do |t|

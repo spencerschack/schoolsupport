@@ -16,10 +16,7 @@ module Resources
     collection = collection.with_permissions_to(:show)
     collection = collection.limit(offset_amount).offset(params[:offset].to_i)
     
-    if params[:order].present? &&
-      (match = /(\w+)\.(\w+) (asc|desc)/.match(params[:order])) &&
-      match[1] == controller_model.table_name &&
-      controller_model.column_names.include?(match[2])
+    if params[:order].present? && valid_order_column?(model, params[:order])
         collection = collection.reorder(params[:order])
     end
     
@@ -52,6 +49,19 @@ module Resources
       attributes = params_with_parents(model).merge(settings)
       record.assign_attributes attributes, as: current_role
     end)
+  end
+  
+  private
+  
+  def valid_order_column? model, order_statement
+    order_statement_regex.match(order_statement) &&
+      ($1 == model.table_name && model.column_names.include?($2)) ||
+      ((reflection = model.reflect_on_association($1.to_sym)) &&
+        valid_order_column?(reflection.klass, order_statement))
+  end
+  
+  def order_statement_regex
+    /\(?(\w+)\.(\w+)(( -> '\w+')(\)::int)?)? (asc|desc)/
   end
   
 end

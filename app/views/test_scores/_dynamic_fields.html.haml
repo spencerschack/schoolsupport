@@ -1,8 +1,0 @@
-= semantic_fields_for resource do |f|
-	- if resource.dynamic_methods
-		= f.inputs *resource.dynamic_methods, class: 'fields'
-	- else
-		%fieldset.fields
-			%ol
-				%li
-					%b Select a test to add scores.

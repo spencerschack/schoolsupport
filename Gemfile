@@ -5,6 +5,8 @@ ruby '1.9.3'
 gem 'rails', '3.2.6'
 
 gem 'pg'
+gem 'activerecord-postgres-hstore'
+
 gem 'unicorn'
 
 gem 'resque'
