@@ -3,7 +3,7 @@ module TestScoresHelper
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
   def data_columns
-    TestScore.data_columns
+    TestScore.data_columns(force: true)
   end
   
   def score_columns

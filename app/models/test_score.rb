@@ -29,14 +29,22 @@ class TestScore < ActiveRecord::Base
       [:school, collection: School.with_permissions_to(:show)]] },
     processor: TestScoreProcessor
   
-  def self.data_columns
-    Rails.cache.fetch(data_columns_cache_key) do
+  def self.data_columns options = {}
+    Rails.cache.fetch(data_columns_cache_key, options) do
+      
       test_scores = TestScore.connection.execute(
         TestScore.uniq.select('test_scores.test_name, test_scores.term, skeys(test_scores.data)').to_sql)
       data_columns = {}
       test_scores.each do |test_score|
-        data_columns[test_score['test_name'] + ' ' + test_score['term']] ||= Set.new
-        data_columns[test_score['test_name'] + ' ' + test_score['term']] << test_score['skeys']
+        
+        test_name = test_score['test_name'].downcase
+        term      = test_score['term'].downcase
+        key       = test_score['skeys'].downcase
+        
+        data_columns[test_name] ||= {}
+        data_columns[test_name][term] ||= Set.new
+        data_columns[test_name][term] << key
+        
       end
       data_columns
     end
