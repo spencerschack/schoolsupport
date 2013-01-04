@@ -17,7 +17,7 @@ class ExportListItemsController < ApplicationController
           page: ERB::Util.html_escape(render_to_string(view))
         })
       else
-        redirect_to "/load_import_jobs?export_data_id=#{@export_data.id}"
+        redirect_to "/export_list_items/waiting?export_data_id=#{@export_data.id}"
       end
     end
     

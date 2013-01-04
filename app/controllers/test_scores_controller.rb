@@ -1,5 +1,7 @@
 class TestScoresController < ApplicationController
   
+  helper_method :data_order_statement_regex
+  
   def find_collection
     @find_collection ||= begin
       
@@ -12,11 +14,15 @@ class TestScoresController < ApplicationController
         
         # Order by the comparison of test_name and term because the key in
         # data will not be unique across different years or tests.
-        default = default.order(ActiveRecord::Base.send(:sanitize_sql, [%(
-          test_scores.test_name = :test_name :direction,
-          test_scores.term = :term :direction,
-          test_scores.data -> ':key', :direction
-        ), match], 'test_scores'))
+        default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
+          "test_scores.test_name = :test_name #{match[:direction]}, " +
+          "test_scores.term = :term #{match[:direction]}, " +
+          "test_scores.data -> :key #{match[:direction]}",
+        {
+          test_name: match[:test_name],
+          term: match[:term],
+          key: match[:key]
+        }], 'test_scores'))
       end
       
       if grade = option_filter_value(:grade)

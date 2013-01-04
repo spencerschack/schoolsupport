@@ -38,20 +38,14 @@ class TestScore < ActiveRecord::Base
       test_scores.each do |test_score|
         
         test_name = test_score['test_name'].downcase
-        term      = test_score['term'].downcase
-        key       = test_score['skeys'].downcase
-        
+        term = test_score['term'].downcase
         data_columns[test_name] ||= {}
         data_columns[test_name][term] ||= Set.new
-        data_columns[test_name][term] << key
+        data_columns[test_name][term] << test_score['skeys'].downcase
         
       end
       data_columns
     end
-  end
-  
-  def name
-    "#{test_name} #{term}"
   end
   
   private
