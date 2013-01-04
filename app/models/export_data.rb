@@ -59,8 +59,13 @@ class ExportData < ActiveRecord::Base
   def students
     @students ||= begin
       includes = columns.map { |c| Student.includes_for(c) }.compact
-      order = sort_by == 'teacher' ? 'users.last_name' : sort_by
-      Student.where(id: student_ids).with_permissions_to(:show).includes(includes).order(order)
+      order = if sort_by == 'teacher'
+        includes << :users unless includes.include?(:users)
+        'users.last_name'
+      else
+        sort_by
+      end
+      Student.where(id: student_ids).with_permissions_to(:show).includes(*includes).order(order)
     end
   end
   
