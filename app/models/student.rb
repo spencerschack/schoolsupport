@@ -156,6 +156,17 @@ class Student < ActiveRecord::Base
     [bus_route, bus_stop].map{|r| r.try(:name)}.compact.join(' / ')
   end
   
+  def self.includes_for column
+    case column
+    when 'school_mascot_image', 'school_name'
+      :school
+    when 'bus_route_name', 'bus_route_color_value'
+      :bus_route
+    when 'bus_stop_name'
+      :bus_stop
+    end
+  end
+  
   # Options with titleized labels.
   def self.sort_options
     sorts.map { |option| [option.titleize, option] }

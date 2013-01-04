@@ -19,8 +19,8 @@ class ExportData < ActiveRecord::Base
   validates_presence_of :certificate_title, :distribution_date, if: :is_request?
   validates_presence_of :type, if: :is_print?
   validates_inclusion_of :sort_by, in: Student.sorts, allow_blank: true
-  validate :students_in_scope, :students_count
-  validate :type_in_scope, :image_presence, :color_presence, if: :is_print?
+  validate :students_count
+  validate :image_presence, :color_presence, if: :is_print?
   
   # Override to optimize insert statements into one statement.
   def autosave_associated_records_for_students
@@ -49,10 +49,6 @@ class ExportData < ActiveRecord::Base
     type.try(:pdf)
   end
   
-  def file_path
-    "export_files/#{id}.#{format}"
-  end
-  
   # Create methods to see if the export is a certain kind.
   ExportJob.kinds.each do |t|
     define_method "is_#{t}?" do
@@ -61,11 +57,10 @@ class ExportData < ActiveRecord::Base
   end
   
   def students
-    collection = Student.where(id: student_ids)
-    if sort_by == 'teacher'
-      collection.includes(:users).order('users.last_name')
-    else
-      collection.order(sort_by)
+    @students ||= begin
+      includes = columns.map { |c| Student.includes_for(c) }.compact
+      order = sort_by == 'teacher' ? 'users.last_name' : sort_by
+      super.with_permissions_to(:show).includes(includes).order(order)
     end
   end
   
@@ -86,23 +81,8 @@ class ExportData < ActiveRecord::Base
   
   private
   
-  # Ensure the current user is authorized to use the pdf.
-  def type_in_scope
-    if type && !(School.with_permissions_to(:show).pluck(:id) | type.school_ids).any?
-      errors.add :base, 'The template must be viewable by you'
-    end
-  end
-  
-  # Ensure the current user is authorized to print the current students.
-  def students_in_scope
-    common = student_ids & Student.with_permissions_to(:show).map(&:id)
-    if common.length < student_ids.length
-      errors.add :base, 'Exported students must be viewable by you'
-    end
-  end
-  
   def students_count
-    unless student_ids.count > 0
+    unless students.count > 0
       errors.add :base, 'You must export at least one student.'
     end
   end

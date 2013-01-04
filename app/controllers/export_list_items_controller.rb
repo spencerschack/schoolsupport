@@ -19,9 +19,9 @@ class ExportListItemsController < ApplicationController
       else
         redirect_to "/export_list_items/waiting?export_data_id=#{@export_data.id}"
       end
+    elsif !@export_data.is_request?
+      @export_data.valid?
     end
-    
-    @export_data.valid? unless @export_data.is_request?
   end
   
   def waiting
