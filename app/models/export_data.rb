@@ -60,7 +60,7 @@ class ExportData < ActiveRecord::Base
     @students ||= begin
       includes = columns.map { |c| Student.includes_for(c) }.compact
       order = if sort_by == 'teacher'
-        includes << :users unless includes.include?(:users)
+        includes << :users
         'users.last_name'
       else
         sort_by
