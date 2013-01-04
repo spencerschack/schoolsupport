@@ -26,13 +26,15 @@ class ExportData < ActiveRecord::Base
   def autosave_associated_records_for_students
     if association = association_instance_get(:students)
       if records = associated_records_to_validate_or_save(association, @new_record_before_save, false)
-        begin
-          values = records.map do |record|
-            "(#{record.id},#{id})"
-          end.join(',')
-          Student.connection.execute(%(INSERT INTO export_data_students ("student_id", "export_data_id") VALUES #{values}))
-        rescue
-          raise ActiveRecord::Rollback
+        if records.any?
+          begin
+            values = records.map do |record|
+              "(#{record.id},#{id})"
+            end.join(',')
+            Student.connection.execute(%(INSERT INTO export_data_students ("student_id", "export_data_id") VALUES #{values}))
+          rescue
+            raise ActiveRecord::Rollback
+          end
         end
       end
       association.send(:reset_scope) if association.respond_to?(:reset_scope)
