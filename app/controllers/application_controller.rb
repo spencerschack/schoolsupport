@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
   def handle_non_xhr
     file_upload = params['X-Requested-With'] == 'IFrame'
     export = params[:view_request] && request.put? && !request.xhr?
-    export ||= params[:export_data] && request.post?
     export ||= params[:export_data_id]
     skip = params[:xhr] == 'true'
     unless export || request.xhr? || file_upload || skip

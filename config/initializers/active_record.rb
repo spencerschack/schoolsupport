@@ -9,9 +9,11 @@ module ActiveRecord
   
     # Creates a singleton function called search that uses LIKE to search
     # through the given columns.
-    def self.searches *columns, join_columns
+    def self.searches *columns
       define_singleton_method :search do |query|
-
+        
+        columns = columns.dup
+        join_columns = columns.extract_options!
         finder = self
         column_count = columns.length + join_columns.values.flatten.length
         

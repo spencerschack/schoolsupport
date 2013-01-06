@@ -28,6 +28,7 @@ Schoolsupport::Application.routes.draw do
         test_scores
       end
       helper :users
+      match 'test_scores' => 'test_scores#show'
     end
   end
   def periods

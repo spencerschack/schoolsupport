@@ -112,6 +112,7 @@ load_results = (wrapper) ->
 		table = wrapper.find('div.table')
 		table.append(data.find('.table a'))
 		table.find('div span.replace').remove()
+		table.attr('data-offset', table.attr('data-limit'))
 		data.find('.table div span.replace').insertAfter(table.find('div span.replace_target'))
 
 		select_path(wrapper.closest('.page'))
@@ -122,23 +123,26 @@ load_results = (wrapper) ->
 handle_index_loaded = ->
   wrapper = $(this)
   scroller = wrapper.find('.scroller')
-  table = scroller.find('.table')
-  loading = false
-  old_offset = 0
-  scroller.on 'scroll.infiniscroll', (event) ->
-    if !loading && scroller.scrollTop() / table.height() > 0.5
-      loading = true
-      load_more_records wrapper, table, (new_offset) ->
-        if old_offset == new_offset
-          scroller.off 'scroll.infiniscroll'
-          infiniscroll_loading.detach()
-        else
+  if !scroller.data('infiniscroll') # Avoid attaching multiple scrol events after loaded is fired
+    scroller.data('infiniscroll', true)
+    table = scroller.find('.table')
+    loading = false
+    old_offset = 0
+    scroller.on 'scroll.infiniscroll', (event) ->
+      if !loading && scroller.scrollTop() / table.height() > 0.5
+        loading = true
+        load_more_records wrapper, table, (new_offset) ->
+          if old_offset == new_offset
+            scroller.off 'scroll.infiniscroll'
+            infiniscroll_loading.detach()
+          else
+            old_offset = new_offset
           loading = false
-          old_offset = new_offset
 
 load_more_records = (wrapper, table, callback) ->
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
+  console.log "load_more_records: #{data['offset']}"
   
   term = wrapper.find('.term_filter select').val()
   data['term'] = term if term
@@ -157,6 +161,7 @@ load_more_records = (wrapper, table, callback) ->
     new_offset = data.find('.table').attr('data-offset')
     table.attr('data-offset', new_offset)
     callback(new_offset)
+    table.trigger('infiniscrolled')
 
 infiniscroll_loading = $('<div/>').addClass('infiniscroll_loading')
 

@@ -7,7 +7,7 @@
 </div>
   
 <div class="scroller">
-  <div class="table" data-offset="<%= params[:offset].to_i + offset_amount %>">
+  <div class="table" data-limit="<%= offset_amount %>" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
       <span></span>

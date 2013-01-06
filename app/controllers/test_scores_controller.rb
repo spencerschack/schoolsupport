@@ -2,7 +2,7 @@ class TestScoresController < ApplicationController
   
   helper_method :data_order_statement_regex
   
-  def find_collection
+  def find_collection second = false
     @find_collection ||= begin
       
       # Pass super to Student so it uses that instead of the inferred model
@@ -15,14 +15,18 @@ class TestScoresController < ApplicationController
         # Order by the comparison of test_name and term because the key in
         # data will not be unique across different years or tests.
         default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
-          "test_scores.test_name = :test_name #{match[:direction]}, " +
-          "test_scores.term = :term #{match[:direction]}, " +
-          "test_scores.data -> :key #{match[:direction]}",
+          "test_scores.test_name = :test_name asc, " +
+          "test_scores.term = :term asc, " +
+          "(test_scores.data -> :key) IS NULL asc, " +
+          "(test_scores.data -> :key)::int #{match[:direction]}",
         {
           test_name: match[:test_name],
           term: match[:term],
           key: match[:key]
         }], 'test_scores'))
+        
+        @ordered = match
+        
       end
       
       if grade = option_filter_value(:grade)
@@ -39,7 +43,7 @@ class TestScoresController < ApplicationController
       
       # Order by students last name after everything else so it does not
       # affect the overall order, but only when other order values are equal.
-      default.order('students.last_name')
+      default = default.order('students.last_name')
       
     end
   end
