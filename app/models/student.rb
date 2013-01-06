@@ -37,7 +37,7 @@ class Student < ActiveRecord::Base
       thumbnail: ['56x70', :jpg],
       index: ['28x35', :jpg]
     },
-    default_url: 'http://placehold.it/56x70'
+    default_url: 'http://placehold.it/28x35'
   
   has_import identify_with: { identifier: :school_id }, associate: { school: :identifier,
     bus_route: :name, bus_stop: :name },

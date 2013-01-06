@@ -131,18 +131,17 @@ handle_index_loaded = ->
     scroller.on 'scroll.infiniscroll', (event) ->
       if !loading && scroller.scrollTop() / table.height() > 0.5
         loading = true
-        load_more_records wrapper, table, (new_offset) ->
-          if old_offset == new_offset
+        load_more_records wrapper, table, (new_offset, more_records) ->
+          if more_records
+            old_offset = new_offset
+          else
             scroller.off 'scroll.infiniscroll'
             infiniscroll_loading.detach()
-          else
-            old_offset = new_offset
           loading = false
 
 load_more_records = (wrapper, table, callback) ->
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
-  console.log "load_more_records: #{data['offset']}"
   
   term = wrapper.find('.term_filter select').val()
   data['term'] = term if term
@@ -157,10 +156,11 @@ load_more_records = (wrapper, table, callback) ->
   $.get table.closest('.page').attr('data-path'), data, (data) ->
     data = $(data)
     infiniscroll_loading.detach()
-    table.append(data.find('.table a'))
+    new_records = data.find('.table a')
+    table.append(new_records)
     new_offset = data.find('.table').attr('data-offset')
     table.attr('data-offset', new_offset)
-    callback(new_offset)
+    callback(new_offset, !!new_records.length)
     table.trigger('infiniscrolled')
 
 infiniscroll_loading = $('<div/>').addClass('infiniscroll_loading')
