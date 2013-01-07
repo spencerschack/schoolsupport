@@ -2,7 +2,7 @@ module TestScoresHelper
   
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
-  def group_levels students, &block
+  def group_levels students
     if @leveled
       students.group_by do |student|
         grouper = nil
@@ -17,6 +17,20 @@ module TestScoresHelper
     else
       [[nil, students]]
     end
+  end
+  
+  def group_tests test_scores, &block
+    hash = {}
+    test_scores.each do |score|
+      hash[score.test_name] ||= Array.new(2)
+      hash[score.test_name][0] ||= SortedSet.new
+      hash[score.test_name][0] += score.data.keys.reject do |key|
+        key =~ /_lv$/
+      end
+      hash[score.test_name][1] ||= []
+      hash[score.test_name][1] << score
+    end
+    hash
   end
   
   def data_columns

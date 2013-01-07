@@ -48,6 +48,19 @@ class TestScoresController < ApplicationController
     end
   end
   
+  # Method called by declarative authorization to authorize the current user
+  # to load the show action. The actual record this page represents is a
+  # student, but declarative authorization expects a test score so send it
+  # one.
+  def load_test_score
+    @student ||= Student.find(params[:id])
+    @test_score = @student.test_scores.build
+  end
+  
+  def show
+    @student ||= Student.find(params[:id])
+  end
+  
   # Set to a higher value because it takes longer to create the index html for
   # test scores.
   def offset_amount
