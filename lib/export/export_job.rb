@@ -13,7 +13,8 @@ class ExportJob
       RequestMailer.request_form(@export_data).deliver
       @export_data.destroy
     else
-      Tempfile.open("export-file-#{@export_data.id}") do |file|
+      file_name = ["export-file-#{@export_data.id}", ".#{@export_data.format}"]
+      Tempfile.open(file_name) do |file|
         if @export_data.kind == 'print'
           Print.new(@export_data, file.path).generate
         elsif @export_data.kind == 'zpass'
