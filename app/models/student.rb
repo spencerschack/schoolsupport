@@ -42,7 +42,7 @@ class Student < ActiveRecord::Base
     bus_route: :name, bus_stop: :name },
     prompts: proc { [[:school, collection: School.with_permissions_to(:show).order('name')]] }
   
-  before_validation :set_school
+  after_initialize :set_school
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier, scope: :school_id
@@ -213,7 +213,7 @@ class Student < ActiveRecord::Base
   
   # For principals that cannot edit school_id, add school for them.
   def set_school
-    if !school_id && Authorization.current_user.respond_to?(:school_id)
+    if new_record? && !school_id && Authorization.current_user.respond_to?(:school_id)
       write_attribute(:school_id, Authorization.current_user.school_id)
     end
   end

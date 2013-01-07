@@ -3,7 +3,8 @@ class TestScoresController < ApplicationController
   helper_method :data_order_statement_regex
   
   def find_collection second = false
-    @find_collection ||= begin
+    @find_collection ||= {}
+    @find_collection[second] ||= begin
       
       # Pass super to Student so it uses that instead of the inferred model
       # TestScore from the controller_name. Outer join with test_scores to be
