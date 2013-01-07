@@ -15,8 +15,8 @@ class ExportData < ActiveRecord::Base
   
   has_attached_file :file, path: '/export_files/:id/:filename',
     s3_headers: {
-      'Content-Disposition' => 'attachment',
-      'Content-Type' => 'application/octet-stream'
+      content_disposition: 'attachment',
+      content_type: 'application/octet-stream'
     }
   
   validates_presence_of :kind
