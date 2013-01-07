@@ -44,3 +44,5 @@ gem 'prawn'
 gem 'prawnto'
 
 gem 'acts_as_tree'
+
+gem 'browser'

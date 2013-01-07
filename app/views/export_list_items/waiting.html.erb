@@ -24,9 +24,15 @@
   <body>
     <div id="container">
       <% if @pending %>
-				Your download will begin shortly.
+        <% if browser.ie? %>
+				  Your download link will appear shortly.
+				<% else %>
+				  Your download will begin shortly.
+				<% end %>
+			<% elsif @link %>
+			  <a href="<%= @link %>">Download</a>
 			<% else %>
-				Your export could not be created. Please try again.
+				Your download could not be created. Please try again.
 			<% end %>
     </div>
   </body>
