@@ -18,8 +18,8 @@
         <% terms_and_keys.each do |term, keys| %>
           <% keys.each do |key| %>
             <span <%= data_column_attributes(test_name, term, key) %>>
-              <em><%= test_name.upcase %> <%= term %></em>
-              <i><%= key.titleize %></i>
+              <%= test_name.upcase %> <%= term %><br />
+              <%= key.titleize %>
             </span>
           <% end %>
         <% end %>

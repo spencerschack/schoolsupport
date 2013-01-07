@@ -13,7 +13,7 @@
         <span class="spacer"></span>
         <span>Term</span>
         <% keys.each do |key| %>
-          <span><%= key.titleize %></span>
+          <span class="small"><%= key.titleize %></span>
         <% end %>
         <span class="spacer"></span>
       </div>
@@ -24,7 +24,7 @@
           <% keys.each do |key| %>
             <% if level = score.data["#{key}_lv"] %>
               <span class="<%= level.downcase %>">
-                <%= score.data[key] %>
+                <%= score.data[key] %><br />
                 <i><%= level %></i>
               </span>
             <% else %>

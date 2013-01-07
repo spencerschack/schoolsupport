@@ -51,14 +51,20 @@ class TestScoresController < ApplicationController
   # Method called by declarative authorization to authorize the current user
   # to load the show action. The actual record this page represents is a
   # student, but declarative authorization expects a test score so send it
-  # one.
-  def load_test_score
-    @student ||= Student.find(params[:id])
-    @test_score = @student.test_scores.build
+  # one. Must override this method and not simply define "load_test_score"
+  # because the filter_access_to is called from ApplicationController so
+  # controller_name is "application", so declarative authorization calls
+  # "load_application".
+  def load_controller_object context
+    @student ||= begin
+      id = params[find_first_parent.is_a?(Student) ? :student_id : :id ]
+      Student.find(id)
+    end
+    @test_score = TestScore.new({student_id: @student.id}, as: current_role)
   end
   
   def show
-    @student ||= Student.find(params[:id])
+    @student ||= Student.find(params[:student_id])
   end
   
   # Set to a higher value because it takes longer to create the index html for

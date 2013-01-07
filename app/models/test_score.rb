@@ -25,6 +25,4 @@ class TestScore < ActiveRecord::Base
       [:school, collection: School.with_permissions_to(:show)]] },
     processor: TestScoreProcessor
   
-  private
-  
 end

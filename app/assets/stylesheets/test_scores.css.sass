@@ -4,15 +4,15 @@ $basic: #EAD64A
 $below-basic: #FF8000
 $far-below-basic: #D02324
 
-@import table
-@import student
-
 .page
 	&.fullscreen
 		div.test_scores.index
 			width: auto
 	
 	div.test_scores
+	
+		&.index
+			width: 1000px
 		
 		&.show
 			div.scroller h2
@@ -36,6 +36,14 @@ $far-below-basic: #D02324
 			color: $far-below-basic
 		
 		div.table
+			width: auto
+			min-width: 100%
+			
+			div span.small
+				position: relative
+				top: -5px
+				font-size: 10px
+				line-height: 10px
 		
 			a.level_breaker
 				span
@@ -66,3 +74,8 @@ $far-below-basic: #D02324
 					top: -1px
 					font-weight: bold
 					font-size: 10px
+		&.show
+			div.table
+				a span
+					i
+						top: -10px

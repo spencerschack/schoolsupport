@@ -29,7 +29,7 @@ authorization do
     end
     
     # Access to students in district.
-    has_permission_on :students, to: :manage do
+    has_permission_on :students, to: [:manage, :export] do
       if_permitted_to :manage, :school
     end
     
@@ -76,7 +76,7 @@ authorization do
     end
     
     # Access to students in school.
-    has_permission_on :students, to: :manage do
+    has_permission_on :students, to: [:manage, :export] do
       if_attribute school_id: is { user.school_id }
     end
     
@@ -123,7 +123,7 @@ authorization do
     end
     
     # Access to students in periods.
-    has_permission_on :students, to: [:index, :show] do
+    has_permission_on :students, to: [:index, :show, :export] do
       if_permitted_to :show, :periods
     end
     

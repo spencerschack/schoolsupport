@@ -26,7 +26,7 @@ module TestScoresHelper
       hash[score.test_name][0] ||= SortedSet.new
       hash[score.test_name][0] += score.data.keys.reject do |key|
         key =~ /_lv$/
-      end
+      end if score.data.respond_to?(:keys)
       hash[score.test_name][1] ||= []
       hash[score.test_name][1] << score
     end
@@ -140,7 +140,7 @@ module TestScoresHelper
       classes << ' sorted'
       classes << ' reverse' if match[:direction] == 'desc'
     end
-    %(data-order-by="#{order_statement}" class="replace double sortable#{classes}").html_safe
+    %(data-order-by="#{order_statement}" class="replace sortable small #{classes}").html_safe
   end
   
 end
