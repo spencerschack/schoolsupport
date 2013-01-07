@@ -1,8 +1,14 @@
 class ExportListItemsController < ApplicationController
   
   def form
+    student_ids = if (parent = find_first_parent).is_a?(Student)
+      [parent.id]
+    else
+      current_user.export_list_student_ids
+    end
+    
     @export_data = ExportData.new((params[:export_data] || {}).merge({
-      student_ids: current_user.export_list_student_ids,
+      student_ids: student_ids,
       kind: params[:export_kind],
       type_id: params[:export_id],
       user_id: current_user.id

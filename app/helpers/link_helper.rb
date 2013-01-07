@@ -59,6 +59,11 @@ module LinkHelper
       if permitted_to?(action, model_or_record) && ImportData.for?(model_or_record)
         link_to 'Import', js_link, options
       end
+    
+    when :export
+      if permitted_to?(action, model_or_record) && model_or_record.is_a?(Student)
+        link_to 'Export', "#{request.path}/export", options
+      end
       
     when :upload
       if model_or_record == ExportListItem

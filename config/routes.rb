@@ -16,6 +16,12 @@ Schoolsupport::Application.routes.draw do
     match 'import', on: :collection
   end
   
+  # Extract export routes.
+  def exportable
+    match 'export' => 'export_list_items#select'
+    match 'export/:export_kind(/:export_id)' => 'export_list_items#form'
+  end
+  
   # Districts, Schools, Periods, Students, Users, Tests
   def test_scores
     helper :test_scores
@@ -29,6 +35,7 @@ Schoolsupport::Application.routes.draw do
       end
       helper :users
       match 'test_scores' => 'test_scores#show'
+      exportable
     end
   end
   def periods
@@ -36,6 +43,7 @@ Schoolsupport::Application.routes.draw do
       helper :students do
         post 'export', on: :collection
         helper :users
+        exportable
       end
       helper :users
       test_scores
@@ -46,12 +54,14 @@ Schoolsupport::Application.routes.draw do
       helper :periods do
         helper :students do
           post 'export', on: :collection
+          exportable
         end
         test_scores
       end
       helper :students do
         post 'export', on: :collection
         helper :periods
+        exportable
       end
       test_scores
     end
@@ -100,12 +110,12 @@ Schoolsupport::Application.routes.draw do
   
   # Export List Items
   match 'export_list_items' => 'export_list_items#index'
-  match 'export_list_items/clear' => 'export_list_items#clear', via: 'POST'
-  match 'export_list_items/toggle' => 'export_list_items#toggle', via: 'POST'
-  match 'export_list_items/export/view_request' => 'export_list_items#view_request'
-  match 'export_list_items/export' => 'export_list_items#select'
-  match 'export_list_items/upload' => 'export_list_items#upload'
   match 'export_list_items/waiting' => 'export_list_items#waiting'
+  match 'export_list_items/upload' => 'export_list_items#upload'
+  match 'export_list_items/export/view_request' => 'export_list_items#view_request'
+  match 'export_list_items/toggle' => 'export_list_items#toggle', via: 'POST'
+  match 'export_list_items/clear' => 'export_list_items#clear', via: 'POST'
+  match 'export_list_items/export' => 'export_list_items#select'
   match 'export_list_items/export/:export_kind(/:export_id)' => 'export_list_items#form'
   
   # Help

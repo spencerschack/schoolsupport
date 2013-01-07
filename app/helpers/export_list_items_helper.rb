@@ -10,6 +10,13 @@ module ExportListItemsHelper
     index: [:identifier, :name, :grade, :teacher]
   }
   
+  PARENTS[:export_list_items] = [Student]
+  
+  def export_selected_students_count
+    count = find_first_parent.is_a?(Student) ? 1 : @export_data.student_ids.count
+    pluralize(count, 'student') + ' selected.'
+  end
+  
   def export_form_options
     options = {}
     options[:url] = request.path

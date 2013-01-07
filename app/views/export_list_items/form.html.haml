@@ -12,7 +12,7 @@
 					%li= error
 		
 		- else
-			%p= pluralize(@export_data.student_ids.count, 'student') + ' selected.'
+			%p= export_selected_students_count
 			
 			- if params[:export_kind] == 'request'
 				= f.inputs do
