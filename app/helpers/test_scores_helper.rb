@@ -12,7 +12,7 @@ module TestScoresHelper
             break
           end
         end
-        grouper || 'Unknown'
+        grouper.present? ? grouper : 'Unknown'
       end
     else
       [[nil, students]]
