@@ -84,10 +84,10 @@ class ImportJob
   
   def process hash
     hash.reverse_merge!(defaults_and_prompt_values)
-    processor.call(hash, model) if processor.respond_to?(:call)
+    processor.call(hash, @import_data) if processor.respond_to?(:call)
     if options[:associate].present?
       options[:associate].each do |record, field|
-        if value = hash.delete(record)
+        if value = hash.delete(record) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
           attempted = finder.where(field => value).first!
           hash[:"#{record}_id"] = attempted.id

@@ -50,7 +50,7 @@ class TestScoresController < ApplicationController
           "test_scores.test_name = :test_name asc, " +
           "test_scores.term = :term asc, " +
           "(test_scores.data -> :key) IS NULL asc, " +
-          "(test_scores.data -> :key)::int #{order_match[:direction]}",
+          "lpad(test_scores.data -> :key, 10, '0') #{order_match[:direction]}",
         {
           test_name: order_match[:test_name],
           term: order_match[:term],

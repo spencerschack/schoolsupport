@@ -22,7 +22,9 @@ class TestScore < ActiveRecord::Base
   
   has_import identify_with: { student_id: [:term, :test_name] },
     prompts: proc { [[:term, collection: Term.options_for_select, include_blank: false],
-      [:school, collection: School.with_permissions_to(:show)]] },
+      [:school, collection: School.with_permissions_to(:show).map do |school|
+        [school.to_label, school.identifier]
+      end ]] },
     processor: TestScoreProcessor
   
 end

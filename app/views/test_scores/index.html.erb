@@ -64,11 +64,11 @@
                   <% keys.each do |key| %>
                     <% if level = score.data["#{key}lv"] %>
                       <span class="<%= level.downcase %>">
-                        <%= score.data[key] || none %>
+                        <%= score.data[key].present? ? score.data[key] : none %>
                         <i><%= level %></i>
                       </span>
                     <% else %>
-                      <span><%= score.data[key] || none %></span>
+                      <span><%= score.data[key].present? ? score.data[key] : none %></span>
                     <% end %>
                   <% end %>
                 <% else %>
