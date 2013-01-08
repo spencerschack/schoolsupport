@@ -87,9 +87,16 @@ module TestScoresHelper
           
           next if @selected_term && term != @selected_term
           
-          score_columns[test_name][term] = if match = keys.grep(/^#{test_name}$/i).first
-            [match] # If there is a key named the same as the test, return only that key.
+          # If there is a key named the same as the test, return only that key.
+          # Set @leveled to whether the data is ordered by that single key.
+          score_columns[test_name][term] = if key = keys.grep(/^#{test_name}$/i).first
+            if matches_current_order(test_name, term, key) && keys.include?("#{key}lv")
+              @leveled = true
+            end
+            [key]
+            
           else
+            
             # Return all non level or report cluster keys.
             keys.reject do |key|
               
