@@ -74,7 +74,7 @@ class ImportJob
         record.assign_attributes(hash, as: current_role)
         record.save!
       rescue => error
-        errors << "Row #{index}: #{error.message}"
+        errors << "Row #{index}: #{error.message}\n#{error.backtrace.join("\n")}"
       ensure
         ActiveRecord::Base.connection.close
       end
