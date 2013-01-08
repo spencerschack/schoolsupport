@@ -80,21 +80,21 @@ module Methods
           worker.job['payload']['args'].first
         end
       end.compact
-      ImportData.with_permissions_to(:read).where(id: pending_ids)
+      ImportData.with_permissions_to(:show).where(id: pending_ids).order('created_at desc')
     else
       []
     end
     
     @failed_jobs ||= if Resque::Failure.count > 0
       @failure_data = {}
-      failed_ids = Resque::Failure.all(0, 100).reverse.map do |job|
+      failed_ids = Resque::Failure.all(0, 100).map do |job|
         if job['queue'] == 'import'
           id = job['payload']['args'].first
           @failure_data[id] = job['error']
           id
         end
       end.compact
-      ImportData.with_permissions_to(:read).where(id: failed_ids)
+      ImportData.with_permissions_to(:show).where(id: failed_ids).order('created_at desc')
     else
       []
     end
