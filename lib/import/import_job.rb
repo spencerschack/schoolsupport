@@ -90,7 +90,7 @@ class ImportJob
         if value = hash.delete(record) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
           attempted = finder.where(field => value).first
-          raise "Could not find the #{record} where #{field} = #{value}" unless attempted
+          raise "Could not find the #{record} where #{field} = '#{value}'" unless attempted
           hash[:"#{record}_id"] = attempted.id
         end
       end
