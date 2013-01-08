@@ -48,7 +48,6 @@ GEM
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
     bcrypt-ruby (3.0.1)
-    browser (0.1.5)
     builder (3.0.0)
     chunky_png (1.2.5)
     cocaine (0.2.1)
@@ -196,7 +195,6 @@ DEPENDENCIES
   authlogic
   aws-sdk
   bcrypt-ruby
-  browser
   coffee-rails (~> 3.2.1)
   compass-rails
   declarative_authorization

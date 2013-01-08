@@ -72,11 +72,11 @@ class TestScoresController < ApplicationController
     
       # Restrict the join to only one row when ordering by a test_score
       # otherwise the query will return a student for each test_score row.
-      default.where('test_scores.id' =>
+      default.where(%((test_scores.id IN (#{
         TestScore.select('MAX(test_scores.id)')
         .where('test_scores.test_name' => order_match[:test_name])
-        .group('test_scores.student_id')
-      )
+        .group('test_scores.student_id').to_sql
+      }) OR test_scores.id IS NULL)))
     else
       
       # Add order values to select because for DISTINCT, postgres requires

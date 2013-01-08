@@ -13,11 +13,7 @@ class ExportData < ActiveRecord::Base
   
   serialize :prompt_values, Hash
   
-  has_attached_file :file, path: '/export_files/:id/:filename',
-    s3_headers: {
-      content_disposition: 'attachment',
-      content_type: 'application/octet-stream'
-    }
+  has_attached_file :file, path: '/export_files/:id/:filename'
   
   validates_presence_of :kind
   validates_presence_of :certificate_title, :distribution_date, if: :is_request?
