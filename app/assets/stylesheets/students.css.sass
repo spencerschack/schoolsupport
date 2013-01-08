@@ -8,3 +8,70 @@
 				width: 28px
 				height: 35px
 				vertical-align: bottom
+
+.page.fullscreen
+	.students.wrapper.show
+		width: auto
+
+.students.wrapper.show, .students.wrapper.new_intervention, .students.wrapper.edit, .students.wrapper.update
+	width: 1000px
+
+	div.fields
+		width: auto
+	
+	div.relations
+		width: 35%
+	
+	div.notes
+		float: left
+		width: 30%
+
+	div.scroller h2
+		height: 35px
+		float: left
+		clear: left
+		margin: $spacing
+		font-size: 16px
+		font-weight: bold
+		line-height: 35px
+
+	div.table
+		a span
+			i
+				top: -10px
+	
+	img
+		width: 160px
+		height: 200px
+		margin: $spacing 0 $spacing $spacing
+		float: left
+	
+	.new_intervention_link
+		height: 35px
+		display: block
+		float: left
+		margin: $spacing
+		padding: 0 10px
+		background: $blue
+		+border-radius($radius)
+		line-height: 35px
+		font-weight: bold
+		color: #FFF
+		text-decoration: none
+		
+		&:hover
+			background-color: $blue-hover
+		
+		&:active
+			background-color: $blue-active
+	
+	.destroy_intervention_link
+		color: $red
+		text-decoration: underline
+		cursor: pointer
+		
+		&:hover
+			color: $red-hover
+		
+		&:active
+			color: $red-dark

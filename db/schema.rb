@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121228021045) do
+ActiveRecord::Schema.define(:version => 20130108002123) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -112,6 +112,16 @@ ActiveRecord::Schema.define(:version => 20121228021045) do
     t.integer  "user_id"
   end
 
+  create_table "interventions", :force => true do |t|
+    t.integer  "student_id"
+    t.string   "name"
+    t.date     "start"
+    t.date     "stop"
+    t.text     "notes"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "pdfs", :force => true do |t|
     t.string   "name"
     t.string   "file_file_name"
@@ -192,6 +202,7 @@ ActiveRecord::Schema.define(:version => 20121228021045) do
     t.boolean  "dropped"
     t.boolean  "hispanic",           :default => false
     t.boolean  "english_learner",    :default => false
+    t.text     "notes"
   end
 
   create_table "templates", :force => true do |t|
@@ -208,6 +219,8 @@ ActiveRecord::Schema.define(:version => 20121228021045) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "test_scores", ["data"], :name => "test_scores_gist_data"
 
   create_table "types", :force => true do |t|
     t.string   "name"

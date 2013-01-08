@@ -1,24 +1,12 @@
-$advanced: #54841E
-$proficient: #82C63B
-$basic: #EAD64A
-$below-basic: #FF8000
-$far-below-basic: #D02324
-
 .page
 	&.fullscreen
 		div.test_scores.index
 			width: auto
 	
-	div.test_scores
+	div.test_scores, div.students.show, div.students.new_intervention
 	
 		&.index
 			width: 1000px
-		
-		&.show
-			div.scroller h2
-				margin: $spacing
-				font-size: 16px
-				font-weight: bold
 	
 		.adv
 			color: $advanced
@@ -78,8 +66,3 @@ $far-below-basic: #D02324
 					top: -1px
 					font-weight: bold
 					font-size: 10px
-		&.show
-			div.table
-				a span
-					i
-						top: -10px

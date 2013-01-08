@@ -7,7 +7,7 @@ module TestScoresHelper
       students.group_by do |student|
         grouper = nil
         student.test_scores.each do |score|
-          if @ordered && score.test_name.downcase == @ordered[:test_name] && score.term == @ordered[:term]
+          if @ordered && score.test_name == @ordered[:test_name] && score.term == @ordered[:term]
             grouper = score.data["#{@ordered[:key]}_lv"]
             break
           end
@@ -33,25 +33,29 @@ module TestScoresHelper
     hash
   end
   
-  def data_columns
+  def data_columns options = {}
     @data_columns ||= begin
-      Rails.cache.fetch("/test_scores/data_columns/#{data_columns_cache_key}") do
+      Rails.cache.fetch("/test_scores/data_columns/#{data_columns_cache_key}", options) do
         data_columns = {}
-      
+        
+        coll = find_collection(true)
+          .limit(nil).offset(nil)
+          .select('students.id')
+        
         coll = TestScore.uniq.where({
-          student_id: collection.limit(nil).offset(nil).select('students.id').to_a
+          student_id: coll
         }).select('test_name, term, skeys(data)')
       
-        coll = collection.where({
+        coll = coll.where({
           term: params[:term]
         }) if params[:term].present? && params[:term] != 'All'
       
-        coll = collection.where({
+        coll = coll.where({
           test_name: params[:test_name]
         }) if params[:test_name].present? && params[:test_name] != 'All'
       
         TestScore.connection.execute(coll.to_sql).to_a.each do |score|
-          test_name = score['test_name'].downcase
+          test_name = score['test_name']
           term = score['term']
           data_columns[test_name] ||= {}
           data_columns[test_name][term] ||= Set.new
@@ -63,7 +67,7 @@ module TestScoresHelper
   end
   
   def data_columns_cache_key
-    sql = collection.joins('left outer join test_scores on students.id = test_scores.student_id')
+    sql = find_collection(true)
       .group('test_scores.id, test_scores.updated_at')
       .limit(nil).offset(nil).reorder(nil)
       .select('test_scores.id, test_scores.updated_at').to_sql
@@ -75,19 +79,23 @@ module TestScoresHelper
     @score_columns ||= begin
       score_columns = {}
       data_columns.each do |test_name, terms_and_keys|
+        
+        next if @selected_test && test_name != @selected_test
+        
         score_columns[test_name] ||= {}
         terms_and_keys.each do |term, keys|
-          score_columns[test_name][term] = if keys.include?(test_name)
-            [test_name] # If there is a key named the same as the test, return only that key.
+          
+          next if @selected_term && term != @selected_term
+          
+          score_columns[test_name][term] = if match = keys.grep(/^#{test_name}$/i).first
+            [match] # If there is a key named the same as the test, return only that key.
           else
             # Return all non level or report cluster keys.
             keys.reject do |key|
               
               # Check to see if the current ordered column is leveled.
-              if @ordered && key == @ordered[:key] &&
-                term == @ordered[:term] &&
-                test_name == @ordered[:test_name]
-                  @leveled = true if keys.include?("#{key}_lv")
+              if matches_current_order(test_name, term, key) && keys.include?("#{key}_lv")
+                @leveled = true
               end
               key =~ /_lv$|_rc/
             end
@@ -117,30 +125,26 @@ module TestScoresHelper
     @test_score_count || (test_score_indices && @test_score_count)
   end
   
-  def ordered_test_scores test_scores, &block
-    array = Array.new(test_score_count)
-    test_scores.each do |score|
-      array[test_score_indices[score.test_name.downcase][score.term.downcase]] = score
-    end
-    array.each(&block)
-  end
-  
   def associated_test_scores test_scores
     hash = {}
     test_scores.each do |score|
-      hash[[score.test_name.downcase, score.term]] = score
+      hash[[score.test_name, score.term]] = score
     end
     yield(hash)
   end
   
   def data_column_attributes test_name, term, key
     classes = ''
-    order_statement = [test_name, term, key].join(' ')
-    if match = /#{order_statement} (?<direction>asc|desc)/.match(params[:order])
+    if matches_current_order(test_name, term, key)
       classes << ' sorted'
-      classes << ' reverse' if match[:direction] == 'desc'
+      classes << ' reverse' if @ordered[:direction] == 'desc'
     end
-    %(data-order-by="#{order_statement}" class="replace sortable small #{classes}").html_safe
+    %(data-order-by="#{[test_name, term, key].join(' ')}" class="replace sortable small #{classes}").html_safe
+  end
+  
+  def matches_current_order test_name, term, key
+    @ordered && test_name == @ordered[:test_name] &&
+      term == @ordered[:term] && key == @ordered[:key]
   end
   
 end

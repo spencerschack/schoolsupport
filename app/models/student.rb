@@ -12,7 +12,7 @@ class Student < ActiveRecord::Base
   
   searches :first_name, :last_name, :identifier
 
-  attr_accessible :first_name, :grade, :last_name, :image, :hispanic, :english_learner,
+  attr_accessible :first_name, :grade, :last_name, :image, :hispanic, :english_learner, :notes,
     as: [:developer, :superintendent, :principal, :teacher]
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal]
@@ -29,6 +29,7 @@ class Student < ActiveRecord::Base
   has_many :test_scores, dependent: :destroy
   has_many :export_list_items
   has_and_belongs_to_many :export_data
+  has_many :interventions
   
   has_attached_file :image,
     path: '/student_images/:basename:style_unless_original.:extension',
@@ -36,10 +37,11 @@ class Student < ActiveRecord::Base
       original: ['', :jpg],
       thumbnail: ['56x70', :jpg],
       index: ['28x35', :jpg]
-    }
+    },
+    default_url: 'http://flickholdr.com/160/200'
   
-  has_import identify_with: { identifier: :school_id }, associate: { school: :identifier,
-    bus_route: :name, bus_stop: :name },
+  has_import identify_with: { identifier: :school_id },
+    associate: { school: :identifier, bus_route: :name, bus_stop: :name },
     prompts: proc { [[:school, collection: School.with_permissions_to(:show).order('name')]] }
   
   after_initialize :set_school

@@ -6,7 +6,9 @@ module Auth
   def self.included base
     base.helper_method :current_user, :current_user_session, :current_role
     base.before_filter :set_authorization
-    base.filter_resource_access additional_collection: [:import, :export, :view_request, :clear, :toggle, :select, :form, :waiting, :upload]
+    base.filter_resource_access additional_collection:
+      [:import, :export, :view_request, :clear, :toggle, :select, :form,
+        :waiting, :upload, :new_intervention, :destroy_intervention]
   end
   
   private

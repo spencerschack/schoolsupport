@@ -22,9 +22,20 @@ Schoolsupport::Application.routes.draw do
     match 'export/:export_kind(/:export_id)' => 'export_list_items#form'
   end
   
+  def intervenable
+    match 'new_intervention' => 'students#new_intervention'
+    match 'destroy_intervention' => 'students#destroy_intervention', via: 'POST'
+  end
+  
   # Districts, Schools, Periods, Students, Users, Tests
   def test_scores
-    helper :test_scores
+    helper :test_scores, only: :index do
+      collection do
+        match ':student_id/new_intervention' => 'students#new_intervention'
+        match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
+        match ':id' => 'students#show'
+      end
+    end
   end
   def students
     helper :students do
@@ -34,7 +45,7 @@ Schoolsupport::Application.routes.draw do
         test_scores
       end
       helper :users
-      match 'test_scores' => 'test_scores#show'
+      intervenable
       exportable
     end
   end
@@ -44,6 +55,7 @@ Schoolsupport::Application.routes.draw do
         post 'export', on: :collection
         helper :users
         exportable
+        intervenable
       end
       helper :users
       test_scores
@@ -55,6 +67,7 @@ Schoolsupport::Application.routes.draw do
         helper :students do
           post 'export', on: :collection
           exportable
+          intervenable
         end
         test_scores
       end
@@ -62,6 +75,7 @@ Schoolsupport::Application.routes.draw do
         post 'export', on: :collection
         helper :periods
         exportable
+        intervenable
       end
       test_scores
     end

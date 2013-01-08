@@ -12,7 +12,7 @@ module Response
   # respond with the appropriate json.
   def respond_with record
     case action_name
-    when 'create', 'update'
+    when 'create', 'update', 'new_intervention'
       if record.errors.any?
         render json: failure_hash, content_type: 'text/plain'
       else
@@ -34,7 +34,7 @@ module Response
     {}.tap do |hash|
       hash[:success] = true
       hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
-      hash[:path] = parent_path(record)
+      hash[:path] = parent_path(record) unless record.is_a?(Intervention)
       
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
@@ -82,6 +82,8 @@ module Response
       success ? 'show' : 'edit'
     when 'create'
       success ? 'show' : 'new'
+    when 'new_intervention'
+      success ? 'show' : 'new_intervention'
     end
   end
   

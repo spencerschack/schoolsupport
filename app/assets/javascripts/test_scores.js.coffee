@@ -11,4 +11,5 @@ handle_test_score_index_loaded = ->
           touched[klass] = true
 
 $ ->
+  
   $('#container').delegate '.wrapper.test_scores.index .table', 'infiniscrolled.ensure_single_level_breaker', handle_test_score_index_loaded

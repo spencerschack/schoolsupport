@@ -15,5 +15,21 @@ class StudentsController < ApplicationController
     return default.with_no_period if params[:term] == 'With No Period'
     default.joins(:periods).where(periods: { term: params[:term] })
   end
+  
+  def new_intervention
+    @student = Student.find(params[:student_id])
+    @intervention = @student.interventions.build
+    if params[:intervention]
+      @intervention.assign_attributes(params[:intervention], as: current_role)
+      @intervention.save
+      respond_with @intervention
+    end
+  end
+  
+  def destroy_intervention
+    @intervention = Intervention.find(params[:intervention_id])
+    @intervention.destroy
+    render text: @intervention.destroyed?
+  end
 
 end
