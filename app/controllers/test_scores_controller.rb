@@ -45,11 +45,13 @@ class TestScoresController < ApplicationController
       else
       
         # Order by the comparison of test_name and term because the key in
-        # data will not be unique across different years or tests.
+        # data will not be unique across different years or tests. Order by
+        # is the value for the given key is NULL or '' so useful data always
+        # appears at the top.
         default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
           "test_scores.test_name = :test_name asc, " +
           "test_scores.term = :term asc, " +
-          "(test_scores.data -> :key) IS NULL asc, " +
+          "((test_scores.data -> :key) IS NULL OR (test_scores.data -> :key) = '') asc, " +
           "lpad(test_scores.data -> :key, 10, '0') #{order_match[:direction]}",
         {
           test_name: order_match[:test_name],
