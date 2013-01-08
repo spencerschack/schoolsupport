@@ -16,9 +16,19 @@ module Resources
     collection = collection.with_permissions_to(:show)
     collection = collection.limit(offset_amount).offset(params[:offset].to_i)
     
-    if params[:order].present? && valid_order_column?(model, params[:order])
-        collection = collection.reorder(params[:order])
+    if params[:order].present? && match = valid_order_column?(model, params[:order])
+      
+      # No need to sanitize sql query because it is validated against
+      # valid_order_column? which ensures valid format, table name, column
+      # name, and direction. Sort by whether the ordered column is NULL or ''
+      # to put all meaningful rows at the top.
+      collection = collection.reorder(
+        "(#{match[:table]}.#{match[:column]} IS NULL OR" +
+        " #{match[:table]}.#{match[:column]} = '') asc, #{params[:order]}"
+      )
     end
+    
+    
     
     if params[:search].present? && collection.respond_to?(:search)
       collection = collection.search(params[:search])
@@ -54,15 +64,19 @@ module Resources
   private
   
   def valid_order_column? model, order_statement
-    (match = order_statement_regex.match(order_statement)) &&
+    if (match = order_statement_regex.match(order_statement)) &&
       ((match[:table] == model.table_name &&
         model.column_names.include?(match[:column])) ||
       ((reflection = model.reflect_on_association(match[:table].to_sym)) &&
         valid_order_column?(reflection.klass, order_statement)))
+          match
+    end
   end
   
+  # The ^ and $ anchors are very necessary for prevention against sql
+  # injection attacks.
   def order_statement_regex
-    /(?<table>\w+)\.(?<column>\w+) (?<direction>asc|desc)/
+    /^(?<table>\w+)\.(?<column>\w+) (?<direction>asc|desc)$/
   end
   
 end

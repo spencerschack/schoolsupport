@@ -127,8 +127,10 @@ class TestScoresController < ApplicationController
   
   # Tests order by values in the form:
   #   Cst 2012-2013 math asc
+  # The ^ and $ anchors are very important for protection against sql
+  # injection attacks.
   def data_order_statement_regex
-    /(?<test_name>.+) (?<term>\d{4}-\d{4}) (?<key>.+) (?<direction>asc|desc)/
+    /$(?<test_name>.+) (?<term>\d{4}-\d{4}) (?<key>.+) (?<direction>asc|desc)^/
   end
   
 end
