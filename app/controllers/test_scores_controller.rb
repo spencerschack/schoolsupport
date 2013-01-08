@@ -10,8 +10,12 @@ class TestScoresController < ApplicationController
     # and then load the test_scores in another query for the last statement
     # in this method to work properly, otherwise only the ordered by test
     # score will be loaded.
-    default = super(Student).preload(:test_scores)
+    default = super(Student).preload(:test_scores).preload(:users)
       .joins('LEFT OUTER JOIN test_scores ON students.id = test_scores.student_id')
+      .joins('LEFT OUTER JOIN periods_students ON students.id = periods_students.student_id')
+      .joins('LEFT OUTER JOIN periods ON periods_students.period_id = periods.id')
+      .joins('LEFT OUTER JOIN periods_users ON periods.id = periods_users.period_id')
+      .joins('LEFT OUTER JOIN users ON periods_users.user_id = users.id')
     
     # Used by some methods to calculate the present columns so the where and
     # order clauses are not necessary.

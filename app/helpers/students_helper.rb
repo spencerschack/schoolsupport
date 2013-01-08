@@ -3,7 +3,8 @@ module StudentsHelper
   PARENTS[:students] = [Period, User, School, District]
   
   SORTS[:students] = {
-    name: 'students.last_name'
+    name: 'students.last_name',
+    teacher: 'users.last_name'
   }
   
   FIELDS[:students] = {

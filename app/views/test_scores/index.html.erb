@@ -13,6 +13,7 @@
       <span class="image"></span>
       <span data-order-by="students.identifier" class="sortable">Identifier</span>
       <span data-order-by="students.last_name" class="sortable">Name</span>
+      <span data-order-by="users.last_name" class="sortable">Teacher</span>
       <span data-order-by="students.grade" class="sortable replace_target">Grade</span>
       <% score_columns.each do |test_name, terms_and_keys| %>
         <% terms_and_keys.each do |term, keys| %>
@@ -30,6 +31,7 @@
       <% if level %>
         <a class="<%= level.downcase %> level_breaker">
           <span class="spacer"></span>
+          <span></span>
           <span></span>
           <span></span>
           <span></span>
@@ -56,6 +58,7 @@
           </span>
           <span><%= student.identifier %></span>
           <span><%= student.name %></span>
+          <span><%= student.teacher.try(:name) || none %></span>
           <span><%= student.grade %></span>
           <% associated_test_scores(student.test_scores) do |association| %>
             <% score_columns.each do |test_name, terms_and_keys| %>
