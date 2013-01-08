@@ -12,7 +12,7 @@ class TestScoreProcessor
     raise "Could not find the school where identifier = '#{identifier}'" unless school
     identifier = hash.delete(:student)
     student = school.students.where(identifier: identifier).first
-    raise "Could not find the student in the school #{school.name} where identifier = '#{identifier}'" unless student
+    raise "Could not find the student #{school.name} where identifier = '#{identifier}'" unless student
     hash[:student_id] = student.id
     
     # Ensure all test names are lowercase so we don't have duplicate test
