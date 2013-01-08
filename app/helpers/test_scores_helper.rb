@@ -8,7 +8,7 @@ module TestScoresHelper
         grouper = nil
         student.test_scores.each do |score|
           if @ordered && score.test_name == @ordered[:test_name] && score.term == @ordered[:term]
-            grouper = score.data["#{@ordered[:key]}_lv"]
+            grouper = score.data["#{@ordered[:key]}lv"]
             break
           end
         end
@@ -25,7 +25,7 @@ module TestScoresHelper
       hash[score.test_name] ||= Array.new(2)
       hash[score.test_name][0] ||= SortedSet.new
       hash[score.test_name][0] += score.data.keys.reject do |key|
-        key =~ /_lv$/
+        key =~ /lv$/
       end if score.data.respond_to?(:keys)
       hash[score.test_name][1] ||= []
       hash[score.test_name][1] << score
@@ -94,10 +94,10 @@ module TestScoresHelper
             keys.reject do |key|
               
               # Check to see if the current ordered column is leveled.
-              if matches_current_order(test_name, term, key) && keys.include?("#{key}_lv")
+              if matches_current_order(test_name, term, key) && keys.include?("#{key}lv")
                 @leveled = true
               end
-              key =~ /_lv$|_rc/
+              key =~ /lv$|_rc/
             end
           end
         end

@@ -62,7 +62,7 @@
               <% terms_and_keys.each do |term, keys| %>
                 <% if score = association[[test_name, term]] %>
                   <% keys.each do |key| %>
-                    <% if level = score.data["#{key}_lv"] %>
+                    <% if level = score.data["#{key}lv"] %>
                       <span class="<%= level.downcase %>">
                         <%= score.data[key] || none %>
                         <i><%= level %></i>

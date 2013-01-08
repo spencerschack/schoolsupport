@@ -69,7 +69,7 @@
           <span class="spacer"></span>
           <span><%= score.term %></span>
           <% keys.each do |key| %>
-            <% if level = score.data["#{key}_lv"] %>
+            <% if level = score.data["#{key}lv"] %>
               <span class="<%= level.downcase %>">
                 <%= score.data[key] %><br />
                 <i><%= level %></i>
