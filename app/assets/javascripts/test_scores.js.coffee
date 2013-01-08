@@ -1,6 +1,6 @@
 handle_test_score_index_loaded = ->
   touched = {}
-  levels = { fbb: true, bbasic: true, basic: true, prof: true, adv: true }
+  levels = { fbb: true, bbasic: true, basic: true, prof: true, adv: true, unknown: true }
   $(this).find('.level_breaker').each ->
     classes = $(this).attr('class').split(' ')
     for klass in classes
