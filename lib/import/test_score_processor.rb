@@ -7,8 +7,13 @@ class TestScoreProcessor
     # associate with a scope (school) because student identifiers are only
     # guaranteed to be unique in a school. Also necessary because school
     # would be added to the data column in the code below if not removed here. 
-    school = School.where(identifier: hash.delete(:school)).first!
-    hash[:student_id] = school.students.where(identifier: hash.delete(:student)).first!.id
+    identifier = hash.delete(:school)
+    school = School.where(identifier: identifier).first
+    raise "Could not find the school where identifier = #{identifier}" unless school
+    identifier = hash.delete(:student)
+    student = school.students.where(identifier: identifier).first
+    raise "Could not find the student where identifier = #{identifier}" unless student
+    hash[:student_id] = student.id
     
     # Ensure all test names are lowercase so we don't have duplicate test
     # called 'Ela' and 'ela'.

@@ -74,7 +74,7 @@ class ImportJob
         record.assign_attributes(hash, as: current_role)
         record.save!
       rescue => error
-        errors << "Row #{index}: #{error.message}\n#{error.backtrace.join("\n")}"
+        errors << "Row #{index}: #{error.message}"
       ensure
         ActiveRecord::Base.connection.close
       end
@@ -89,7 +89,8 @@ class ImportJob
       options[:associate].each do |record, field|
         if value = hash.delete(record) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
-          attempted = finder.where(field => value).first!
+          attempted = finder.where(field => value).first
+          raise "Could not find the #{record} where #{field} = #{value}" unless attempted
           hash[:"#{record}_id"] = attempted.id
         end
       end
