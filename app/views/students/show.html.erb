@@ -54,7 +54,7 @@
     </div>
   <% end %>
   <% group_tests(@student.test_scores).each do |test_name, (keys, test_scores)| %>
-    <h2><%= test_name %></h2>
+    <h2><%= test_name.upcase %></h2>
     <div class="table">
       <div>
         <span class="spacer"></span>
