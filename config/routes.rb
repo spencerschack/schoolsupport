@@ -35,6 +35,7 @@ Schoolsupport::Application.routes.draw do
         match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
         match ':id' => 'students#show'
       end
+      exportable
     end
   end
   def students
