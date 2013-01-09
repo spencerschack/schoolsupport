@@ -12,7 +12,6 @@ class District < ActiveRecord::Base
   has_many :test_scores, through: :students
   has_many :bus_stops, dependent: :destroy
   has_many :bus_routes, dependent: :destroy
-  has_and_belongs_to_many :test_groups
   
   has_import identify_with: { identifier: nil }
   
