@@ -89,7 +89,7 @@ class ImportJob
       options[:associate].each do |record, field|
         if (value = hash.delete(record)) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
-          attempted = finder.where(field => value).first
+          attempted = finder.send("find_by_#{field}", value) # Must be find_by because some methods have special finders
           raise "Could not find the #{record} where #{field} = '#{value}'" unless attempted
           hash[:"#{record}_id"] = attempted.id
         end
@@ -106,7 +106,7 @@ class ImportJob
             raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
               " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"
           else
-            finder = finder.where(scope.to_sym => hash[scope])
+            finder = finder.send("find_by_#{scope}", hash[scope])
           end
         end
         record = finder.where(identifier => hash[identifier]).first
