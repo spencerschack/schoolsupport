@@ -10,7 +10,7 @@
     </div>
     <a>
       <span class="spacer"></span>
-      <span><%= test_name %></span>
+      <span><%= test_name.titleize %></span>
       <% scores.each_value do |value| %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">
