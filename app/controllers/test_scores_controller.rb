@@ -63,11 +63,11 @@ class TestScoresController < ApplicationController
         # is the value for the given key is NULL or '' so useful data always
         # appears at the top.
         default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
-          "test_scores.test_name = :test_name asc, " +
-          "test_scores.term = :term asc, " +
+          "test_scores.test_name = :test_name, " +
+          "test_scores.term = :term, " +
           (level_order_statement || '') +
           "((test_scores.data -> :key) IS NULL OR" +
-          " (test_scores.data -> :key) = '') asc, " +
+          " (test_scores.data -> :key) = ''), " +
           "lpad(test_scores.data -> :score_key, 10, '0') #{order_match[:direction]}",
         {
           test_name: order_match[:test_name],
