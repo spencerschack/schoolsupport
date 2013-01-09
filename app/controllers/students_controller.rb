@@ -7,7 +7,7 @@ class StudentsController < ApplicationController
   end
   
   def find_collection
-    default = super.eager_load(:users).order('students.last_name')
+    default = super.includes(:users).order('students.last_name')
     if params[:grade].present? && params[:grade] != 'All'
       default = default.where(grade: params[:grade])
     end

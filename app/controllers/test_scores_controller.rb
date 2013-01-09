@@ -42,6 +42,10 @@ class TestScoresController < ApplicationController
       @selected_term = term
     end
     
+    if params[:order].blank?
+      params[:order] = "ela #{Term.current} elalv asc"
+    end
+    
     if params[:order].present? && order_match = data_order_statement_regex.match(params[:order])
       
       # Skip ordering if the term or test filter does not align with the

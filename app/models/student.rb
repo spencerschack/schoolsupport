@@ -41,8 +41,7 @@ class Student < ActiveRecord::Base
       original: ['', :jpg],
       thumbnail: ['56x70', :jpg],
       index: ['28x35', :jpg]
-    },
-    default_url: 'http://flickholdr.com/160/200'
+    }
   
   has_import identify_with: { identifier: :school_id },
     associate: { school: :identifier, bus_route: :name, bus_stop: :name },

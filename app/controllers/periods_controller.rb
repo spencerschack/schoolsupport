@@ -1,7 +1,7 @@
 class PeriodsController < ApplicationController
   
   def find_collection
-    default = super.eager_load(:school).order('periods.name')
+    default = super.includes(:school).order('periods.name')
     return default if params[:term] == 'All' || params[:term].blank?
     default.where(term: params[:term])
   end

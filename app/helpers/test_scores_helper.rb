@@ -35,7 +35,8 @@ module TestScoresHelper
         end
       end
     end
-    hash
+    hash.to_a.sort_by(&test_name_sort)
+    end
   end
   
   def data_columns options = {}
@@ -110,11 +111,11 @@ module TestScoresHelper
                 @leveled = true
               end
               level_column?(key) || key =~ /_rc/
-            end
+            end.sort
           end
         end
       end
-      score_columns
+      score_columns.sort_by(&test_name_sort)
     end
   end
   
@@ -163,6 +164,19 @@ module TestScoresHelper
   def matches_current_order test_name, term, key
     @ordered && test_name == @ordered[:test_name] &&
       term == @ordered[:term] && key == score_column_for(@ordered[:key])
+  end
+  
+  private
+  
+  def test_name_sort
+    Proc.new do |(test_name, scores)|
+      case test_name.downcase
+      when /ela/ then 'A'
+      when /celdt/ then 'AA'
+      when /math/ then 'AAA'
+      else
+        test_name
+      end
   end
   
 end

@@ -18,6 +18,8 @@ module Resources
     
     if params[:order].present? && match = valid_order_column?(model, params[:order])
       
+      @collection_ordered_table = match[:table]
+      
       # No need to sanitize sql query because it is validated against
       # valid_order_column? which ensures valid format, table name, column
       # name, and direction. Sort by whether the ordered column is NULL or ''
