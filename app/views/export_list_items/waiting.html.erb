@@ -26,6 +26,8 @@
       <% if @pending %>
 				Your export will appear shortly. You can start another export while
 				this one is being created.
+			<% elsif @link %>
+				<%= link_to 'View Export', @link %>
 			<% else %>
 				Your export could not be created. Please try again.
 			<% end %>

@@ -54,7 +54,12 @@ class ExportListItemsController < ApplicationController
     unless @pending
       finished = ExportData.find(params[:export_data_id])
       if finished.try(:file?)
-        redirect_to finished.file.url
+        @link = finished.file.url
+        if browser.ie?
+          render layout: false
+        else
+          redirect_to @link
+        end
       else
         render layout: false
       end
