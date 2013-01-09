@@ -3,6 +3,7 @@
 	%h1 Export
 	= link_for :cancel, controller_model
 	= link_for :upload, controller_model
+	= link_for :back, controller_model
 	
 .scroller
 	= semantic_form_for :upload, url: '/export_list_items/upload' do |f|

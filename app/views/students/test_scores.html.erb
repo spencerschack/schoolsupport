@@ -1,8 +1,8 @@
 <div class="title">
-  <%= link_to 'Return', js_link, class: 'return' %>
   <h2>Student</h2>
   <h1><%= @student.name %></h1>
   <%= link_for :fullscreen, @student %>
+  <%= link_for :back, controller_model %>
 </div>
 
 <div class="scroller">

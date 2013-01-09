@@ -1,11 +1,9 @@
 .title
 	%h2 Import
 	%h1= plural_title
-	- if @import_success
-		= link_for :back, controller_model
-	- else
-		= link_for :cancel, controller_model
+	= link_for :cancel, controller_model
 	= link_for :upload, controller_model
+	= link_for :back, controller_model
 	
 .scroller
 	- if @import_success

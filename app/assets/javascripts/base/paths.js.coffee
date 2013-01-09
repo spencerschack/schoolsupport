@@ -37,13 +37,13 @@ handle_state_change = ->
 	switch path
 		when '/login' then push_state('/')
 		when '/logout' then handle_logout()
+		when '' then load_path('/', data)
 		else load_path(path, data)
 
 # Find the most matching page for the given path, remove unnecessary pages,
 # and create the necessary pages.
 # @param {String} path the path to load.
 load_path = (path, data) ->
-
 	$('.page').stop(true, true)
 	index = path == '/'
 	parts = if index then [''] else path.split('/')

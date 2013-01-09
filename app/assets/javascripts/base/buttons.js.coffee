@@ -1,16 +1,10 @@
 # If cancel is clicked on a new or create page, simply focus its parent
 # page. If it is an edit page, hide the form and bring up the show wrapper.
 handle_cancel_click = (event) ->
-	if $(this).closest('.wrapper').is('.new, .create, .export_list_items:not(.upload)')
-		push_state $(this).closest('.page').next('.page').attr('data-path')
-	else
-		$(this).closest('.wrapper').trigger('unloaded')
-			.animate { marginTop: "-#{$('#container').height()}px" }, SHORT_DURATION, ->
-				$(this).remove()
-
-handle_back_click = (event) ->
 	wrapper = $(this).closest('.wrapper')
-	if wrapper.is('.import')
+	if wrapper.is('.new, .create, .export_list_items:not(.upload)')
+		push_state $(this).closest('.page').next('.page').attr('data-path')
+	else if wrapper.is('.import')
 		$(this).display_loading_message();
 		url = wrapper.closest('.page').attr('data-path')
 		wrapper.next('.wrapper').trigger('unloaded').remove()
@@ -19,6 +13,17 @@ handle_back_click = (event) ->
 			wrapper.animate {
 				marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
 					$(this).remove()
+	else
+		wrapper.trigger('unloaded')
+			.animate { marginTop: "-#{$('#container').height()}px" }, SHORT_DURATION, ->
+				$(this).remove()
+
+handle_back_click = (event) ->
+	event.preventDefault()
+	event.stopImmediatePropagation()
+	parts = History.getState().url.split('/')
+	parts.pop()
+	push_state parts.join('/')
 
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
@@ -36,12 +41,6 @@ handle_edit_click = (event) ->
 			data = $(data)
 			data.css(marginTop: "-#{$('#container').height()}px")
 			$(data).prependTo(page).trigger('loaded').animate { marginTop: 0 }, MEDIUM_DURATION
-
-handle_return_click = (event) ->
-	event.stopImmediatePropagation()
-	parts = History.getState().url.split('/')
-	parts.pop()
-	push_state parts.join('/')
 
 # After clicking the delete button, show a confirmation message in the
 # button. After a second click, destroy the record and remove the page. If
@@ -111,8 +110,6 @@ $ ->
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
-	
-	$('#container').delegate 'a.return', 'click.return', handle_return_click
 	
 	# Handle create and update button clicks.
 	$('#container').delegate 'a.update, a.create, a.upload', 'click.submit',
