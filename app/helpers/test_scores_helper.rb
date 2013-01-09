@@ -26,8 +26,8 @@ module TestScoresHelper
       hash[test_name] = {}
       test_scores.sort_by(&:term).each_with_index do |score, index|
         score.data.each do |key, value|
-          if index.zero? || (!level_column?(key) && key !~ /_rc/)
-            hash[test_name]["#{key} #{Term.shorten(score.term)}"] = {
+          if !level_column?(key) && (index.zero? || key !~ /_rc/)
+            hash[test_name]["#{key.titleize} #{Term.shorten(score.term)}"] = {
               level: score.data[level_column_for(key)],
               score: value
             }
