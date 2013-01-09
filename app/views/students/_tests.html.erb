@@ -2,7 +2,6 @@
   <div class="table">
     <div>
       <span class="spacer"></span>
-      <span>Test</span>
       <% scores.keys.each do |key| %>
         <span class="small"><%= key.html_safe %></span>
       <% end %>
@@ -10,7 +9,6 @@
     </div>
     <a>
       <span class="spacer"></span>
-      <span><%= test_name.titleize %></span>
       <% scores.each_value do |value| %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">
