@@ -1,10 +1,6 @@
-# Possible levels in the data hstore include:
-# - Adv
-# - Prof
-# - Basic
-# - BBasic
-# - FBB
 class TestScore < ActiveRecord::Base
+  
+  LEVELS = %w(adv prof basic bbasic fbb)
   
   using_access_control
   

@@ -1,6 +1,6 @@
 class TestScoresController < ApplicationController
   
-  helper_method :data_order_statement_regex
+  helper_method :data_order_statement_regex, :level_column_for, :score_column_for, :level_column?
   
   def find_collection without = false
     # Pass super to Student so it uses that instead of the inferred model
@@ -47,6 +47,16 @@ class TestScoresController < ApplicationController
         (@selected_term && @selected_term != order_match[:term])
           order_match = nil
       else
+        
+        # If ordering by a level, create an order statement to order by
+        # adv, prof, basic, bbasic, fbb or the opposite.
+        level_order_statement = if level_column?(order_match[:key])
+          levels = TestScore::LEVELS
+          levels.reverse! if order_match[:direction] == 'desc'
+          levels.reduce('') do |statement, level|
+            statement << "(test_scores.data -> :key) = '#{level}', "
+          end
+        end
       
         # Order by the comparison of test_name and term because the key in
         # data will not be unique across different years or tests. Order by
@@ -55,11 +65,14 @@ class TestScoresController < ApplicationController
         default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
           "test_scores.test_name = :test_name asc, " +
           "test_scores.term = :term asc, " +
-          "((test_scores.data -> :key) IS NULL OR (test_scores.data -> :key) = '') asc, " +
-          "lpad(test_scores.data -> :key, 10, '0') #{order_match[:direction]}",
+          (level_order_statement || '') +
+          "((test_scores.data -> :key) IS NULL OR" +
+          " (test_scores.data -> :key) = '') asc, " +
+          "lpad(test_scores.data -> :score_key, 10, '0') #{order_match[:direction]}",
         {
           test_name: order_match[:test_name],
           term: order_match[:term],
+          score_key: score_column_for(order_match[:key]),
           key: order_match[:key]
         }], 'test_scores'))
       
@@ -130,7 +143,22 @@ class TestScoresController < ApplicationController
   # The ^ and $ anchors are very important for protection against sql
   # injection attacks.
   def data_order_statement_regex
-    /$(?<test_name>.+) (?<term>\d{4}-\d{4}) (?<key>.+) (?<direction>asc|desc)^/
+    /^(?<test_name>.+) (?<term>\d{4}-\d{4}) (?<key>.+) (?<direction>asc|desc)$/
+  end
+  
+  # Convert column to level column
+  def level_column_for column
+    level_column?(column) ? column : "#{column}lv"
+  end
+  
+  # Convert column to score column
+  def score_column_for column
+    (match = level_column?(column)) ? match[:score_column] : column
+  end
+  
+  # Test whether the column is a level column.
+  def level_column? column
+    /(?<score_column>.+)lv$/.match(column)
   end
   
 end

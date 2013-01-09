@@ -8,7 +8,7 @@ module TestScoresHelper
         grouper = nil
         student.test_scores.each do |score|
           if @ordered && score.test_name == @ordered[:test_name] && score.term == @ordered[:term]
-            grouper = score.data["#{@ordered[:key]}lv"]
+            grouper = score.data[level_column_for(@ordered[:key])]
             break
           end
         end
@@ -25,7 +25,7 @@ module TestScoresHelper
       hash[score.test_name] ||= Array.new(2)
       hash[score.test_name][0] ||= SortedSet.new
       hash[score.test_name][0] += score.data.keys.reject do |key|
-        key =~ /lv$/
+        level_column?(key)
       end if score.data.respond_to?(:keys)
       hash[score.test_name][1] ||= []
       hash[score.test_name][1] << score
@@ -90,7 +90,7 @@ module TestScoresHelper
           # If there is a key named the same as the test, return only that key.
           # Set @leveled to whether the data is ordered by that single key.
           score_columns[test_name][term] = if key = keys.grep(/^#{test_name}$/i).first
-            if matches_current_order(test_name, term, key) && keys.include?("#{key}lv")
+            if matches_current_order(test_name, term, key) && keys.include?(level_column_for(key))
               @leveled = true
             end
             [key]
@@ -101,10 +101,10 @@ module TestScoresHelper
             keys.reject do |key|
               
               # Check to see if the current ordered column is leveled.
-              if matches_current_order(test_name, term, key) && keys.include?("#{key}lv")
+              if matches_current_order(test_name, term, key) && keys.include?(level_column_for(key))
                 @leveled = true
               end
-              key =~ /lv$|_rc/
+              level_column?(key) || key =~ /_rc/
             end
           end
         end
@@ -146,12 +146,18 @@ module TestScoresHelper
       classes << ' sorted'
       classes << ' reverse' if @ordered[:direction] == 'desc'
     end
+    
+    # Sort by level if we can.
+    if data_columns[test_name][term].include?(level_column_for(key))
+      key = level_column_for(key)
+    end
+    
     %(data-order-by="#{[test_name, term, key].join(' ')}" class="replace sortable small #{classes}").html_safe
   end
   
   def matches_current_order test_name, term, key
     @ordered && test_name == @ordered[:test_name] &&
-      term == @ordered[:term] && key == @ordered[:key]
+      term == @ordered[:term] && key == score_column_for(@ordered[:key])
   end
   
 end

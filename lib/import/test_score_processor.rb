@@ -26,7 +26,7 @@ class TestScoreProcessor
     hash.each do |key, value|
       unless model.column_names.include?(key.to_s)
         hash.delete(key)
-        hash[:data][key.downcase] = value
+        hash[:data][key.downcase] = value.downcase
       end
     end
   end
