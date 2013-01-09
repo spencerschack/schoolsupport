@@ -18,6 +18,7 @@ class StudentsController < ApplicationController
   
   def test_scores
     @student.initialize_notes
+    @student.initialize_interventions
     @intervention = Intervention.new
   end
   
