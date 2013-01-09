@@ -65,9 +65,9 @@ class TestScoresController < ApplicationController
         default = default.order(ActiveRecord::Base.send(:sanitize_sql, [
           "test_scores.test_name = :test_name, " +
           "test_scores.term = :term, " +
-          (level_order_statement || '') +
           "((test_scores.data -> :key) IS NULL OR" +
           " (test_scores.data -> :key) = ''), " +
+          (level_order_statement || '') +
           "lpad(test_scores.data -> :score_key, 10, '0') #{order_match[:direction]}",
         {
           test_name: order_match[:test_name],
