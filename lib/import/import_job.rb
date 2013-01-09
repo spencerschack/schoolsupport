@@ -109,7 +109,7 @@ class ImportJob
             finder = finder.send("find_by_#{scope}", hash[scope])
           end
         end
-        record = finder.where(identifier => hash[identifier]).first
+        record = finder.send("find_by_#{identifier}", hash[identifier])
         return record if record
       end
     end
