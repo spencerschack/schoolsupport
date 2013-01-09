@@ -14,6 +14,11 @@ class Term < ActiveModel::Validator
     !!(term.to_s =~ /(\d{4})-(\d{4})/ && $1.to_i + 1 == $2.to_i)
   end
   
+  # Convert format from 2012-2013 to 12-13
+  def self.shorten term
+    /\d\d(\d\d)-\d\d(\d\d)/.match(term).captures.join('-')
+  end
+  
   # Return the first year of the current term.
   def self.current_year
     (now = Time.now).month > 6 ? now.year : now.year - 1

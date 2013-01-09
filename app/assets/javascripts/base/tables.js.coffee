@@ -111,9 +111,10 @@ load_results = (wrapper) ->
 		data = $(data)
 		table = wrapper.find('div.table')
 		table.append(data.find('.table a'))
-		table.find('div span.replace').remove()
 		table.attr('data-offset', table.attr('data-limit'))
-		data.find('.table div span.replace').insertAfter(table.find('div span.replace_target'))
+		replaced = table.find('div span.replace')
+		replaced.first().after(data.find('.table div span.replace'))
+		replaced.remove()
 
 		select_path(wrapper.closest('.page'))
 		selected = table.find('.selected')

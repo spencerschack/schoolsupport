@@ -152,7 +152,7 @@ module TestScoresHelper
       key = level_column_for(key)
     end
     
-    %(data-order-by="#{[test_name, term, key].join(' ')}" class="replace sortable small #{classes}").html_safe
+    %(data-order-by="#{[test_name, term, key].join(' ')}" class="replace sortable small#{classes}").html_safe
   end
   
   def matches_current_order test_name, term, key
