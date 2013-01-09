@@ -51,7 +51,19 @@ handle_destroy_link_click = (event) ->
       button.unbind('click.confirm').text('Delete')
       $('body').unbind('click.unconfirm')
 
+handle_note_input_blur = (event) ->
+  console.log this, 'blurred'
+  event.preventDefault()
+  event.stopImmediatePropagation()
+  form = $(this).closest('form')
+  data = form.serialize() + '&' + $.param(csrf_param())
+  $.post form.attr('action'), data
+
 $ ->
   
-  $('#container').delegate '.wrapper.students form#new_intervention, .wrapper.students form#new_student_note', 'submit.submit_form', handle_form_submit
-  $('#container').delegate '.wrapper.students .destroy_intervention_link, .wrapper.students .destroy_student_note_link', 'click.destroy_link', handle_destroy_link_click
+  $('#container').delegate '.wrapper.students form#new_intervention', 'submit.submit_form', handle_form_submit
+  $('#container').delegate '.wrapper.students .destroy_intervention_link', 'click.destroy_link', handle_destroy_link_click
+
+  $('#container').delegate '.wrapper.students .notes textarea', 'blur.blur_submit', handle_note_input_blur
+  $('#container').delegate '.wrapper.students .notes form', 'submit.hold_submit', (event) ->
+    event.preventDefault()

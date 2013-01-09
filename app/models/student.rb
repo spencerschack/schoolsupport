@@ -14,6 +14,8 @@ class Student < ActiveRecord::Base
 
   attr_accessible :first_name, :grade, :last_name, :image, :hispanic, :english_learner, :notes,
     as: [:developer, :superintendent, :principal, :secretary, :teacher]
+  attr_accessible :note_1, :note_2, :note_3, :note_4, as: [:developer,
+    :superintendent, :principal, :teacher]
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal, :secretary]
   attr_accessible :school_id, as: [:developer, :superintendent]
@@ -54,6 +56,16 @@ class Student < ActiveRecord::Base
 
   def as_json options = {}
     super(options.reverse_merge(only: [:id, :identifier], methods: [:name]))
+  end
+  
+  def initialize_notes
+    string = %w(Date Assessment Goals Interventions Results).map do |col|
+      "#{col}: "
+    end.join("\n")
+    self.note_1 ||= string
+    self.note_2 ||= string
+    self.note_3 ||= string
+    self.note_4 ||= string
   end
   
   # Never overwrite image_file_name with a blank value.

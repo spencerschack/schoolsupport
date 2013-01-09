@@ -23,10 +23,13 @@
     </div>
     <h2>Notes</h2>
     <div class="notes">
-      <% @student.student_notes.includes(:user).order('users.last_name').each do |note| %>
-        <%= render partial: 'student_note_row', locals: { note: note } %>
+      <% 1.upto(4) do |n| %>
+        <%= semantic_form_for @student, class: 'special_handler' do |f| %>
+          <%= f.inputs do %>
+            <%= f.input :"note_#{n}" %>
+          <% end %>
+        <% end %>
       <% end %>
-      <%= render 'student_note_form' %>
     </div>
   </div>
   <div class="right_col">
@@ -44,12 +47,14 @@
         <% test_scores.each do |score| %>
           <a>
             <span class="spacer"></span>
-            <span><%= score.term %></span>
+            <span class="nowrap"><%= Term.shorten(score.term) %></span>
             <% keys.each do |key| %>
               <% if level = score.data[level_column_for(key)] %>
-                <span class="<%= level %>">
-                  <%= score.data[key] %><br />
-                  <i><%= level.titleize %></i>
+                <span class="<%= level %> small">
+                  <i>
+                    <%= score.data[key] %><br />
+                    <em><%= level.titleize %></em>
+                  </i>
                 </span>
               <% else %>
                 <span><%= score.data[key] %></span>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130109045650) do
+ActiveRecord::Schema.define(:version => 20130109162745) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -184,14 +184,6 @@ ActiveRecord::Schema.define(:version => 20130109045650) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "student_notes", :force => true do |t|
-    t.integer  "student_id"
-    t.integer  "user_id"
-    t.text     "notes"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "students", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -210,6 +202,10 @@ ActiveRecord::Schema.define(:version => 20130109045650) do
     t.boolean  "dropped"
     t.boolean  "hispanic",           :default => false
     t.boolean  "english_learner",    :default => false
+    t.text     "note_1"
+    t.text     "note_2"
+    t.text     "note_3"
+    t.text     "note_4"
   end
 
   create_table "templates", :force => true do |t|
