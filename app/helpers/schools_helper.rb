@@ -3,6 +3,7 @@ module SchoolsHelper
   PARENTS[:schools] = [Type, Pdf, Template, District]
   
   SORTS[:schools] = {
+    district: 'districts.name'
   }
   
   FIELDS[:schools] = {

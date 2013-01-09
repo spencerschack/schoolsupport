@@ -18,25 +18,24 @@ div.table
 			font-weight: bold
 	
 		span.sortable
-			padding-right: 15px
-			background: #FFF url(image-path("icons.png")) no-repeat 100% -798px
+			background: #FFF url(image-path("icons.png")) no-repeat -6px -798px
 			cursor: pointer
 			
 			&:hover
-				background-position: 100% -828px
+				background-position: -6px -828px
 				
 			&:active
-				background-position: 100% -858px
+				background-position: -6px -858px
 			
 			&.sorted
-				background-position: 100% -888px
+				background-position: -6px -888px
 				color: $blue
 				
 				&.reverse:active, &:active
-					background-position: 100% -858px
+					background-position: -6px -858px
 				
 				&.reverse
-					background-position: 100% -918px
+					background-position: -6px -918px
 			
 			&.spacer, &.select
 				width: $spacing

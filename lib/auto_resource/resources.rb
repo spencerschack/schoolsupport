@@ -68,6 +68,8 @@ module Resources
       ((match[:table] == model.table_name &&
         model.column_names.include?(match[:column])) ||
       ((reflection = model.reflect_on_association(match[:table].to_sym)) &&
+        valid_order_column?(reflection.klass, order_statement)) ||
+      ((reflection = model.reflect_on_association(match[:table].singularize.to_sym)) &&
         valid_order_column?(reflection.klass, order_statement)))
           match
     end
