@@ -79,14 +79,15 @@ handle_search_click = (event) ->
 					$(this).remove()
 
 handle_options_filter_change = ->
-	selected_text = $(this).find("option[value='#{$(this).val()}']").text()
-	if $(this).closest('div').is('.term_filter')
-		selected_text = 'Term: ' + selected_text
-	else if $(this).closest('div').is('.grade_filter')
-		selected_text = 'Grade: ' + selected_text
-	else
-		selected_text = 'Test: ' + selected_text
-	$(this).siblings('span').text(selected_text)
+	unless $(this).is('.test_filter')
+		selected_text = $(this).find("option[value='#{$(this).val()}']").text()
+		if $(this).closest('div').is('.term_filter')
+			selected_text = 'Term: ' + selected_text
+		else if $(this).closest('div').is('.grade_filter')
+			selected_text = 'Grade: ' + selected_text
+		else
+			selected_text = 'Test: ' + selected_text
+		$(this).siblings('span').text(selected_text)
 	load_results($(this).closest('.wrapper'))
 
 search_and_sort_data = (wrapper, table) ->
@@ -147,11 +148,14 @@ load_more_records = (wrapper, table, callback) ->
   term = wrapper.find('.term_filter select').val()
   data['term'] = term if term
   
-  grade = wrapper.find('.grade_filter select').val()
+  grade = wrapper.find('.grade_filter select, select.grade_filter').val()
   data['grade'] = grade if grade
-
-  test = wrapper.find('.test_filter select').val()
-  data['test'] = test if test
+  
+  teacher = wrapper.find('select.teacher_filter').val()
+  data['teacher'] = teacher if teacher
+  
+  subject = wrapper.find('select.subject_filter').val()
+  data['subject'] = subject if subject
   
   infiniscroll_loading.insertAfter(table)
   $.get table.closest('.page').attr('data-path'), data, (data) ->
@@ -176,6 +180,6 @@ $ ->
 	$('#container').delegate 'a.search', 'click.search', handle_search_click
 
 	# Prepare term filter.
-	$('#container').delegate '.term_filter select, .grade_filter select, .test_filter select', 'change.options_filter', handle_options_filter_change
+	$('#container').delegate '.term_filter select, select.grade_filter, .grade_filter select, select.subject_filter, select.teacher_filter', 'change.options_filter', handle_options_filter_change
 	
 	$('#container').delegate '.index.wrapper', 'loaded.prepare_infiniscroll', handle_index_loaded

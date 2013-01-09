@@ -65,14 +65,6 @@ module ApplicationHelper
    end
 	end
 	
-	def test_options
-	  @test_options ||= if controller_model == TestScore
-	    tests = options_scope.uniq.pluck('test_scores.test_name')
-	    selected = params[:test].present? ? params[:test] : 'All'
-	    options_for_select(['All'] + tests.sort, selected)
-    end
-	end
-	
 	# Includes an include_blank option.
 	def import_prompt_options args
 	  options = args.extract_options!

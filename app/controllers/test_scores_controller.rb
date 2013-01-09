@@ -25,35 +25,42 @@ class TestScoresController < ApplicationController
     # order clauses are not necessary.
     return default if without
     
-    @selected_test = false
-    @selected_term = false
+    @selected_subject = false
     
     if grade = option_filter_value(:grade)
       default = default.where('students.grade' => grade)
     end
-
-    if test = option_filter_value(:test)
-      default = default.where('test_scores.test_name' => test)
-      @selected_test = test
+    
+    if subject = option_filter_value(:subject)
+      if subject == 'ELA'
+        @selected_subject = 'ELA'
+        inverter = ' NOT'
+      else
+        @selected_subject = 'Math'
+        inverter = ''
+      end
+      default = default.where("test_scores.test_name#{inverter} ILIKE '%math%'")
     end
 
-    if term = option_filter_value(:term)
-      default = default.where('test_scores.term' => term)
-      @selected_term = term
+    if teacher = option_filter_value(:teacher)
+      last, first = teacher.split(', ')
+      default = default.where('users.id' => teacher)
     end
     
     if params[:order].blank?
-      params[:order] = "ela #{Term.current} elalv asc"
+      #params[:order] = "ela #{Term.current} elalv asc"
     end
     
     if params[:order].present? && order_match = data_order_statement_regex.match(params[:order])
       
-      # Skip ordering if the term or test filter does not align with the
+      # Skip ordering if the test filter does not align with the
       # ordered column, otherwise no rows will match. Also nillify order_match
       # so all other code thinks there is no order.
-      if (@selected_test && @selected_test != order_match[:test_name]) ||
-        (@selected_term && @selected_term != order_match[:term])
-          order_match = nil
+      if @selected_subject
+        if (@selected_subject == 'ELA' && match[:test_name] =~ /math/i) ||
+          (@selected_subject == 'Math' && match[:test_name] !~ /math/i)
+            order_match = nil
+        end
       else
         
         # If ordering by a level, create an order statement to order by
@@ -143,7 +150,7 @@ class TestScoresController < ApplicationController
   # Return false if the parameter is not present or equal to 'All' or return
   # the parameter's value.
   def option_filter_value option
-    params[option].present? && params[option] != 'All' && params[option]
+    params[option].present? && params[option] !~ /^All/ && params[option]
   end
   
   # Tests order by values in the form:

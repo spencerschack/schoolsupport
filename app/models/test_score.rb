@@ -10,6 +10,7 @@ class TestScore < ActiveRecord::Base
     as: [:developer, :superintendent, :principal, :teacher]
   
   belongs_to :student
+  has_many :users, through: :student
   
   serialize :data, ActiveRecord::Coders::Hstore
   

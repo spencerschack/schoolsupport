@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   has_many :export_data
   has_many :export_list_items
   has_many :export_list_students, through: :export_list_items, source: :student
-  has_many :student_notes
+  has_many :test_scores, through: :students
   
   after_initialize :associate_students
   before_save :update_appropriate_timestamps

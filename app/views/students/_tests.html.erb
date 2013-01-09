@@ -1,5 +1,5 @@
-<% group_tests(@student.test_scores).each do |(test_name, scores)| %>
-  <div class="table">
+<div class="table">
+  <% group_tests(@student.test_scores).each do |(test_name, scores)| %>
     <div>
       <span class="spacer"></span>
       <% scores.keys.each do |key| %>
@@ -9,7 +9,9 @@
     </div>
     <a>
       <span class="spacer"></span>
+      <% key_count = @max_keys %>
       <% scores.each_value do |value| %>
+        <% key_count -= 1 %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">
             <i>
@@ -21,7 +23,10 @@
           <span><%= value[:score] || none %></span>
         <% end %>
       <% end %>
+      <% key_count.times do %>
+        <span></span>
+      <% end %>
       <span class="spacer"></span>
     </a>
-  </div>
-<% end %>
+  <% end %>
+</div>

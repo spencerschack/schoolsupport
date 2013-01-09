@@ -7,11 +7,14 @@ window.load_content = (wrapper, data, url, callback) ->
 		term = wrapper.find('.term_filter select').val()
 		data['term'] = term if term
 		
-		grade = wrapper.find('.grade_filter select').val()
+		grade = wrapper.find('select.grade_filter, .grade_filter select').val()
 		data['grade'] = grade if grade
 		
-		test = wrapper.find('.test_filter select').val()
-		data['test'] = test if test
+		teacher = wrapper.find('select.teacher_filter').val()
+		data['teacher'] = teacher if teacher
+		
+		subject = wrapper.find('select.subject_filter').val()
+		data['subject'] = subject if subject
 		
 		data = $.param data
 		url += "?#{data}" if data

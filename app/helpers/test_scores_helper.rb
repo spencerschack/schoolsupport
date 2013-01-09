@@ -2,6 +2,34 @@ module TestScoresHelper
   
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
+  def teacher_options
+	  @teacher_options ||= begin
+	    scope = find_first_parent ? find_first_parent.students : Student
+	    scope = scope.with_permissions_to(:show)
+	    sql = scope.joins(:users).order('users.last_name').uniq.select('users.*').to_sql
+	    teachers = User.find_by_sql(sql).map { |t| [t.name, t.id]}
+      selected = params[:teacher].present? ? params[:teacher] : 'All Teachers'
+	    options_for_select(['All Teachers'] + teachers, selected)
+   end
+	end
+	
+	def grade_options
+	 @grade_options ||= if controller_model == Student || controller_model == TestScore
+	   grades = if controller_model == Student
+	     options_scope.uniq.pluck('students.grade')
+	   elsif controller_model == TestScore
+	     options_scope.joins(:student).uniq.pluck('students.grade')
+     end
+     selected = params[:grade].present? ? params[:grade] : 'All Grades'
+	   grades.sort_by!(&:to_i)
+	   options_for_select(['All Grades'] + grades, selected)
+   end
+	end
+	
+	def subject_options
+	  %w(ELA Math)
+	end
+  
   def group_levels students
     if @leveled
       students.group_by do |student|
@@ -21,10 +49,12 @@ module TestScoresHelper
   
   def group_tests test_scores
     hash = {}
+    @max_keys = 0
     grouped = test_scores.group_by(&:test_name)
     grouped.each do |test_name, test_scores|
       hash[test_name] = {}
       test_scores.sort_by!(&:term).each_with_index do |score, index|
+        @max_keys = [score.data.keys.count, @max_keys].max
         score.data.each do |key, value|
           if !level_column?(key) && (index == test_scores.length - 1 || key !~ /_rc/)
             hash[test_name]["#{key.titleize}<br />#{Term.shorten(score.term)}"] = {
@@ -170,10 +200,12 @@ module TestScoresHelper
   
   def test_name_sort
     Proc.new do |(test_name, scores)|
-      case test_name.downcase
-      when /ela/ then 'A'
-      when /celdt/ then 'AA'
-      when /math/ then 'AAA'
+      case test_name
+      when /^ela/i then 'A'
+      when /ela/i then 'AA'
+      when /^celdt/i then 'AAA'
+      when /^math/i then 'AAAA'
+      when /math/i then 'AAAAA'
       else
         test_name
       end
