@@ -52,7 +52,7 @@ class TestScoresController < ApplicationController
         # adv, prof, basic, bbasic, fbb or the opposite.
         level_order_statement = if level_column?(order_match[:key])
           levels = TestScore::LEVELS
-          levels.reverse! if order_match[:direction] == 'desc'
+          levels = levels.reverse if order_match[:direction] == 'desc'
           levels.reduce('') do |statement, level|
             statement << "(test_scores.data -> :key) = '#{level}', "
           end
