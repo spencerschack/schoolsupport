@@ -29,7 +29,7 @@ authorization do
     end
     
     # Access to students in district.
-    has_permission_on :students, to: [:manage, :export, :new_intervention, :destroy_intervention] do
+    has_permission_on :students, to: [:manage, :export, :test_scores] do
       if_permitted_to :manage, :school
     end
     
@@ -66,6 +66,10 @@ authorization do
 	role :principal do
     
     includes :secretary
+    
+    has_permission_on :students, to: [:test_scores] do
+      if_attribute school_id: is { user.school_id }
+    end
     
     # Access to test scores of students.
     has_permission_on :test_scores, to: :manage do
@@ -108,7 +112,7 @@ authorization do
     end
     
     # Access to students in school.
-    has_permission_on :students, to: [:manage, :export, :new_intervention, :destroy_intervention] do
+    has_permission_on :students, to: [:manage, :export] do
       if_attribute school_id: is { user.school_id }
     end
     
@@ -150,7 +154,7 @@ authorization do
     end
     
     # Access to students in periods.
-    has_permission_on :students, to: [:index, :show, :export, :new_intervention, :destroy_intervention] do
+    has_permission_on :students, to: [:index, :show, :export, :test_scores] do
       if_permitted_to :show, :periods
     end
     

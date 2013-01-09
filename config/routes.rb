@@ -40,7 +40,7 @@ Schoolsupport::Application.routes.draw do
         match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
         match ':student_id/new_student_note' => 'students#new_student_note'
         match ':student_id/destroy_student_note' => 'students#destroy_student_note', via: 'POST'
-        match ':id' => 'students#show'
+        match ':id' => 'students#test_scores'
       end
       exportable
     end

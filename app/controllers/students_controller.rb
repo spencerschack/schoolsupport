@@ -16,7 +16,7 @@ class StudentsController < ApplicationController
     default.joins(:periods).where(periods: { term: params[:term] })
   end
   
-  def show
+  def test_scores
     @student_note = StudentNote.new
     @intervention = Intervention.new
   end
