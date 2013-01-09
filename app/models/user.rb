@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   after_initialize :associate_students
   before_save :update_appropriate_timestamps
   
-  has_import identify_with: { email: nil, name: :school_id },
+  has_import identify_with: { email: nil, first_name: [:last_name, :school_id] },
     associate: { school: :identifier, role: :name }
   
   before_validation :set_school
