@@ -16,20 +16,42 @@ class StudentsController < ApplicationController
     default.joins(:periods).where(periods: { term: params[:term] })
   end
   
+  def show
+    @student_note = StudentNote.new
+    @intervention = Intervention.new
+  end
+  
   def new_intervention
     @student = Student.find(params[:student_id])
-    @intervention = @student.interventions.build
-    if params[:intervention]
-      @intervention.assign_attributes(params[:intervention], as: current_role)
-      @intervention.save
-      respond_with @intervention
-    end
+    @intervention = @student.interventions.build(params[:intervention], as: current_role)
+    success = @intervention.save
+    render json: {
+      success: success,
+      page: render_to_string(success ? '_intervention_row' : '_intervention_form', layout: false)
+    }
+  end
+  
+  def new_student_note
+    @student = Student.find(params[:student_id])
+    @student_note = @student.student_notes.build(params[:student_note], as: current_role)
+    @student_note.user_id = current_user.id
+    success = @student_note.save
+    render json: {
+      success: success,
+      page: render_to_string(success ? '_student_note_row' : '_student_note_form', layout: false)
+    }
   end
   
   def destroy_intervention
     @intervention = Intervention.find(params[:intervention_id])
     @intervention.destroy
     render text: @intervention.destroyed?
+  end
+  
+  def destroy_student_note
+    @student_note = StudentNote.find(params[:student_note_id])
+    @student_note.destroy
+    render text: @student_note.destroyed?
   end
 
 end

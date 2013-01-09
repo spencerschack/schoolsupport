@@ -50,6 +50,7 @@ class Student < ActiveRecord::Base
   validates_uniqueness_of :identifier, scope: :school_id
   validate :periods_in_school
   validate :bus_in_district
+  has_many :student_notes
 
   def as_json options = {}
     super(options.reverse_merge(only: [:id, :identifier], methods: [:name]))

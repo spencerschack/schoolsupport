@@ -9,79 +9,74 @@
 </div>
 
 <div class="scroller">
-  <%= image_tag(@student.image) %>
-  <div class="fields">
-    <% FIELDS[:students][:show][:fields].each do |field| %>
-      <%= field_content @student, field %>
-    <% end %>
-  </div>
-  <div class="notes">
-    <p>
-      <b>Notes</b><br />
-      <%= @student.notes.present? ? @student.notes : none %>
-    </p>
-  </div>
-  <div class="relations">
-    <% FIELDS[:students][:show][:relations].each do |field| %>
-      <%= relation_content @student, field %>
-    <% end %>
-  </div>
-  <h2>Interventions</h2>
-  <%= link_to 'New Intervention', js_link, class: 'new_intervention_link' %>
-  <% if @student.interventions.any? %>
-    <div class="table">
-      <div>
-        <span class="spacer"></span>
-        <span>Name</span>
-        <span>Start</span>
-        <span>Stop</span>
-        <span>Notes</span>
-        <span></span>
-        <span class="spacer"></span>
-      </div>
-      <% @student.interventions.each do |intervention| %>
-        <a>
-          <span class="spacer"></span>
-          <span><%= intervention.name %></span>
-          <span><%= intervention.start.try :strftime, '%b %e, %Y' %></span>
-          <span><%= intervention.stop.try :strftime, '%b %e, %Y' %></span>
-          <span><%= intervention.notes %></span>
-          <span class="destroy_intervention_link" data-id="<%= intervention.id %>">
-            Delete
-          </span>
-          <span class="spacer"></span>
-        </a>
+  <div class="left_col">
+    <div class="fields">
+      <%= image_tag(@student.image) %>
+      <% FIELDS[:students][:show][:fields].each do |field| %>
+        <%= field_content @student, field %>
       <% end %>
     </div>
-  <% end %>
-  <% group_tests(@student.test_scores).each do |test_name, (keys, test_scores)| %>
-    <h2><%= test_name.upcase %></h2>
-    <div class="table">
-      <div>
-        <span class="spacer"></span>
-        <span>Term</span>
-        <% keys.each do |key| %>
-          <span class="small"><%= key.titleize %></span>
-        <% end %>
-        <span class="spacer"></span>
-      </div>
-      <% test_scores.each do |score| %>
-        <a>
+    <div class="relations">
+      <% FIELDS[:students][:show][:relations].each do |field| %>
+        <%= relation_content @student, field %>
+      <% end %>
+    </div>
+    <h2>Notes</h2>
+    <div class="notes">
+      <% @student.student_notes.includes(:user).order('users.last_name').each do |note| %>
+        <%= render partial: 'student_note_row', locals: { note: note } %>
+      <% end %>
+      <%= render 'student_note_form' %>
+    </div>
+  </div>
+  <div class="right_col">
+    <% group_tests(@student.test_scores).each do |test_name, (keys, test_scores)| %>
+      <h2><%= test_name.upcase %></h2>
+      <div class="table">
+        <div>
           <span class="spacer"></span>
-          <span><%= score.term %></span>
+          <span>Term</span>
           <% keys.each do |key| %>
-            <% if level = score.data[level_column_for(key)] %>
-              <span class="<%= level %>">
-                <%= score.data[key] %><br />
-                <i><%= level.titleize %></i>
-              </span>
-            <% else %>
-              <span><%= score.data[key] %></span>
-            <% end %>
+            <span class="small"><%= key.titleize %></span>
           <% end %>
           <span class="spacer"></span>
-        </a>
+        </div>
+        <% test_scores.each do |score| %>
+          <a>
+            <span class="spacer"></span>
+            <span><%= score.term %></span>
+            <% keys.each do |key| %>
+              <% if level = score.data[level_column_for(key)] %>
+                <span class="<%= level %>">
+                  <%= score.data[key] %><br />
+                  <i><%= level.titleize %></i>
+                </span>
+              <% else %>
+                <span><%= score.data[key] %></span>
+              <% end %>
+            <% end %>
+            <span class="spacer"></span>
+          </a>
+        <% end %>
+      </div>
       <% end %>
+    <div class="interventions">
+      <h2>Interventions</h2>
+      <div class="table">
+        <div>
+          <span class="spacer"></span>
+          <span>Name</span>
+          <span>Start</span>
+          <span>Stop</span>
+          <span>Notes</span>
+          <span></span>
+          <span class="spacer"></span>
+        </div>
+        <% @student.interventions.each do |intervention| %>
+          <%= render partial: 'intervention_row', locals: { intervention: intervention } %>
+        <% end %>
+      </div>
+      <%= render 'intervention_form' %>
     </div>
-  <% end %>
+  </div>
 </div>

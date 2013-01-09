@@ -21,8 +21,7 @@ window.create_page = (path, data, method = 'GET') ->
 		width = page.children().width()
 		if prevPage.is('.fullscreen')
 			prevPage.animate { left: '-200px', width: '200px' }, SHORT_DURATION
-			page.css(width: 'auto').animate { left: 0, right: 0 }
-			page.find('.fullscreen').text('Exit Fullscreen')
+			page.trigger('enter_fullscreen')
 		else
 			page.stop(false, true).animate {
 				width: width,

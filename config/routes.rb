@@ -23,8 +23,13 @@ Schoolsupport::Application.routes.draw do
   end
   
   def intervenable
-    match 'new_intervention' => 'students#new_intervention'
+    match 'new_intervention' => 'students#new_intervention', via: 'POST'
     match 'destroy_intervention' => 'students#destroy_intervention', via: 'POST'
+  end
+  
+  def notable
+    match 'new_student_note' => 'students#new_student_note', via: 'POST'
+    match 'destroy_student_note' => 'students#destroy_student_note', via: 'POST'
   end
   
   # Districts, Schools, Periods, Students, Users, Tests
@@ -33,6 +38,8 @@ Schoolsupport::Application.routes.draw do
       collection do
         match ':student_id/new_intervention' => 'students#new_intervention'
         match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
+        match ':student_id/new_student_note' => 'students#new_student_note'
+        match ':student_id/destroy_student_note' => 'students#destroy_student_note', via: 'POST'
         match ':id' => 'students#show'
       end
       exportable
@@ -47,6 +54,7 @@ Schoolsupport::Application.routes.draw do
       end
       helper :users
       intervenable
+      notable
       exportable
     end
   end
@@ -57,6 +65,7 @@ Schoolsupport::Application.routes.draw do
         helper :users
         exportable
         intervenable
+        notable
       end
       helper :users
       test_scores
@@ -69,6 +78,7 @@ Schoolsupport::Application.routes.draw do
           post 'export', on: :collection
           exportable
           intervenable
+          notable
         end
         test_scores
       end
@@ -77,6 +87,7 @@ Schoolsupport::Application.routes.draw do
         helper :periods
         exportable
         intervenable
+        notable
       end
       test_scores
     end

@@ -114,4 +114,4 @@ window.unescape_values = (hash) ->
 $ ->
 	
 	# Handle all form submits.
-	$('#container').delegate 'form', 'submit.submit', handle_form_submit
+	$('#container').delegate 'form:not(#new_intervention, #new_student_note)', 'submit.submit', handle_form_submit

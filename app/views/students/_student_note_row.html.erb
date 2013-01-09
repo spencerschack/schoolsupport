@@ -1,0 +1,8 @@
+<% note ||= @student_note %>
+<p>
+  <b><%= note.user.name %>:</b>
+  <%= note.notes %>
+  <% if permitted_to?(:destroy, note) %>
+    <%= link_to 'Delete', js_link, class: 'destroy_student_note_link', data: { id: note.id } %>
+  <% end %>
+</p>

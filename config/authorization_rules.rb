@@ -43,6 +43,11 @@ authorization do
       if_permitted_to :show, :student
     end
     
+    # Access to notes of students.
+    has_permission_on :student_notes, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -95,6 +100,11 @@ authorization do
       if_permitted_to :show, :student
     end
     
+    # Access to notes of students.
+    has_permission_on :student_notes, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -144,6 +154,11 @@ authorization do
     
     # Access to interventions of students.
     has_permission_on :interventions, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
+    # Access to notes of students.
+    has_permission_on :student_notes, to: :manage do
       if_permitted_to :show, :student
     end
     

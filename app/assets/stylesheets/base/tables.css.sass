@@ -55,17 +55,18 @@ div.table
 			span
 				background-color: $gray-stripe
 		
-		&.selected, &:hover.selected, &:active.selected
+		&:link.selected, &:link:hover.selected, &:link:active.selected,
+		&:visited.selected, &:visited:hover.selected, &:visited:active.selected
 			span
 				background-color: $blue
 				color: #FFF
 		
-		&:hover
+		&:link:hover, &:visited:hover
 			span
 				background-color: $gray-hover
 				color: #000
 		
-		&:active
+		&:link:active, &:visited:active
 			span
 				background-color: $gray-active
 				color: #FFF

@@ -1,0 +1,13 @@
+<%= semantic_form_for @intervention, url: student_new_intervention_path(@student.id) do |f| %>
+  <%= f.inputs class: 'left' do %>
+    <%= f.input :name %>
+    <%= f.input :notes %>
+  <% end %>
+  <%= f.inputs class: 'right' do %>
+    <%= f.input :start, include_blank: true %>
+    <%= f.input :stop, include_blank: true %>
+  <% end %>
+  <%= f.actions do %>
+    <%= f.action :submit, label: 'Add Intervention' %>
+  <% end %>
+<% end %>
