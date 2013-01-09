@@ -19,16 +19,21 @@ module TestScoresHelper
     end
   end
   
-  def group_tests test_scores, &block
+  def group_tests test_scores
     hash = {}
-    test_scores.each do |score|
-      hash[score.test_name] ||= Array.new(2)
-      hash[score.test_name][0] ||= SortedSet.new
-      hash[score.test_name][0] += score.data.keys.reject do |key|
-        level_column?(key)
-      end if score.data.respond_to?(:keys)
-      hash[score.test_name][1] ||= []
-      hash[score.test_name][1] << score
+    grouped = test_scores.group_by(&:test_name)
+    grouped.each do |test_name, test_scores|
+      hash[test_name] = {}
+      test_scores.sort_by(&:term).each_with_index do |score, index|
+        score.data.each do |key, value|
+          if index.zero? || (!level_column?(key) && key !~ /_rc/)
+            hash[test_name]["#{key} #{Term.shorten(score.term)}"] = {
+              level: score.data[level_column_for(key)],
+              score: value
+            }
+          end
+        end
+      end
     end
     hash
   end

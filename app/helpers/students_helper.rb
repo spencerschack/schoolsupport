@@ -9,7 +9,7 @@ module StudentsHelper
   
   FIELDS[:students] = {
     index: [:identifier, :name, :grade, :teacher],
-    show: { fields: [:identifier, :grade, :hispanic, :english_learner, :dropped],
+    show: { fields: [:identifier, :grade, :hispanic, :english_learner, :dropped, :teacher],
       relations: [:periods, :users, :school, :district]},
     form: { fields: [:identifier, :first_name, :last_name, :grade, [:hispanic, as: :radio], [:english_learner, as: :radio],
       [:dropped, as: :radio], :image], relations: [[:school, as: :search_select],

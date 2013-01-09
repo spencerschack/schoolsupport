@@ -3,9 +3,6 @@
   <h2>Student</h2>
   <h1><%= @student.name %></h1>
   <%= link_for :fullscreen, @student %>
-  <%= link_for :edit, @student %>
-  <%= link_for :destroy, @student %>
-  <%= link_for :export, @student %>
 </div>
 
 <div class="scroller">
@@ -14,11 +11,6 @@
       <%= image_tag(@student.image) %>
       <% FIELDS[:students][:show][:fields].each do |field| %>
         <%= field_content @student, field %>
-      <% end %>
-    </div>
-    <div class="relations">
-      <% FIELDS[:students][:show][:relations].each do |field| %>
-        <%= relation_content @student, field %>
       <% end %>
     </div>
     <%= render 'notes' %>

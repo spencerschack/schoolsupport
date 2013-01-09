@@ -37,10 +37,23 @@
 			width: 350px
 			position: absolute
 			left: 0
-		
-			h2
-				margin: $spacing 0 0 $spacing
-				float: left
+			
+			div.fields
+				width: 100%
+				padding: $spacing
+				
+				p
+					margin: 0 0 10px 0
+
+				b
+					display: inline
+					margin-right: 10px
+
+				img
+					width: 160px
+					height: 200px
+					margin-right: $spacing
+					float: left
 		
 			.notes
 				width: 100%
@@ -72,19 +85,6 @@
 					input
 						padding: 0 5px
 						+border-radius(0)
-	
-	div.fields
-		width: 100%
-		
-		b
-			display: inline
-			margin-right: 10px
-		
-		img
-			width: 160px
-			height: 200px
-			margin: $spacing
-			float: left
 	
 	div.relations
 		width: 100%
