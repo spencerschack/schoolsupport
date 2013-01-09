@@ -1,6 +1,8 @@
 class TestScore < ActiveRecord::Base
   
-  LEVELS = %w(adv prof basic bbasic fbb)
+  def self.levels
+    %w(adv prof basic bbasic fbb)
+  end
   
   using_access_control
   

@@ -51,8 +51,12 @@ class TestScoresController < ApplicationController
         # If ordering by a level, create an order statement to order by
         # adv, prof, basic, bbasic, fbb or the opposite.
         level_order_statement = if level_column?(order_match[:key])
-          levels = TestScore::LEVELS
-          levels = levels.reverse if order_match[:direction] == 'desc'
+          
+          # Make sure to duplicate levels otherwise reverse will cause the
+          # direction to be wrong every other time this method is called.
+          levels = TestScore.levels
+          levels.reverse! if order_match[:direction] == 'desc'
+          
           levels.reduce('') do |statement, level|
             statement << "(test_scores.data -> :key) = '#{level}', "
           end
