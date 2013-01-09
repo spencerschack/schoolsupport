@@ -60,23 +60,18 @@
 			right: 0
 			
 			.interventions
+				margin-right: $spacing
+			
 				.right, .left
 					width: 50%
 					float: left
-				
-				.left li
-					margin: $spacing 0
-				
-				.actions li
-					margin: $spacing $spacing $spacing 0
-				
-				.right .fragments
-					li
-						margin: 0
-						
-					.fragment
-						margin-right: $spacing
-						float: left
+					
+				span
+					padding: 0
+			
+					input
+						padding: 0 5px
+						+border-radius(0)
 	
 	div.fields
 		width: 100%

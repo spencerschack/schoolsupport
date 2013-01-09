@@ -1,69 +1,10 @@
-handle_form_submit = (event) ->
-	event.preventDefault()
-	event.stopImmediatePropagation()
-	form = $(this)
-	form.find(':submit').display_loading_message()
-	data = form.serialize() + '&' + $.param(csrf_param())
-	$.post form.attr('action'), data, (data) ->
-		if data.success
-			form.find(':submit').hide_loading_message()
-			if form.is('#new_intervention')
-				form.closest('.interventions').find('.table').append(data.page)
-			else if form.is('#new_student_note')
-				form.before(data.page)
-			form[0].reset()
-		else
-			form.replaceWith(data.page)
-
-handle_destroy_link_click = (event) ->
-  event.preventDefault()
-  button = $(this)
-  button.text('Are you sure?')
-  button.on 'click.confirm', (event) ->
-    event.stopImmediatePropagation()
-    event.preventDefault()
-    button.display_loading_message('Deleting')
-    button.off 'click.confirm'
-    $('body').off 'click.unconfirm'
-    data = csrf_param()
-    
-    url = button.closest('.page').attr('data-path')
-    if button.is('.destroy_intervention_link')
-      row = button.closest('a')
-      data['intervention_id'] = button.attr('data-id')
-      url += '/destroy_intervention'
-    else if button.is('.destroy_student_note_link')
-      row = button.closest('p')
-      data['student_note_id'] = button.attr('data-id')
-      url += '/destroy_student_note'
-
-    $.post url, data, (data) ->
-      if data == 'true'
-        row.slideUp SHORT_DURATION, ->
-           row.remove()
-      else
-        button.hide_loading_message()
-  
-  $('body').on 'click.unconfirm', (event) ->
-    if $(event.target).is(button)
-      event.preventDefault()
-    else
-      button.unbind('click.confirm').text('Delete')
-      $('body').unbind('click.unconfirm')
-
-handle_note_input_blur = (event) ->
-  console.log this, 'blurred'
+handle_input_blur = (event) ->
   event.preventDefault()
   event.stopImmediatePropagation()
   form = $(this).closest('form')
-  data = form.serialize() + '&' + $.param(csrf_param())
-  $.post form.attr('action'), data
+  inputs = $(this).closest('.note, .intervention')
+  inputs.add(form.find('div:first')) # The first div holds csrf token and _method
+  $.post form.attr('action'), inputs.serialize()
 
 $ ->
-  
-  $('#container').delegate '.wrapper.students form#new_intervention', 'submit.submit_form', handle_form_submit
-  $('#container').delegate '.wrapper.students .destroy_intervention_link', 'click.destroy_link', handle_destroy_link_click
-
-  $('#container').delegate '.wrapper.students .notes textarea', 'blur.blur_submit', handle_note_input_blur
-  $('#container').delegate '.wrapper.students .notes form', 'submit.hold_submit', (event) ->
-    event.preventDefault()
+  $('#container').delegate '.wrapper.students .notes textarea, .wrapper.students .interventions input', 'blur.blur_submit', handle_input_blur

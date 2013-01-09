@@ -7,6 +7,6 @@ class Intervention < ActiveRecord::Base
   
   belongs_to :student
   
-  validates_presence_of :name, :student
+  validates_presence_of :student
   
 end

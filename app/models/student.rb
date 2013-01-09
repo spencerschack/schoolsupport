@@ -14,8 +14,8 @@ class Student < ActiveRecord::Base
 
   attr_accessible :first_name, :grade, :last_name, :image, :hispanic, :english_learner, :notes,
     as: [:developer, :superintendent, :principal, :secretary, :teacher]
-  attr_accessible :note_1, :note_2, :note_3, :note_4, as: [:developer,
-    :superintendent, :principal, :teacher]
+  attr_accessible :note_1, :note_2, :note_3, :note_4, :interventions_attributes, as:
+    [:developer, :superintendent, :principal, :teacher]
   attr_accessible :period_ids, :teacher, :teacher_last_year, :identifier,
     :dropped, as: [:developer, :superintendent, :principal, :secretary]
   attr_accessible :school_id, as: [:developer, :superintendent]
@@ -32,6 +32,8 @@ class Student < ActiveRecord::Base
   has_many :export_list_items
   has_and_belongs_to_many :export_data
   has_many :interventions
+  
+  accepts_nested_attributes_for :interventions, reject_if: proc { |a| a.values.all?(&:blank?) }
   
   has_attached_file :image,
     path: '/student_images/:basename:style_unless_original.:extension',
@@ -66,6 +68,12 @@ class Student < ActiveRecord::Base
     self.note_2 ||= string
     self.note_3 ||= string
     self.note_4 ||= string
+  end
+  
+  def initialize_interventions
+    5.times do
+      interventions.build
+    end
   end
   
   # Never overwrite image_file_name with a blank value.

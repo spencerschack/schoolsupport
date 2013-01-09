@@ -12,7 +12,7 @@ module Response
   # respond with the appropriate json.
   def respond_with record
     case action_name
-    when 'create', 'update', 'new_intervention'
+    when 'create', 'update'
       if record.errors.any?
         render json: failure_hash, content_type: 'text/plain'
       else

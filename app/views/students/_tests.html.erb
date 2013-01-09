@@ -1,0 +1,32 @@
+<% group_tests(@student.test_scores).each do |test_name, (keys, test_scores)| %>
+      <h2><%= test_name.upcase %></h2>
+      <div class="table">
+        <div>
+          <span class="spacer"></span>
+          <span>Term</span>
+          <% keys.each do |key| %>
+            <span class="small"><%= key.titleize %></span>
+          <% end %>
+          <span class="spacer"></span>
+        </div>
+        <% test_scores.each do |score| %>
+          <a>
+            <span class="spacer"></span>
+            <span class="nowrap"><%= Term.shorten(score.term) %></span>
+            <% keys.each do |key| %>
+              <% if level = score.data[level_column_for(key)] %>
+                <span class="<%= level %> small">
+                  <i>
+                    <%= score.data[key] %><br />
+                    <em><%= level.titleize %></em>
+                  </i>
+                </span>
+              <% else %>
+                <span><%= score.data[key] %></span>
+              <% end %>
+            <% end %>
+            <span class="spacer"></span>
+          </a>
+        <% end %>
+      </div>
+      <% end %>

@@ -8,8 +8,7 @@ module Auth
     base.before_filter :set_authorization
     base.filter_resource_access additional_collection:
       [:import, :export, :view_request, :clear, :toggle, :select, :form,
-        :waiting, :upload, :new_intervention, :destroy_intervention,
-        :new_student_note, :destroy_student_note]
+        :waiting, :upload]
   end
   
   private

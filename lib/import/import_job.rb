@@ -87,7 +87,7 @@ class ImportJob
     processor.call(hash, @import_data) if processor.respond_to?(:call)
     if options[:associate].present?
       options[:associate].each do |record, field|
-        if value = hash.delete(record) && !hash.has_key?(:"#{record}_id")
+        if (value = hash.delete(record)) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
           attempted = finder.where(field => value).first
           raise "Could not find the #{record} where #{field} = '#{value}'" unless attempted

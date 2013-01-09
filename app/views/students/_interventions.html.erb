@@ -1,0 +1,23 @@
+<div class="interventions">
+  <h2>Interventions</h2>
+  <%= form_for @student, class: 'special_handler' do |f| %>
+    <div class="table">
+      <div>
+        <span>Name</span>
+        <span>Start</span>
+        <span>Stop</span>
+        <span>Notes</span>
+      </div>
+      <% @student.interventions.each do |intervention| %>
+        <%= f.fields_for :interventions, intervention do |i| %>
+          <a class="intervention">
+            <span><%= i.text_field :name %></span>
+            <span><%= i.text_field :start %></span>
+            <span><%= i.text_field :stop %></span>
+            <span><%= i.text_field :notes %></span>
+          </a>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

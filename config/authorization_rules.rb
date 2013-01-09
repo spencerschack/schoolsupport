@@ -89,7 +89,7 @@ authorization do
 	end
 	
 	# School level access without test_score
-	role :secretary
+	role :secretary do
 	
 	  # Access to user.
     has_permission_on :users, to: [:show, :update] do

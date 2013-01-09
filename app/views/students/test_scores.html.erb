@@ -21,67 +21,9 @@
         <%= relation_content @student, field %>
       <% end %>
     </div>
-    <h2>Notes</h2>
-    <div class="notes">
-      <% 1.upto(4) do |n| %>
-        <%= semantic_form_for @student, class: 'special_handler' do |f| %>
-          <%= f.inputs do %>
-            <%= f.input :"note_#{n}" %>
-          <% end %>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render 'notes' %>
   </div>
   <div class="right_col">
-    <% group_tests(@student.test_scores).each do |test_name, (keys, test_scores)| %>
-      <h2><%= test_name.upcase %></h2>
-      <div class="table">
-        <div>
-          <span class="spacer"></span>
-          <span>Term</span>
-          <% keys.each do |key| %>
-            <span class="small"><%= key.titleize %></span>
-          <% end %>
-          <span class="spacer"></span>
-        </div>
-        <% test_scores.each do |score| %>
-          <a>
-            <span class="spacer"></span>
-            <span class="nowrap"><%= Term.shorten(score.term) %></span>
-            <% keys.each do |key| %>
-              <% if level = score.data[level_column_for(key)] %>
-                <span class="<%= level %> small">
-                  <i>
-                    <%= score.data[key] %><br />
-                    <em><%= level.titleize %></em>
-                  </i>
-                </span>
-              <% else %>
-                <span><%= score.data[key] %></span>
-              <% end %>
-            <% end %>
-            <span class="spacer"></span>
-          </a>
-        <% end %>
-      </div>
-      <% end %>
-    <div class="interventions">
-      <h2>Interventions</h2>
-      <div class="table">
-        <div>
-          <span class="spacer"></span>
-          <span>Name</span>
-          <span>Start</span>
-          <span>Stop</span>
-          <span>Notes</span>
-          <span></span>
-          <span class="spacer"></span>
-        </div>
-        <% @student.interventions.each do |intervention| %>
-          <%= render partial: 'intervention_row', locals: { intervention: intervention } %>
-        <% end %>
-      </div>
-      <%= render 'intervention_form' %>
-    </div>
-  </div>
+    <%= render 'tests' %>
+    <%= render 'interventions' %>
 </div>
