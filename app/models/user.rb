@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   end
   
   def as_json options = {}
-    super options.reverse_merge(only: [:name, :id])
+    super options.reverse_merge(only: [:id, :identifier], methods: [:name])
   end
   
   # Specify which column to use to check whether a collection has changed.

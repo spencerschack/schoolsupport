@@ -43,6 +43,7 @@ handle_state_change = ->
 # and create the necessary pages.
 # @param {String} path the path to load.
 load_path = (path, data) ->
+
 	$('.page').stop(true, true)
 	index = path == '/'
 	parts = if index then [''] else path.split('/')
@@ -59,7 +60,9 @@ load_path = (path, data) ->
 				section++ if one_more_link.length
 			
 			animate_container_width_to(page.width(), index)
-			page.prevAll('.page').each -> destroy_page($(this))
+			page.trigger('enter_fullscreen') if page.is('.fullscreen')
+			page.prevAll('.page').each ->
+				destroy_page($(this))
 			while ++section < parts.length
 				create_page "/#{parts[1..section].join('/')}", data
 			select_path(page)

@@ -2,7 +2,9 @@ module PeriodsHelper
   
   PARENTS[:periods] = [Student, User, School, District]
   
-  SORTS[:periods] = {}
+  SORTS[:periods] = {
+    school: 'school.name'
+  }
   
   FIELDS[:periods] = {
     index: [:name, :school],

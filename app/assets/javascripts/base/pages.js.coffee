@@ -3,23 +3,34 @@
 # {String} path the path to load.
 # {Function} callback
 window.create_page = (path, data, method = 'GET') ->
-	console.log "CREATE PAGE: #{path}"
 	page = $('<div />').addClass('page').attr('data-path', path)
 	loading_message = $('<div />').addClass('loading_message')
 	page.html loading_message.text('Loading')
 	page.prependTo('#container')
-	page.css(marginLeft: '-200px').animate { marginLeft: 0 }, MEDIUM_DURATION
+	prevPage = page.next('.page')
+	if prevPage.is('.fullscreen')
+		page.addClass('fullscreen')
+		prevPage.animate { left: '-200px', right: '200px' }, MEDIUM_DURATION
+		page.css(width: '200px', right: '-200px')
+			.animate { right: 0 }, MEDIUM_DURATION
+	else
+		page.css(marginLeft: '-200px').animate { marginLeft: 0 }, MEDIUM_DURATION
 	load_callback = ->
 		page.find('.wrapper').trigger('loaded')
 		select_path(page)
 		width = page.children().width()
-		page.stop(false, true).animate {
-			width: width,
-			marginLeft: 0
-		}, {
-			duration: MEDIUM_DURATION,
-			step: ensure_visible_header
-		}
+		if prevPage.is('.fullscreen')
+			prevPage.animate { left: '-200px', width: '200px' }, SHORT_DURATION
+			page.css(width: 'auto').animate { left: 0, right: 0 }
+			page.find('.fullscreen').text('Exit Fullscreen')
+		else
+			page.stop(false, true).animate {
+				width: width,
+				marginLeft: 0
+			}, {
+				duration: MEDIUM_DURATION,
+				step: ensure_visible_header
+			}
 		animate_container_width_to(width) unless page.index()
 	if $.isPlainObject(data) && !$.isEmptyObject(data)
 		page.load path, data, load_callback
@@ -61,7 +72,7 @@ header = null
 window.ensure_visible_header = ->
 	header ||= $('#header')
 	next = header.prev('.page')
-	if next.length && next.offset().left < 200
+	if next.length && !next.is('.fullscreen') && next.offset().left < 200
 		header.addClass('stuck')
 	else
 		header.removeClass('stuck')

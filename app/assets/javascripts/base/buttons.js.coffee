@@ -37,6 +37,12 @@ handle_edit_click = (event) ->
 			data.css(marginTop: "-#{$('#container').height()}px")
 			$(data).prependTo(page).trigger('loaded').animate { marginTop: 0 }, MEDIUM_DURATION
 
+handle_return_click = (event) ->
+	event.stopImmediatePropagation()
+	parts = History.getState().url.split('/')
+	parts.pop()
+	push_state parts.join('/')
+
 # After clicking the delete button, show a confirmation message in the
 # button. After a second click, destroy the record and remove the page. If
 # the user clicks somewhere else, put the button in its previous state.
@@ -105,6 +111,8 @@ $ ->
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
+	
+	$('#container').delegate 'a.return', 'click.return', handle_return_click
 	
 	# Handle create and update button clicks.
 	$('#container').delegate 'a.update, a.create, a.upload', 'click.submit',

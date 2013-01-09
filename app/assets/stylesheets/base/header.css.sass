@@ -2,10 +2,9 @@
 
 	&.stuck
 		min-height: 300px
-		height: auto
 		position: fixed
-		top: 20px
-		bottom: 40px
+		top: 0
+		bottom: 0
 		left: 0
 
 	h1
@@ -228,3 +227,23 @@
 
 				&:active, &.selected
 					background-position: $spacing -587px
+			
+			&.footer
+				padding: $spacing 0 0 $spacing
+				font-size: 12px
+				color: $gray-text
+				line-height: 20px
+				
+				a
+					width: auto
+					height: auto
+					padding: 0
+					display: inline
+					background: none
+					font-weight: normal
+					text-decoration: underline
+					line-height: 20px
+					color: $gray-text
+					
+					&:hover
+						text-decoration: none

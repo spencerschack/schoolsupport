@@ -21,6 +21,7 @@ prepare_multiple = ->
 				element.closest('.wrapper').attr('data-name')
 			
 		name = element.find('input:hidden').attr('name')
+		id = element.find('input:hidden').attr('id').replace(/_none/, '_id')
 		single = element.is('.search_select')
 		depends_on = element.attr('data-depends-on')
 		
@@ -92,7 +93,7 @@ prepare_multiple = ->
 											if !inserted.length || single
 												list.find('li.choice').remove() if single
 												choice = $('<label />')
-													.append("<input type='hidden' name='#{name}' value='#{record.id}' />")
+													.append("<input type='hidden' id='#{id}' name='#{name}' value='#{record.id}' />")
 													.append(record.name)
 												if depends_on == 'district'
 													choice.append("<input type='hidden' id='district_id' value='#{record.district_id}' />")
