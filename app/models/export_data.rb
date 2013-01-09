@@ -13,7 +13,7 @@ class ExportData < ActiveRecord::Base
   
   serialize :prompt_values, Hash
   
-  has_attached_file :file, path: '/export_files/:id/:filename'
+  has_attached_file :file, path: '/export_files/:id/:filename', use_timestamp: false
   
   validates_presence_of :kind
   validates_presence_of :certificate_title, :distribution_date, if: :is_request?

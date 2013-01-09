@@ -18,4 +18,14 @@ module StudentsHelper
           label: 'Classes', depends_on: :school]] }
   }
   
+  def sort_interventions interventions
+    interventions.sort_by do |intervention|
+      if %w(name start stop notes).map {|c| intervention.send(c) }.all?(&:blank?)
+        Time.now
+      else
+        intervention.created_at
+      end
+    end
+  end
+  
 end

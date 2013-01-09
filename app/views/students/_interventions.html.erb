@@ -8,7 +8,7 @@
         <span>Stop</span>
         <span>Notes</span>
       </div>
-      <% @student.interventions.each do |intervention| %>
+      <% sort_interventions(@student.interventions).each do |intervention| %>
         <%= f.fields_for :interventions, intervention do |i| %>
           <a class="intervention">
             <span><%= i.text_field :name %></span>

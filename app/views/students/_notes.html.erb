@@ -3,7 +3,7 @@
   <% 1.upto(4) do |n| %>
     <%= semantic_form_for @student, class: 'special_handler note' do |f| %>
       <%= f.inputs do %>
-        <%= f.input :"note_#{n}" %>
+        <%= f.input :"note_#{n}", as: :text %>
       <% end %>
     <% end %>
   <% end %>

@@ -33,7 +33,7 @@ class Student < ActiveRecord::Base
   has_and_belongs_to_many :export_data
   has_many :interventions
   
-  accepts_nested_attributes_for :interventions, reject_if: proc { |a| a.values.all?(&:blank?) }
+  accepts_nested_attributes_for :interventions, reject_if: :all_blank
   
   has_attached_file :image,
     path: '/student_images/:basename:style_unless_original.:extension',
@@ -71,8 +71,18 @@ class Student < ActiveRecord::Base
   end
   
   def initialize_interventions
-    5.times do
-      interventions.build
+    count = 10
+    interventions.each do |intervention|
+      if %w(name start stop notes).map {|c| intervention.send(c) }.all?(&:blank?)
+        if count.zero?
+          intervention.destroy
+        else
+          count -= 1
+        end
+      end
+    end
+    count.times do
+      interventions.create
     end
   end
   
