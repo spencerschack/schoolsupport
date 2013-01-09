@@ -1,7 +1,7 @@
 class BusRoutesController < ApplicationController
   
   def find_collection
-    super.includes(:district).order('bus_routes.name')
+    super.eager_load(:district).order('bus_routes.name')
   end
   
 end

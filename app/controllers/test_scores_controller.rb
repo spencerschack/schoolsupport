@@ -86,7 +86,7 @@ class TestScoresController < ApplicationController
     
     # Order by students last name after everything else so it does not
     # affect the overall order, but only when other order values are equal.
-    default = default.order('students.last_name')
+    default = default.order('users.last_name, students.last_name')
     
     # No join restriction is needed if the data is not ordered. Uniq is only
     # present here because duplicates are handled by the join restriction
