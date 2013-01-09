@@ -1,7 +1,5 @@
 class TestScoresController < ApplicationController
   
-  helper_method :data_order_statement_regex, :level_column_for, :score_column_for, :level_column?
-  
   def find_collection without = false
     # Pass super to Student so it uses that instead of the inferred model
     # TestScore from the controller_name. Outer join with test_scores to be
@@ -51,12 +49,8 @@ class TestScoresController < ApplicationController
         # If ordering by a level, create an order statement to order by
         # adv, prof, basic, bbasic, fbb or the opposite.
         level_order_statement = if level_column?(order_match[:key])
-          
-          # Make sure to duplicate levels otherwise reverse will cause the
-          # direction to be wrong every other time this method is called.
           levels = TestScore.levels
           levels.reverse! if order_match[:direction] == 'desc'
-          
           levels.reduce('') do |statement, level|
             statement << "(test_scores.data -> :key) = '#{level}', "
           end
@@ -148,21 +142,6 @@ class TestScoresController < ApplicationController
   # injection attacks.
   def data_order_statement_regex
     /^(?<test_name>.+) (?<term>\d{4}-\d{4}) (?<key>.+) (?<direction>asc|desc)$/
-  end
-  
-  # Convert column to level column
-  def level_column_for column
-    level_column?(column) ? column : "#{column}lv"
-  end
-  
-  # Convert column to score column
-  def score_column_for column
-    (match = level_column?(column)) ? match[:score_column] : column
-  end
-  
-  # Test whether the column is a level column.
-  def level_column? column
-    /(?<score_column>.+)lv$/.match(column)
   end
   
 end

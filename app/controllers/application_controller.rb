@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   include Errors
   include Caching
   include ExportList
+  include TestScores
 
   private
   
