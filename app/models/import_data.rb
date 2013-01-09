@@ -3,7 +3,7 @@ class ImportData < ActiveRecord::Base
   using_access_control
   
   attr_accessible :defaults, :model, :prompt_values, :user_id, :file,
-    as: [:developer, :superintendent, :principal, :teacher]
+    as: [:developer, :superintendent, :principal, :secretary, :teacher]
   
   serialize :model, Class
   serialize :prompt_values, Hash

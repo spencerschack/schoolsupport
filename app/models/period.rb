@@ -5,7 +5,7 @@ class Period < ActiveRecord::Base
   searches :name, :term
   
   attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
-    :superintendent, :principal]
+    :superintendent, :principal, :secretary]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :identifier, as: [:developer]
 

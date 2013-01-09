@@ -11,9 +11,9 @@ class User < ActiveRecord::Base
   searches :first_name, :last_name
 
   attr_accessible :email, :password, :password_confirmation, :first_name,
-    :last_name, :name, as: [:developer, :superintendent, :principal, :teacher]
+    :last_name, :name, as: [:developer, :superintendent, :principal, :secretary, :teacher]
   attr_accessible :school_id, as: [:developer, :superintendent]
-  attr_accessible :period_ids, as: [:developer, :superintendent, :principal]
+  attr_accessible :period_ids, as: [:developer, :superintendent, :principal, :secretary]
   attr_accessible :role_id, as: :developer
 
   acts_as_authentic do |c|
@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   
   def associate_students
     scope = case role_symbol
-    when :principal
+    when :principal, :secretary
       :school
     when :superintendent
       :district

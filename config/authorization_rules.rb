@@ -65,7 +65,29 @@ authorization do
 	# School level access.
 	role :principal do
     
-    # Access to user.
+    includes :secretary
+    
+    # Access to test scores of students.
+    has_permission_on :test_scores, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
+    # Access to interventions of students.
+    has_permission_on :interventions, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
+    # Access to notes of students.
+    has_permission_on :student_notes, to: :manage do
+      if_permitted_to :show, :student
+    end
+    
+	end
+	
+	# School level access without test_score
+	role :secretary
+	
+	  # Access to user.
     has_permission_on :users, to: [:show, :update] do
       if_attribute id: is { user.id }
     end
@@ -90,21 +112,6 @@ authorization do
       if_attribute school_id: is { user.school_id }
     end
     
-    # Access to test scores of students.
-    has_permission_on :test_scores, to: :manage do
-      if_permitted_to :show, :student
-    end
-    
-    # Access to interventions of students.
-    has_permission_on :interventions, to: :manage do
-      if_permitted_to :show, :student
-    end
-    
-    # Access to notes of students.
-    has_permission_on :student_notes, to: :manage do
-      if_permitted_to :show, :student
-    end
-    
     # Access to logout.
     has_permission_on :user_sessions, to: :destroy
     
@@ -116,8 +123,8 @@ authorization do
     
     # Access to import jobs.
     includes :imports
-    
-	end
+	
+  end
 
 	# Class level access.
 	role :teacher do

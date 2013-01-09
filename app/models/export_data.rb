@@ -4,7 +4,7 @@ class ExportData < ActiveRecord::Base
   
   attr_accessible :additional_information, :certificate_title, :student_ids,
     :distribution_date, :kind, :prompt_values, :sort_by, :type_id, :user_id,
-    as: [:developer, :superintendent, :principal, :teacher]
+    as: [:developer, :superintendent, :principal, :secretary, :teacher]
   
   belongs_to :user
   belongs_to :type
