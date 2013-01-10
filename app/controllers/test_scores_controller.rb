@@ -48,7 +48,11 @@ class TestScoresController < ApplicationController
     end
     
     if params[:order].blank?
-      #params[:order] = "ela #{Term.current} elalv asc"
+      if @selected_subject == 'Math'
+        params[:order] = "math #{Term.current} mathlv asc"
+      else
+        params[:order] = "ela #{Term.current} elalv asc"
+      end
     end
     
     if params[:order].present? && order_match = data_order_statement_regex.match(params[:order])

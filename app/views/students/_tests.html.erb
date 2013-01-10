@@ -15,7 +15,7 @@
             </i>
           </span>
         <% else %>
-          <span><%= value[:score] || none %></span>
+          <span><%= value[:score].titleize || none %></span>
         <% end %>
       <% end %>
     </a>
