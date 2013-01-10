@@ -2,7 +2,7 @@ loading_message = $('<div class="loading_message">Loading</div>')
 
 window.load_content = (wrapper, data, url, callback) ->
 	scroller = wrapper.children('div.scroller')
-	buttons = wrapper.find('.title a')
+	buttons = wrapper.find('.title a:not(.back)')
 	if data
 		term = wrapper.find('select.term_filter').val()
 		data['term'] = term if term
