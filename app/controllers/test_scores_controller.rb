@@ -63,13 +63,16 @@ class TestScoresController < ApplicationController
       else
         
         # If ordering by a level, create an order statement to order by
-        # adv, prof, basic, bbasic, fbb or the opposite.
-        level_order_statement = if level_column?(order_match[:key])
+        # adv, prof, basic, bbasic, fbb or the opposite. If not ordering by a
+        # level just order by the score key.
+        score_order_statement = if level_column?(order_match[:key])
           levels = TestScore.levels
           levels.reverse! if order_match[:direction] == 'desc'
-          levels.reduce('') do |statement, level|
-            statement << "(test_scores.data -> :key) = '#{level}', "
-          end
+          levels.map do |level|
+            "(test_scores.data -> :key) = '#{level}'"
+          end.join(', ')
+        else
+          "lpad(test_scores.data -> :score_key, 10, '0') #{order_match[:direction]}"
         end
       
         # Order by the comparison of test_name and term because the key in
@@ -81,8 +84,7 @@ class TestScoresController < ApplicationController
           "test_scores.term = :term, " +
           "((test_scores.data -> :key) IS NULL OR" +
           " (test_scores.data -> :key) = ''), " +
-          (level_order_statement || '') +
-          "lpad(test_scores.data -> :score_key, 10, '0') #{order_match[:direction]}",
+          score_order_statement,
         {
           test_name: order_match[:test_name],
           term: order_match[:term],
