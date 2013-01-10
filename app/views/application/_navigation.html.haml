@@ -15,7 +15,8 @@
 
 	%li.students= link_to 'Students', students_path
 	
-	%li.test_scores= link_to 'Test Scores', test_scores_path
+	- if permitted_to? :index, :test_scores
+		%li.test_scores= link_to 'Test Scores', test_scores_path
 
 	%li.group Tools
 	

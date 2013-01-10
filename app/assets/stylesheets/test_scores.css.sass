@@ -49,8 +49,29 @@
 					position: relative
 					font-size: 14px
 					line-height: 14px
-					text-align: center
 					vertical-align: middle
+					text-align: center
+					
+					&.unknown, &.adv, &.prof, &.basic, &.bbasic, &.fbb
+						color: #FFF
+					
+					&.unknown
+						background-color: $gray-active
+					
+					&.adv
+						background-color: $advanced
+					
+					&.prof
+						background-color: $proficient
+					
+					&.basic
+						background-color: $basic
+					
+					&.bbasic
+						background-color: $below-basic
+					
+					&.fbb
+						background-color: $far-below-basic
 			
 				div span.small i
 					top: 0
@@ -63,6 +84,7 @@
 					span
 						color: #FFF !important
 						font-weight: bold
+						text-align: center
 				
 					&.unknown span
 						background-color: $gray-active
