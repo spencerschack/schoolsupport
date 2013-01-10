@@ -121,6 +121,10 @@ module TestScoresHelper
           end
         end
         
+        terms_and_keys = terms_and_keys.to_a.sort_by do |(term, keys)|
+          term
+        end
+        
         score_columns[test_name] ||= {}
         terms_and_keys.each do |term, keys|
           
