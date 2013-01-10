@@ -17,7 +17,7 @@ class TestScoreProcessor
     
     # Ensure all test names are lowercase so we don't have duplicate test
     # called 'Ela' and 'ela'.
-    hash[:test_name].downcase!
+    hash[:test_name].try(:downcase!)
     
     # Put all columns present in the hash but not present in the model in
     # the serialized data column. Also ensure that all keys are lowercase
@@ -26,7 +26,7 @@ class TestScoreProcessor
     hash.each do |key, value|
       unless model.column_names.include?(key.to_s)
         hash.delete(key)
-        hash[:data][key.downcase] = value.downcase
+        hash[:data][key.downcase] = value.try(:downcase).try(:strip)
       end
     end
   end
