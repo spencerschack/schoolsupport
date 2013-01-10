@@ -49,7 +49,7 @@ class Period < ActiveRecord::Base
   
   # Returns a generic name for a user's period.
   def self.default_name_for user
-    "#{user.name(true)}'s Class"
+    user.name
   end
   
   # What this model is called on the client end.
