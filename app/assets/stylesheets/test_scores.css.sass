@@ -38,6 +38,11 @@
 			width: auto
 			min-width: 100%
 			
+			span.stacked
+				vertical-align: middle
+				font-size: 12px
+				line-height: 12px
+			
 			span.small
 				min-width: 50px
 				position: relative
@@ -47,13 +52,10 @@
 				i
 					position: absolute
 					text-align: center
-				
-					&.left
-						text-align: left
-			
-			a span.small
-				i
 					top: 6px
+			
+			div span.small i
+				top: 0
 			
 			a:active, a.selected
 				.adv, .prof, .basic, .bbasic, .fbb

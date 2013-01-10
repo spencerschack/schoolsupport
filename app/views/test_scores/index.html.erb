@@ -58,15 +58,13 @@
           <span class="image">
             <%= image_tag(student.image(:index)) if student.image? %>
           </span>
-          <span class="small">
-            <i class="left">
-              <%= student.identifier %>
-              <%= student.name %>
-              <%= student.grade %>
-            </i>
+          <span class="stacked">
+            <%= student.identifier %>
+            <%= student.name %>
+            <%= student.grade %>
           </span>
-          <span class="small">
-            <i class="left"><%= student.teacher.try(:name) || none %></i>
+          <span class="stacked">
+            <%= student.teacher.try(:name) || none %>
           </span>
           <% associated_test_scores(student.test_scores) do |association| %>
             <% score_columns.each do |test_name, terms_and_keys| %>
