@@ -22,6 +22,9 @@ module TestScoresHelper
      end
      selected = params[:grade].present? ? params[:grade] : 'All Grades'
 	   grades.sort_by!(&:to_i)
+	   grades.map! do |grade|
+	     [pretty_grade(grade), grade]
+     end
 	   options_for_select(['All Grades'] + grades, selected)
    end
 	end
@@ -201,15 +204,19 @@ module TestScoresHelper
       term == @ordered[:term] && key == score_column_for(@ordered[:key])
   end
   
+  def pretty_grade grade
+    grade =~ /\d+/ ? grade.to_i.ordinalize : grade
+  end
+  
   private
   
   def test_name_sort
     Proc.new do |(test_name, scores)|
       case test_name
-      when /^ela/i then 'A'
+      when /^ela$/i then 'A'
       when /ela/i then 'AA'
       when /^celdt/i then 'AAA'
-      when /^math/i then 'AAAA'
+      when /^math$/i then 'AAAA'
       when /math/i then 'AAAAA'
       else
         test_name

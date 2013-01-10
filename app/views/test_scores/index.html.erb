@@ -59,9 +59,8 @@
             <%= image_tag(student.image(:index)) if student.image? %>
           </span>
           <span class="stacked">
-            <%= student.identifier %>
-            <%= student.name %>
-            <%= student.grade %>
+            <%= student.name %> -
+            <%= pretty_grade(student.grade) %>
           </span>
           <span class="stacked">
             <%= student.teacher.try(:name) || none %>
@@ -73,10 +72,8 @@
                   <% keys.each do |key| %>
                     <% if level = score.data[level_column_for(key)] %>
                       <span class="<%= level %> small">
-                        <i>
-                          <%= score.data[key].present? ? score.data[key] : none %><br />
-                          <em><%= level.titleize %></em>
-                        </i>
+                        <%= score.data[key].present? ? score.data[key] : none %><br />
+                        <%= level.titleize %>
                       </span>
                     <% else %>
                       <span><%= score.data[key].present? ? score.data[key].titleize : none %></span>
