@@ -49,12 +49,10 @@ module TestScoresHelper
   
   def group_tests test_scores
     hash = {}
-    @max_keys = 0
     grouped = test_scores.group_by(&:test_name)
     grouped.each do |test_name, test_scores|
       hash[test_name] = {}
       test_scores.sort_by!(&:term).each_with_index do |score, index|
-        @max_keys = [score.data.keys.count, @max_keys].max
         score.data.each do |key, value|
           if !level_column?(key) && (index == test_scores.length - 1 || key !~ /_rc/)
             hash[test_name]["#{key.titleize}<br />#{Term.shorten(score.term)}"] = {

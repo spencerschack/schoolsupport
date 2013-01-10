@@ -79,7 +79,7 @@
                         </i>
                       </span>
                     <% else %>
-                      <span><%= score.data[key].present? ? score.data[key] : none %></span>
+                      <span><%= score.data[key].present? ? score.data[key].titleize : none %></span>
                     <% end %>
                   <% end %>
                 <% else %>
