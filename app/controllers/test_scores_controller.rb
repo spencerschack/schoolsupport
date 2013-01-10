@@ -59,11 +59,10 @@ class TestScoresController < ApplicationController
       # Skip ordering if the test filter does not align with the
       # ordered column, otherwise no rows will match. Also nillify order_match
       # so all other code thinks there is no order.
-      if @selected_subject
-        if (@selected_subject == 'ELA' && order_match[:test_name] =~ /math/i) ||
-          (@selected_subject == 'Math' && order_match[:test_name] !~ /math/i)
-            order_match = nil
-        end
+      if @selected_subject &&
+        ((@selected_subject == 'ELA' && order_match[:test_name] =~ /math/i) ||
+        (@selected_subject == 'Math' && order_match[:test_name] !~ /math/i))
+          order_match = nil
       else
         
         # If ordering by a level, create an order statement to order by
