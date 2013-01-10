@@ -55,8 +55,12 @@
 				width: 100%
 				float: left
 				
+				label
+					border-bottom: 5px $blue-light solid
+				
 				textarea
 					height: 120px
+					+border-top-radius(0)
 		
 				p
 					width: 100%
@@ -70,6 +74,9 @@
 			
 			.interventions
 				margin-right: $spacing
+				
+				h2
+					border-bottom: 5px $blue-light solid
 			
 				.right, .left
 					width: 50%

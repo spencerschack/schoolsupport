@@ -1,85 +1,86 @@
-.page
-	&.fullscreen
-		div.test_scores.index
-			width: auto
+#container
+	.page
+		&.fullscreen
+			div.test_scores.index
+				width: auto
 	
-	div.test_scores
+		div.test_scores
 	
-		&.index
-			.title
-				h1
-					margin-top: 7px
+			&.index
+				.title
+					h1
+						margin-top: 7px
 			
-				select
-					height: 35px
+					select
+						height: 35px
+						position: relative
+						left: 150px
+						border: 0
+	
+			&.index
+				width: 1000px
+	
+			.adv
+				color: $advanced
+		
+			.prof
+				color: $proficient
+		
+			.basic
+				color: $basic
+		
+			.bbasic
+				color: $below-basic
+		
+			.fbb
+				color: $far-below-basic
+		
+			div.table
+				width: auto
+				min-width: 100%
+			
+				span.stacked
+					vertical-align: middle
+					font-size: 14px
+					line-height: 14px
+			
+				span.small
+					min-width: 50px
 					position: relative
-					left: 150px
-					border: 0
-	
-		&.index
-			width: 1000px
-	
-		.adv
-			color: $advanced !important
-		
-		.prof
-			color: $proficient !important
-		
-		.basic
-			color: $basic !important
-		
-		.bbasic
-			color: $below-basic !important
-		
-		.fbb
-			color: $far-below-basic !important
-		
-		div.table
-			width: auto
-			min-width: 100%
+					font-size: 12px
+					line-height: 12px
+				
+					i
+						position: absolute
+						text-align: center
+						top: 6px
 			
-			span.stacked
-				vertical-align: middle
-				font-size: 14px
-				line-height: 14px
+				div span.small i
+					top: 0
 			
-			span.small
-				min-width: 50px
-				position: relative
-				font-size: 12px
-				line-height: 12px
-				
-				i
-					position: absolute
-					text-align: center
-					top: 6px
-			
-			div span.small i
-				top: 0
-			
-			a:active, a.selected
-				.adv, .prof, .basic, .bbasic, .fbb
-					color: #FFF
+				a:active, a.selected
+					.adv, .prof, .basic, .bbasic, .fbb
+						color: #FFF
 		
-			a.level_breaker
-				span
-					color: #FFF !important
-					font-weight: bold
+				a.level_breaker
+					span
+						color: #FFF !important
+						font-weight: bold
 				
-				&.unknown span
-					background-color: $gray-active
+					&.unknown span
+						background-color: $gray-active
 				
-				&.adv span
-					background-color: $advanced
+					&.adv span
+						background-color: $advanced
 				
-				&.prof span
-					background-color: $proficient
+					&.prof span
+						background-color: $proficient
 				
-				&.basic span
-					background-color: $basic
+					&.basic span
+						background-color: $basic
 				
-				&.bbasic span
-					background-color: $below-basic
+					&.bbasic span
+						background-color: $below-basic
 				
-				&.fbb span
-					background-color: $far-below-basic
+					&.fbb span
+						background-color: $far-below-basic
