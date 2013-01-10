@@ -109,8 +109,15 @@ class TestScoresController < ApplicationController
       # otherwise the query will return a student for each test_score row.
       default.where(%((test_scores.id IN (#{
         TestScore.select('MAX(test_scores.id)')
-        .where('test_scores.test_name' => order_match[:test_name])
-        .group('test_scores.student_id').to_sql
+        .where(
+          'test_scores.test_name = :test_name AND ' +
+          'test_scores.term = :term AND ' +
+          'test_scores.data ? :key',
+        {
+          test_name: order_match[:test_name],
+          term: order_match[:term],
+          key: order_match[:key]
+        }).group('test_scores.student_id').to_sql
       }) OR test_scores.id IS NULL)))
     else
       
