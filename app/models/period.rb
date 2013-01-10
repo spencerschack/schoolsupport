@@ -38,6 +38,10 @@ class Period < ActiveRecord::Base
     super(options.reverse_merge(only: [:id])).reverse_merge(name: to_label)
   end
   
+  def student_count
+    students.count
+  end
+  
   # Used by formtastic.
   def to_label
     "#{term} #{name}"
