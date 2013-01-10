@@ -3,13 +3,13 @@ module TestScoresHelper
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
   def teacher_options
-	  @teacher_options ||= begin
+	  @teacher_options ||= if controller_model == TestScore
 	    scope = find_first_parent ? find_first_parent.students : Student
 	    scope = scope.with_permissions_to(:show)
 	    sql = scope.joins(:users).order('users.last_name').uniq.select('users.*').to_sql
 	    teachers = User.find_by_sql(sql).map { |t| [t.name, t.id]}
       selected = params[:teacher].present? ? params[:teacher] : 'All Teachers'
-	    options_for_select(['All Teachers'] + teachers, selected)
+	    options_for_select([['All Teachers', 'All']] + teachers, selected)
    end
 	end
 	
@@ -25,7 +25,7 @@ module TestScoresHelper
 	   grades.map! do |grade|
 	     [pretty_grade(grade), grade]
      end
-	   options_for_select(['All Grades'] + grades, selected)
+	   options_for_select([['All Grades', 'All']] + grades, selected)
    end
 	end
 	

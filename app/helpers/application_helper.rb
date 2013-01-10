@@ -53,7 +53,7 @@ module ApplicationHelper
 	end
 	
 	def grade_options
-	 @grade_options ||= if controller_model == Student || controller_model == TestScore
+	 @grade_options ||= if controller_model == Student
 	   grades = if controller_model == Student
 	     options_scope.uniq.pluck('students.grade')
 	   elsif controller_model == TestScore

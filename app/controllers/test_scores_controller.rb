@@ -152,7 +152,7 @@ class TestScoresController < ApplicationController
   # Return false if the parameter is not present or equal to 'All' or return
   # the parameter's value.
   def option_filter_value option
-    params[option].present? && params[option] !~ /^All/ && params[option]
+    params[option].present? && params[option] != 'All' && params[option]
   end
   
   # Tests order by values in the form:

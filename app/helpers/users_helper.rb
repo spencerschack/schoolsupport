@@ -4,7 +4,8 @@ module UsersHelper
   
   SORTS[:users] = {
     name: 'users.last_name',
-    school: 'schools.name'
+    school: 'schools.name',
+    role: 'roles.name'
   }
   
   FIELDS[:users] = {
