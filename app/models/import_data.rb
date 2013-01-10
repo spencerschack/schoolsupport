@@ -26,6 +26,13 @@ class ImportData < ActiveRecord::Base
     super values.reject { |key, value| value.blank? }
   end
   
+  def defaults_and_prompt_values
+    @defaults_and_prompt_values ||= {}.tap do |options|
+      options.merge!(defaults) if defaults
+      options.merge!(prompt_values) if prompt_values
+    end
+  end
+  
   def options
     model.has_import_options
   end

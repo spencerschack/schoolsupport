@@ -4,7 +4,7 @@ class ImportJob
   
   attr_accessor :import_data
   
-  delegate :model, :defaults, :prompt_values, :update_ids, :user, to: :import_data
+  delegate :model, :defaults, :prompt_values, :defaults_and_prompt_values, :update_ids, :user, to: :import_data
   
   def self.perform id
     ImportJob.new(id)
@@ -56,13 +56,6 @@ class ImportJob
   
   private
   
-  def defaults_and_prompt_values
-    @defaults_and_prompt_values ||= {}.tap do |options|
-      options.merge!(defaults) if defaults
-      options.merge!(prompt_values) if prompt_values
-    end
-  end
-  
   def create_records
     current_role = user.role_symbols.first
     errors = []
@@ -89,7 +82,15 @@ class ImportJob
       options[:associate].each do |record, field|
         if (value = hash.delete(record)) && !hash.has_key?(:"#{record}_id")
           finder = record.to_s.camelize.constantize
-          attempted = finder.where(field => value).first
+          
+          # Handle methods that are specially defined for finding by a certain
+          # field. Example: User has find_by_name because the actual columns
+          # are last_name and first_name.
+          attempted = if finder.respond_to?("find_by_#{field}")
+            finder.send("find_by_#{field}", value)
+          else
+            finder.where(field => value).first
+          end
           raise "Could not find the #{record} where #{field} = '#{value}'" unless attempted
           hash[:"#{record}_id"] = attempted.id
         end

@@ -4,7 +4,7 @@ class Period < ActiveRecord::Base
   
   searches :name, :term
   
-  attr_accessible :name, :student_ids, :user_ids, :term, as: [:developer,
+  attr_accessible :name, :student_ids, :user_ids, :term, :student_id, as: [:developer,
     :superintendent, :principal, :secretary]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :identifier, as: [:developer]
@@ -16,7 +16,8 @@ class Period < ActiveRecord::Base
   has_and_belongs_to_many :users
   
   has_import identify_with: { identifier: :school_id, name: :school_id },
-    associate: { school: :identifier }
+    associate: { school: :identifier, student: :identifier },
+    prompts: proc { [[:school_id, collection: School.with_permissions_to(:show).order('name')]] }
   
   after_initialize :set_term, on: :create
   after_initialize :set_school
@@ -50,6 +51,11 @@ class Period < ActiveRecord::Base
   # What this model is called on the client end.
   def self.display_name
     'Class'
+  end
+  
+  # Used by import
+  def student_id= student_id
+    self.student_ids = ((student_ids || []) << student_id).uniq
   end
   
   private

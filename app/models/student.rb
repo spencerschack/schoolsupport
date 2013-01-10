@@ -45,7 +45,7 @@ class Student < ActiveRecord::Base
   
   has_import identify_with: { identifier: :school_id },
     associate: { school: :identifier, bus_route: :name, bus_stop: :name },
-    prompts: proc { [[:school, collection: School.with_permissions_to(:show).order('name')]] }
+    prompts: proc { [[:school_id, collection: School.with_permissions_to(:show).order('name')]] }
   
   after_initialize :set_school
   
