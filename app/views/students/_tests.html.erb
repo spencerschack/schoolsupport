@@ -1,11 +1,15 @@
 <div class="table tests">
   <% group_tests(@student.test_scores).each do |(test_name, scores)| %>
     <div>
+      <span><%= test_name %></span>
       <% scores.keys.each do |key| %>
-        <span class="small"><%= key.html_safe %></span>
+        <span class="small">
+          <%= key.html_safe %>
+        </span>
       <% end %>
     </div>
     <a>
+      <span></span>
       <% scores.each_value do |value| %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">

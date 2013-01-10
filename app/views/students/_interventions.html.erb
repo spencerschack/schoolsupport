@@ -11,10 +11,10 @@
       <% sort_interventions(@student.interventions).each do |intervention| %>
         <%= f.fields_for :interventions, intervention do |i| %>
           <a class="intervention">
-            <span><%= i.text_field :name %></span>
-            <span><%= i.text_field :start %></span>
-            <span><%= i.text_field :stop %></span>
-            <span><%= i.text_field :notes %></span>
+            <span><%= i.text_area :name %></span>
+            <span><%= i.text_area :start %></span>
+            <span><%= i.text_area :stop %></span>
+            <span><%= i.text_area :notes %></span>
           </a>
         <% end %>
       <% end %>
