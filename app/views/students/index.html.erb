@@ -11,7 +11,7 @@
   <div class="table" data-limit="<%= offset_amount %>" data-offset="<%= params[:offset].to_i + offset_amount %>">
     <div>
       <span class="spacer"></span>
-      <span title="Add all to export list" class="export_all_button">All</span>
+      <span></span>
       <span class="image"></span>
       <% fields(:index).each do |field| %>
         <span<%= order_by_for(field) %>><%= header_content(field) %></span>
