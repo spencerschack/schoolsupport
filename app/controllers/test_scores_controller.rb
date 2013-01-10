@@ -31,16 +31,15 @@ class TestScoresController < ApplicationController
       default = default.where('students.grade' => grade)
     end
     
-    if subject = option_filter_value(:subject)
-      if subject == 'ELA'
-        @selected_subject = 'ELA'
-        inverter = ' NOT'
-      else
-        @selected_subject = 'Math'
-        inverter = ''
-      end
-      default = default.where("test_scores.test_name#{inverter} ILIKE '%math%'")
+    subject = option_filter_value(:subject)
+    if subject == 'Math'
+      @selected_subject = 'Math'
+      inverter = ''
+    else
+      @selected_subject = 'ELA'
+      inverter = ' NOT'
     end
+    default = default.where("test_scores.test_name#{inverter} ILIKE '%math%'")
 
     if teacher = option_filter_value(:teacher)
       last, first = teacher.split(', ')
