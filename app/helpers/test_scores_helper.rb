@@ -114,12 +114,15 @@ module TestScoresHelper
       score_columns = {}
       data_columns.each do |test_name, terms_and_keys|
         
-        next if @selected_test && test_name != @selected_test
+        if @selected_subject
+          if (@selected_subject == 'ELA' && test_name =~ /math/i) ||
+            (@selected_subject == 'Math' && test_name !~ /math/i)
+              next
+          end
+        end
         
         score_columns[test_name] ||= {}
         terms_and_keys.each do |term, keys|
-          
-          next if @selected_term && term != @selected_term
           
           # If there is a key named the same as the test, return only that key.
           # Set @leveled to whether the data is ordered by that single key.
