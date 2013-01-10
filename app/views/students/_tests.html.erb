@@ -9,10 +9,8 @@
       <% scores.each_value do |value| %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">
-            <i>
-              <%= value[:score] || none %><br />
-              <em><%= level.titleize %></em>
-            </i>
+            <%= value[:score] || none %><br />
+            <em><%= level.titleize %></em>
           </span>
         <% else %>
           <span><%= value[:score].titleize || none %></span>
