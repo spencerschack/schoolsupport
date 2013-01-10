@@ -59,12 +59,14 @@
             <%= image_tag(student.image(:index)) if student.image? %>
           </span>
           <span class="small">
-            <%= student.identifier %>
-            <%= student.name %>
-            <%= student.grade %>
+            <i class="left">
+              <%= student.identifier %>
+              <%= student.name %>
+              <%= student.grade %>
+            </i>
           </span>
           <span class="small">
-            <%= student.teacher.try(:name) || none %>
+            <i class="left"><%= student.teacher.try(:name) || none %></i>
           </span>
           <% associated_test_scores(student.test_scores) do |association| %>
             <% score_columns.each do |test_name, terms_and_keys| %>
