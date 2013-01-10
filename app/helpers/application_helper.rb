@@ -20,18 +20,11 @@ module ApplicationHelper
     (model.respond_to?(:display_name) ? model.display_name : model.model_name).titleize
   end
 	
-	# Return a render if applicable.
-	def term_filter
-	  if [Period, Student, User, TestScore].include?(controller_model)
-	    render 'term_filter'
-    end
-	end
-	
 	# Which terms can be selected.
 	def term_options
 	  return if find_first_parent.is_a?(Period)
 	  @term_options ||= begin
-  	  other_options = ['All']
+  	  other_options = [['All Terms', 'All']]
   	  if controller_model == Period
         terms = options_scope.uniq.pluck("#{controller_name}.term")
       elsif [Student, User].include?(controller_model)
@@ -61,7 +54,7 @@ module ApplicationHelper
      end
      selected = params[:grade].present? ? params[:grade] : 'All'
 	   grades.sort_by!(&:to_i)
-	   options_for_select(['All'] + grades, selected)
+	   options_for_select([['All Grades', 'All']] + grades, selected)
    end
 	end
 	

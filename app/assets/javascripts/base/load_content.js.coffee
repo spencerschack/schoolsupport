@@ -4,10 +4,10 @@ window.load_content = (wrapper, data, url, callback) ->
 	scroller = wrapper.children('div.scroller')
 	buttons = wrapper.find('.title a')
 	if data
-		term = wrapper.find('.term_filter select').val()
+		term = wrapper.find('select.term_filter').val()
 		data['term'] = term if term
 		
-		grade = wrapper.find('select.grade_filter, .grade_filter select').val()
+		grade = wrapper.find('select.grade_filter').val()
 		data['grade'] = grade if grade
 		
 		teacher = wrapper.find('select.teacher_filter').val()

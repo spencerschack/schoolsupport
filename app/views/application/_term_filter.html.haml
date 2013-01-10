@@ -1,7 +1,3 @@
-.term_filter
-	%span Term: All
-	= select_tag('term', term_options)
+= select_tag('term', term_options, class: 'term_filter')
 - if grade_options
-	.grade_filter
-		%span Grade: All
-		= select_tag('grade', grade_options)
+	= select_tag('grade', grade_options, class: 'grade_filter')
