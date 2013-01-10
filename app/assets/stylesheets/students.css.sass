@@ -118,13 +118,36 @@
 	
 				div
 					height: 45px
+					
+					span.test_name
+						background-color: #FFF
+						text-align: right
 			
 					span
 						background-color: $gray-stripe
 		
 				a span
 					top: 0
-					background-color: #FFF !important
+					background-color: #FFF
+					color: #000
+					
+					&.adv, &.prof, &.basic, &.bbasic, &.fbb
+						color: #FFF
+					
+					&.adv
+						background-color: $advanced
+					
+					&.prof
+						background-color: $proficient
+					
+					&.basic
+						background-color: $basic
+					
+					&.bbasic
+						background-color: $below-basic
+					
+					&.fbb
+						background-color: $far-below-basic
 	
 		.destroy_intervention_link, .destroy_student_note_link
 			color: $red

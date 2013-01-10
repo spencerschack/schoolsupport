@@ -1,7 +1,7 @@
 <div class="table tests">
   <% group_tests(@student.test_scores).each do |(test_name, scores)| %>
     <div>
-      <span><%= test_name.titleize %></span>
+      <span class="test_name"><%= test_name.titleize %></span>
       <% scores.keys.each do |key| %>
         <span class="small">
           <%= key.html_safe %>
@@ -13,11 +13,11 @@
       <% scores.each_value do |value| %>
         <% if level = value[:level] %>
           <span class="<%= level %> small">
-            <%= value[:score] || none %><br />
+            <%= value[:score].blank? ? none : value[:score].titleize %><br />
             <em><%= level.titleize %></em>
           </span>
         <% else %>
-          <span><%= value[:score].titleize || none %></span>
+          <span><%= value[:score].blank? ? none : value[:score].titleize %></span>
         <% end %>
       <% end %>
     </a>
