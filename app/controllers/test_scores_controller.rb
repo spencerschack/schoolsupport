@@ -61,8 +61,8 @@ class TestScoresController < ApplicationController
       # ordered column, otherwise no rows will match. Also nillify order_match
       # so all other code thinks there is no order.
       if @selected_subject
-        if (@selected_subject == 'ELA' && match[:test_name] =~ /math/i) ||
-          (@selected_subject == 'Math' && match[:test_name] !~ /math/i)
+        if (@selected_subject == 'ELA' && order_match[:test_name] =~ /math/i) ||
+          (@selected_subject == 'Math' && order_match[:test_name] !~ /math/i)
             order_match = nil
         end
       else
