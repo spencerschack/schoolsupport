@@ -14,7 +14,10 @@ module Caching
       layout: false,
       cache_path: proc { |controller|
         column = controller_model.respond_to?(:cache_key_timestamp_column) ? controller_model.cache_key_timestamp_column : :updated_at
+        
+        # Reorder is safe because params is appended to digest source string
         collection = find_collection.reorder(nil)
+        
         sql = collection.select([:id, column].map{|c| "#{controller_model.table_name}.#{c}"}).to_sql
         string = ActiveRecord::Base.connection.execute(sql).to_a.to_s
         string << params.to_s
