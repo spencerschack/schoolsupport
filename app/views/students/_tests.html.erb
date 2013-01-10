@@ -1,7 +1,7 @@
 <div class="table tests">
   <% group_tests(@student.test_scores).each do |(test_name, scores)| %>
     <div>
-      <span><%= test_name %></span>
+      <span><%= test_name.titleize %></span>
       <% scores.keys.each do |key| %>
         <span class="small">
           <%= key.html_safe %>
