@@ -81,8 +81,8 @@ class Period < ActiveRecord::Base
   # error.
   def students_in_school
     if (students.map(&:school_id).uniq.any? do |id|
+      Rails.logger.info "STUDENT NOT IN SCHOOL: #{id.inspect} != #{school_id.inspect}"
       id != school_id
-      Rails.logger.debug "STUDENT NOT IN SCHOOL: #{id.inspect} != #{school_id.inspect}"
     end)
       errors.add(:students, 'must be in the same school as the period')
     end
