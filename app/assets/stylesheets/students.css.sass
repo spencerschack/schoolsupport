@@ -55,12 +55,16 @@
 				.notes
 					width: 100%
 					float: left
+					
+					.holder
+						margin-left: $spacing
+						display: block
 				
 					label
 						border-bottom: 5px $blue-light solid
 				
 					textarea
-						height: 120px
+						height: 140px
 						+border-top-radius(0)
 		
 					p
@@ -148,7 +152,10 @@
 					
 					&.fbb
 						background-color: $far-below-basic
-	
+		
+		.holder
+			display: none
+		
 		.destroy_intervention_link, .destroy_student_note_link
 			color: $red
 			text-decoration: underline

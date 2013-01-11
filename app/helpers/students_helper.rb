@@ -28,4 +28,8 @@ module StudentsHelper
     end
   end
   
+  def format_holder_text text
+    h(text).gsub(/\n/, '<br />').html_safe
+  end
+  
 end

@@ -3,6 +3,9 @@
     <%= semantic_form_for @student, class: 'special_handler note' do |f| %>
       <%= f.inputs do %>
         <%= f.input :"note_#{n}", as: :text %>
+        <span class="holder">
+          <%= format_holder_text(@student.send(:"note_#{n}")) %>
+        </span>
       <% end %>
     <% end %>
   <% end %>

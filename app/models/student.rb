@@ -60,13 +60,16 @@ class Student < ActiveRecord::Base
   end
   
   def initialize_notes
-    string = %w(Date Assessment Goals Interventions Results).map do |col|
-      "#{col}: "
-    end.join("\n")
-    self.note_1 ||= string
-    self.note_2 ||= string
-    self.note_3 ||= string
-    self.note_4 ||= string
+    %w(note_1 note_2 note_3 note_4).each do |note|
+      unless self.send(note).present?
+        self.send("#{note}=", default_note)
+      end
+    end
+  end
+  
+  def default_note
+    @default_note ||= (Setting.value_of("SST #{district.identifier}") ||
+      "Date: \nStrengths: \nConcerns: \nModifications/Strategies: \nActions to be taken: \nNext steps: ")
   end
   
   def initialize_interventions
