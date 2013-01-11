@@ -4,7 +4,7 @@ class Period < ActiveRecord::Base
   
   searches :name, :term
   
-  attr_accessible :name, :student_ids, :user_ids, :term, :student_id, :user_id,
+  attr_accessible :name, :student_ids, :user_ids, :term, :student, :user,
     as: [:developer, :superintendent, :principal, :secretary]
   attr_accessible :school_id, as: [:developer, :superintendent]
   attr_accessible :identifier, as: [:developer]
@@ -16,7 +16,7 @@ class Period < ActiveRecord::Base
   has_and_belongs_to_many :users
   
   has_import identify_with: { identifier: :school_id, name: :school_id },
-    associate: { school: :identifier, student: :identifier, user: :name },
+    associate: { school: :identifier },
     prompts: proc { [[:school_id, collection: School.with_permissions_to(:show).order('name')]] }
   
   after_initialize :set_term, on: :create
@@ -54,13 +54,17 @@ class Period < ActiveRecord::Base
   end
   
   # Used by import
-  def student_id= student_id
-    self.student_ids = ((student_ids || []) << student_id).uniq
+  def student= identifier
+    added = Student.where(school_id: school_id, identifier: identifier).first
+    raise "Could not find Student in #{school.name} where identifier = '#{identifier}'" unless added
+    self.student_ids = ((student_ids || []) << added.id).uniq
   end
   
   # Used by import
-  def user_id= user_id
-    self.user_ids = ((user_ids || []) << user_id).uniq
+  def user= name
+    added = User.where(school_id: school_id).find_by_name(name)
+    raise "Could not find User in #{school.name} where name = '#{name}'" unless added
+    self.user_ids = ((user_ids || []) << added.id).uniq
   end
   
   private
@@ -81,11 +85,6 @@ class Period < ActiveRecord::Base
   # error.
   def students_in_school
     if students.map(&:school_id).uniq.any?{|id| id != school_id }
-      students.each do |student|
-        if student.school_id != school_id
-          Rails.logger.info "STUDENT NOT IN SCHOOL: #{student.id.inspect} != #{school_id.inspect} (#{student.name})"
-        end
-      end
       errors.add(:students, 'must be in the same school as the period')
     end
   end
