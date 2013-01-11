@@ -7,7 +7,7 @@ module PeriodsHelper
   }
   
   FIELDS[:periods] = {
-    index: [:name, :student_count, :school],
+    index: [:name, :school],
     show: { fields: [:name, :term], relations: [:school, :students, :users, :test_scores]},
     form: { fields: [:name, [:term, collection: Term.options_for_select]],
       relations: [[:school, as: :search_select], [:students, as: :token, depends_on: :school],
