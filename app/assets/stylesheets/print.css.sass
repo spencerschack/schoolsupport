@@ -22,23 +22,14 @@
 			width: 100% !important
 			height: auto
 			
-			&.test_scores.index
+			&.test_scores.index, &.students.test_scores
+				div.table a span
+					-webkit-print-color-adjust: exact
+			
 				.level_breaker
-				
-					&.adv, &.prof, &.basic, &.bbasic, &.fbb
+					&.adv, &.prof, &.basic, &.bbasic, &.fbb, &.unknown
 						span
-							background-color: none !important
-				
-					&.adv span
-						color: $advanced !important
-					&.prof span
-						color: $proficient !important
-					&.basic span
-						color: $basic !important
-					&.bbasic span
-						color: $below-basic !important
-					&.fbb span
-						color: $far-below-basic !important
+							-webkit-print-color-adjust: exact
 			
 			&.students.test_scores
 				.left_col, .right_col

@@ -69,7 +69,6 @@ header = null
 # If the header is off the page, set its position to static to keep it on the
 # page.
 window.ensure_visible_header = ->
-	header ||= $('#header')
 	next = header.prev('.page')
 	if next.length && !next.is('.fullscreen') && next.offset().left < 200
 		header.addClass('stuck')
@@ -82,3 +81,5 @@ $ ->
 	
 	# Handle window focus.
 	$(window).focus ensure_visible_header
+	
+	header = $('#header')
