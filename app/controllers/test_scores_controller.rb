@@ -42,7 +42,6 @@ class TestScoresController < ApplicationController
     default = default.where("test_scores.test_name#{inverter} ILIKE '%math%'")
 
     if teacher = option_filter_value(:teacher)
-      last, first = teacher.split(', ')
       default = default.where('users.id' => teacher)
     end
     

@@ -1,6 +1,7 @@
 <div class="title">
   <h1>Students</h1>
-  <%= render 'term_filter' %>
+  <%= select_tag 'grade', options_for_select(grade_options), class: 'grade_filter test_filter' %>
+  <%= select_tag 'teacher', options_for_select(teacher_options), class: 'teacher_filter test_filter' %>
   <%= link_for :new, new_resource %>
   <%= link_for :import, controller_model %>
   <%= link_for :search, controller_model %>

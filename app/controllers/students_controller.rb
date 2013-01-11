@@ -11,6 +11,9 @@ class StudentsController < ApplicationController
     if params[:grade].present? && params[:grade] != 'All'
       default = default.where(grade: params[:grade])
     end
+    if params[:teacher].present? && params[:teacher] != 'All'
+      default = default.where('users.id' => params[:teacher])
+    end
     return default if params[:term] == 'All' || params[:term].blank?
     return default.with_no_period if params[:term] == 'With No Period'
     default.joins(:periods).where(periods: { term: params[:term] })

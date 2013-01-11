@@ -3,7 +3,7 @@ module TestScoresHelper
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
   def teacher_options
-	  @teacher_options ||= if controller_model == TestScore
+	  @teacher_options ||= if controller_model == TestScore || controller_model == Student
 	    scope = find_first_parent ? find_first_parent.students : Student
 	    scope = scope.with_permissions_to(:show)
 	    sql = scope.joins(:users).order('users.last_name').uniq.select('users.*').to_sql

@@ -23,7 +23,7 @@ module ApplicationHelper
 	# Which terms can be selected.
 	def term_options
 	  return if find_first_parent.is_a?(Period)
-	  @term_options ||= begin
+	  @term_options ||= unless controller_model == Student
   	  other_options = [['All Terms', 'All']]
   	  if controller_model == Period
         terms = options_scope.uniq.pluck("#{controller_name}.term")
