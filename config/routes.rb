@@ -63,6 +63,7 @@ Schoolsupport::Application.routes.draw do
       helper :students do
         post 'export', on: :collection
         helper :users
+        test_scores
         exportable
         intervenable
         notable

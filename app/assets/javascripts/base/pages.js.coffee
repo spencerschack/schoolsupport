@@ -3,10 +3,10 @@
 # {String} path the path to load.
 # {Function} callback
 window.create_page = (path, data, method = 'GET') ->
-	page = $('<div />').addClass('page').attr('data-path', path)
+	page = $('<div />').addClass('page current').attr('data-path', path)
 	loading_message = $('<div />').addClass('loading_message')
 	page.html loading_message.text('Loading')
-	page.prependTo('#container')
+	page.prependTo('#container').nextAll('.page').removeClass('current')
 	prevPage = page.next('.page')
 	if prevPage.is('.fullscreen')
 		page.addClass('fullscreen')

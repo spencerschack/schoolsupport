@@ -63,8 +63,10 @@ load_path = (path, data) ->
 			page.trigger('enter_fullscreen') if page.is('.fullscreen')
 			page.prevAll('.page').each ->
 				destroy_page($(this))
+			page.addClass('current')
 			while ++section < parts.length
 				create_page "/#{parts[1..section].join('/')}", data
+			
 			select_path(page)
 			break
 

@@ -3,14 +3,14 @@
 	%head
 		%title Shoob School Support
 		= stylesheet_link_tag 'application', media: 'all'
-		= stylesheet_link_tag 'print', media: 'print'
+		= stylesheet_link_tag 'print', media: 'all'
 		= javascript_include_tag 'application'
 		= csrf_meta_tags
 		= tag :meta, name: :initial_path, content: flash[:initial_path] || '/'
 		%style#export_list_styles= export_list_styles if current_user
 	%body
 		#container
-			#header.page{data: { path: '/' }}
+			#header.page.current{data: { path: '/' }}
 				%h1=link_to 'Shoob Photography School Support', root_path
 				= render('navigation') if current_user
 			= yield

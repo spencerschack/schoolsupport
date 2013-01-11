@@ -1,16 +1,58 @@
+@import variables
+
 #container
-	#header
+	width: 11in
+	height: auto
+	left: 0
+	right: 0
+	margin-right: 0 !important
+
+	#header, .page
 		display: none
 
-	.page .title
-		display: none
+	.page.current
+		width: 100% !important
+		height: auto
+		position: absolute
+		left: 0
+		right: 0
+		display: block
+		
+		.wrapper
+			width: 100% !important
+			height: auto
+			
+			&.test_scores.index
+				.level_breaker
+				
+					&.adv, &.prof, &.basic, &.bbasic, &.fbb
+						span
+							background-color: none !important
+				
+					&.adv span
+						color: $advanced !important
+					&.prof span
+						color: $proficient !important
+					&.basic span
+						color: $basic !important
+					&.bbasic span
+						color: $below-basic !important
+					&.fbb span
+						color: $far-below-basic !important
+			
+			&.students.test_scores
+				.left_col, .right_col
+					position: static
+					float: left
+				
+				.right_col
+					width: 700px
+		
+		.scroller
+			position: static
 	
-	.scroller
-		top: 20px
-
-	div.table
-		input
+		.title
 			display: none
 	
-		a span
-			border-color: #FFF
+		.scroller
+			top: 0
