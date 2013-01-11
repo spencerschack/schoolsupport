@@ -28,10 +28,14 @@ handle_back_click = (event) ->
 handle_print_click = (event) ->
 	event.preventDefault()
 	button = $(this)
-	button.display_loading_message('Printing')
 	wrapper = button.closest('.wrapper')
-	load_results wrapper, true, ->
+	if wrapper.is('.students.test_scores')
 		window.print()
+	else
+		button.display_loading_message('Printing')
+		load_results wrapper, true, ->
+			window.print()
+			button.hide_loading_message()
 
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
