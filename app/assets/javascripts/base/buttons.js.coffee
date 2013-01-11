@@ -25,6 +25,14 @@ handle_back_click = (event) ->
 	parts.pop()
 	push_state parts.join('/')
 
+handle_print_click = (event) ->
+	event.preventDefault()
+	button = $(this)
+	button.display_loading_message('Printing')
+	wrapper = button.closest('.wrapper')
+	load_results wrapper, true, ->
+		window.print()
+
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
 handle_edit_click = (event) ->
@@ -107,6 +115,9 @@ $ ->
 	
 	# Handle back button clicks.
 	$('#container').delegate 'a.back', 'click.back', handle_back_click
+	
+	# Handle print button clicks.
+	$('#container').delegate 'a.print', 'click.print', handle_print_click
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click

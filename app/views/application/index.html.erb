@@ -5,11 +5,12 @@
   <%= link_for :new, new_resource %>
   <%= link_for :import, controller_model %>
   <%= link_for :search, controller_model %>
+  <%= link_for :print, controller_model %>
   <%= link_for :back, controller_model %>
 </div>
   
 <div class="scroller">
-  <div class="table" data-limit="<%= offset_amount %>" data-offset="<%= params[:offset].to_i + offset_amount %>">
+  <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>
       <span class="spacer"></span>
       <% fields(:index).each do |field| %>

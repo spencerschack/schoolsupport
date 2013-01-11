@@ -27,6 +27,10 @@ module Caching
   end
   
   def offset_amount
+    params[:print] ? nil : default_offset_amount
+  end
+  
+  def default_offset_amount
     ENV['PAGE_OFFSET_AMOUNT'].to_i
   end
 

@@ -94,10 +94,11 @@ search_and_sort_data = (wrapper, table) ->
   
   data
 
-load_results = (wrapper) ->
+window.load_results = (wrapper, print, callback) ->
 	url = wrapper.closest('.page').attr('data-path')
 	table = wrapper.find('.table')
 	data = search_and_sort_data(wrapper, table)
+	data['print'] = true if print
 	
 	load_content wrapper, data, url, (data) ->
 		data = $(data)
@@ -112,6 +113,7 @@ load_results = (wrapper) ->
 		selected = table.find('.selected')
 		wrapper.find('div.scroller').scrollTo(selected) if selected.length
 		wrapper.trigger('loaded')
+		callback() if $.isFunction(callback)
 
 handle_index_loaded = ->
   wrapper = $(this)
@@ -133,6 +135,7 @@ handle_index_loaded = ->
           loading = false
 
 load_more_records = (wrapper, table, callback) ->
+  return if table.attr('data-limit') == 0
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
   

@@ -148,7 +148,7 @@ class TestScoresController < ApplicationController
   
   # Set to a higher value because it takes longer to create the index html for
   # test scores.
-  def offset_amount
+  def default_offset_amount
     50
   end
   

@@ -4,11 +4,12 @@
   <%= link_to 'Export', '/export_list_items/export', class: 'export_list' %>
   <%= link_for :upload, controller_model %>
   <%= link_to 'Clear', js_link, class: 'clear_export_list' %>
+  <%= link_for :print, controller_model %>
   <%= link_for :back, controller_model %>
 </div>
   
 <div class="scroller">
-  <div class="table" data-limit="<%= offset_amount %>" data-offset="<%= params[:offset].to_i + offset_amount %>">
+  <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>
       <span class="spacer"></span>
       <span></span>

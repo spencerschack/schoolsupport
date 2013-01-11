@@ -27,7 +27,7 @@ window.load_content = (wrapper, data, url, callback) ->
 	
 	wrapper.data('load_content_xhr').abort() if wrapper.data('load_content_xhr')
 	xhr = $.get url, (data) ->
-		callback(data)
+		callback(data) if $.isFunction(callback)
 		buttons.fadeTo(TINY_DURATION, 1).off('click.term_disable')
 		loading_message.remove()
 		wrapper.trigger('loaded')
