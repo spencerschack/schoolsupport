@@ -80,10 +80,10 @@ class Period < ActiveRecord::Base
   # If the students are not all in the same school as the period, then add an
   # error.
   def students_in_school
-    if (students.map(&:school_id).uniq.any? do |id|
-      Rails.logger.info "STUDENT NOT IN SCHOOL: #{id.inspect} != #{school_id.inspect}"
-      id != school_id
-    end)
+    if students.map(&:school_id).uniq.any?{|id| id != school_id }
+      students.map(&:school_id).uniq.select{|id| id != school_id }.each do |id|
+        Rails.logger.info "STUDENT NOT IN SCHOOL: #{id.inspect} != #{school_id.inspect}"
+      end
       errors.add(:students, 'must be in the same school as the period')
     end
   end
