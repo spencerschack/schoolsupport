@@ -134,7 +134,7 @@ Schoolsupport::Application.routes.draw do
   end
   resources :fonts
   resources :settings
-  resources :logins
+  resources :logins, only: :index
   
   # Export List Items
   match 'export_list_items' => 'export_list_items#index'
