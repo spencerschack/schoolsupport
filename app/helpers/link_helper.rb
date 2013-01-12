@@ -52,6 +52,12 @@ module LinkHelper
     
     when :print
       link_to 'Print', js_link, options
+    
+    when :previous
+      link_to 'Previous', js_link, options
+    
+    when :next
+      link_to 'Next', js_link, options
       
     when :search
       if (model_or_record.is_a?(Class) ? model_or_record : model_or_record.class).respond_to?(:search)

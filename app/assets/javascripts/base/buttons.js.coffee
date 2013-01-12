@@ -100,6 +100,18 @@ window.destroy_confirm = (callback) ->
 			self.unbind('click.confirm').removeClass('confirm').text('Delete')
 			$('body').unbind('click.unconfirm')
 
+handle_direction_click = (event) ->
+	event.preventDefault()
+	event.stopImmediatePropagation()
+	direction = if $(this).is('.next') then 'next' else 'prev'
+	page = $(this).closest('.page')
+	old_url = page.attr('data-path')
+	index = page.next('.page')
+	old_row = index.find(".table a[href='#{old_url}']")
+	new_row = old_row[direction]('a:not(.level_breaker)')
+	if url = new_row.attr('href')
+		push_state url
+
 # Generate the necessary form data to destroy a resource and post that to
 # the given path and callback.
 destroy_path = (path, callback = null) ->
@@ -125,6 +137,8 @@ $ ->
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
+	
+	$('#container').delegate 'a.previous, a.next', 'click.direction', handle_direction_click
 	
 	# Handle create and update button clicks.
 	$('#container').delegate 'a.update, a.create, a.upload', 'click.submit',

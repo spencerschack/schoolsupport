@@ -10,6 +10,7 @@ enter_fullscreen = (event, callback) ->
 	page.find('.title a.fullscreen').text('Exit Fullscreen')
 	offset = page.offset()
 	width = page.width()
+	$('#meta_container').addClass('fullscreen')
 	page.addClass('fullscreen').css
 		width: ''
 		top: offset.top
@@ -29,6 +30,7 @@ enter_fullscreen = (event, callback) ->
 
 exit_fullscreen = (event, callback) ->
 	page = $(this)
+	$('#meta_container').removeClass('fullscreen')
 	page.find('.title a.fullscreen').text('Fullscreen')
 	page.find('a').off 'click.exit_fullscreen_first'
 	page.removeClass('fullscreen').css
