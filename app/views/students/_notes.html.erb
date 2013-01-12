@@ -4,7 +4,7 @@
       <%= f.inputs do %>
         <%= f.input :"note_#{n}", as: :text %>
         <span class="holder">
-          <%= format_holder_text(@student.send(:"note_#{n}")) %>
+          <%= convert_newlines_to_breaks(@student.send(:"note_#{n}")) %>
         </span>
       <% end %>
     <% end %>

@@ -3,22 +3,19 @@
 		%p You have been logged out due to 10 minutes of inactivity.
 	= f.semantic_errors
 	= f.inputs do
-		= f.input :email, input_html: { autocomplete: 'off' }
-		= f.input :password, input_html: { autocomplete: 'off' }
+		= f.input :email, input_html: { autocomplete: 'off', tabindex: 1 }
+		%li.radio
+			= f.radio_button 'login_as_guest', false
+			= f.label 'login_as_guest_false', 'Login with password'
+		= f.input :password, input_html: { autocomplete: 'off', tabindex: 2 }
+		%li.radio
+			= f.radio_button 'login_as_guest', true
+			= f.label 'login_as_guest_true', 'Login as guest'
 	= f.actions do
 		= f.action :submit, label: 'Login'
-
-	%p
-		Shoob Photography school support allows schools to print ID
-		cards and achievement certificates.
-
-	%p
-		It also allows administrators and teachers to analyze test
-		results and manage RTI information.
-
-	%p
-		Please contact #{mail_to 'alex@shoobphoto.com'} for a login to
-		this service.
 	
-	.exit_button
-		= link_to 'Exit', 'http://shoobphoto.com/school_support/', class: 'exit_button'
+	- cache 'Login Page Text' do
+		%p= convert_newlines_to_breaks(auto_link(Setting.value_of('Login Page Text')))
+	
+		.exit_button
+			= link_to 'Exit', 'http://shoobphoto.com/school_support/', class: 'exit_button'

@@ -147,6 +147,10 @@ module ApplicationHelper
 	  pluralize ? plural_title(model) : singular_title(model)
 	end
 	
+	def convert_newlines_to_breaks text
+    h(text).gsub(/\n/, '<br />').html_safe
+  end
+	
 	private
 	
 	def options_scope

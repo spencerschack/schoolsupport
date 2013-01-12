@@ -1,4 +1,4 @@
-loading_message = $('<div class="loading_message">Loading</div>')
+window.loading_message = $('<div class="loading_message">Loading</div>')
 
 window.load_content = (wrapper, data, url, callback) ->
 	scroller = wrapper.children('div.scroller')

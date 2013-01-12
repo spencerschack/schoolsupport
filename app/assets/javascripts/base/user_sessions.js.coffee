@@ -34,7 +34,7 @@ window.load_login_form = ->
 	$.get '/login', (data) ->
 		clearTimeout(window.login_timeout)
 		$('#header .loading_message').remove()
-		animate_container_width_to(300, true)
+		animate_container_width_to(100, false, true)
 		$('#header').append(data).animate({width: '300px'}, SHORT_DURATION)
 
 # Request the logout page and hard refresh the page.

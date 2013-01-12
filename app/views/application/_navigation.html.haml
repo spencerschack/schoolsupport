@@ -40,6 +40,9 @@
 	- if current_role == :developer
 		%li.account= link_to 'Settings', settings_path
 	
+	- if current_role == :developer
+		%li.logins= link_to 'Logins', logins_path
+	
 	%li.help= link_to 'Help', help_path
 	
 	%li.logout= link_to 'Logout', logout_path

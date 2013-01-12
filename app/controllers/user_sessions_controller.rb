@@ -34,6 +34,12 @@ class UserSessionsController < ApplicationController
   
   # Override to skip assign_attributes.
   def new_resource
+    if params[:user_session] && params[:user_session][:login_as_guest] == 'true'
+      Login.create(email: params[:user_session][:email])
+      params[:user_session][:email] = Setting.value_of('Guest Account Email')
+      params[:user_session][:password] = Setting.value_of('Guest Account Password')
+    end
     @user_session = UserSession.new(params[:user_session])
   end
+  
 end

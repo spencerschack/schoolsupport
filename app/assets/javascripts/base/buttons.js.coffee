@@ -105,12 +105,19 @@ handle_direction_click = (event) ->
 	event.stopImmediatePropagation()
 	direction = if $(this).is('.next') then 'next' else 'prev'
 	page = $(this).closest('.page')
+	wrapper = page.children('.wrapper')
 	old_url = page.attr('data-path')
 	index = page.next('.page')
 	old_row = index.find(".table a[href='#{old_url}']")
 	new_row = old_row[direction]('a:not(.level_breaker)')
 	if url = new_row.attr('href')
-		push_state url
+		wrapper.remove()
+		page.append(loading_message)
+		$.get url, (data) ->
+			push_state(url)
+			page.attr('data-path', url)
+			select_path(index)
+			page.append(data)
 
 # Generate the necessary form data to destroy a resource and post that to
 # the given path and callback.

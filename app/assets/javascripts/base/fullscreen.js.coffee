@@ -28,7 +28,7 @@ enter_fullscreen = (event, callback) ->
 			page.trigger 'exit_fullscreen', ->
 				self.trigger 'click'
 
-exit_fullscreen = (event, callback) ->
+exit_fullscreen = (event) ->
 	page = $(this)
 	$('#meta_container').removeClass('fullscreen')
 	page.find('.title a.fullscreen').text('Fullscreen')

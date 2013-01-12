@@ -13,19 +13,19 @@
           <a class="intervention">
             <span>
               <%= i.text_area :name %>
-              <em class="holder"><%= format_holder_text(intervention.name) %></em>
+              <em class="holder"><%= convert_newlines_to_breaks(intervention.name) %></em>
             </span>
             <span>
               <%= i.text_area :start %>
-              <em class="holder"><%= format_holder_text(intervention.start) %></em>
+              <em class="holder"><%= convert_newlines_to_breaks(intervention.start) %></em>
             </span>
             <span>
               <%= i.text_area :stop %>
-              <em class="holder"><%= format_holder_text(intervention.stop) %></em>
+              <em class="holder"><%= convert_newlines_to_breaks(intervention.stop) %></em>
             </span>
             <span>
               <%= i.text_area :notes %>
-              <em class="holder"><%= format_holder_text(intervention.notes) %></em>
+              <em class="holder"><%= convert_newlines_to_breaks(intervention.notes) %></em>
             </span>
           </a>
         <% end %>

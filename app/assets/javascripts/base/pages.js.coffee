@@ -53,11 +53,11 @@ window.destroy_page = (page) ->
 # Animate the container to the new width and adjust the marginRight so it
 # stays centered in the window.
 # @param {Integer} new_width
-window.animate_container_width_to = (new_width, center = false) ->
+window.animate_container_width_to = (new_width, center = false, login = false) ->
 	new_width /= -2
 	new_width = 0 if center
 	container = $('#container')
-	duration = if center then SHORT_DURATION else MEDIUM_DURATION
+	duration = if center || login then SHORT_DURATION else MEDIUM_DURATION
 	container.stop().animate {
 		marginRight: "#{new_width}px"
 	}, {

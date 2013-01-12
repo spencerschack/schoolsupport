@@ -123,7 +123,7 @@ Schoolsupport::Application.routes.draw do
   helper :bus_stops
   helper :bus_routes
   
-  # Templates, Pdfs, Types, Fields, Fonts, and Settings
+  # Templates, Pdfs, Types, Fields, Fonts, Settings, Logins
   resources :templates do
     resources :pdfs do
       resources :types do
@@ -134,6 +134,7 @@ Schoolsupport::Application.routes.draw do
   end
   resources :fonts
   resources :settings
+  resources :logins
   
   # Export List Items
   match 'export_list_items' => 'export_list_items#index'
