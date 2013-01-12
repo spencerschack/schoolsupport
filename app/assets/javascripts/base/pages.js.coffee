@@ -54,26 +54,26 @@ window.destroy_page = (page) ->
 # stays centered in the window.
 # @param {Integer} new_width
 window.animate_container_width_to = (new_width, center = false) ->
-	new_width /= 2
-	new_width += 100 unless center
+	new_width /= -2
+	new_width = 0 if center
 	container = $('#container')
 	duration = if center then SHORT_DURATION else MEDIUM_DURATION
 	container.stop().animate {
-		marginRight: "-#{new_width}px"
+		marginRight: "#{new_width}px"
 	}, {
 		duration: duration,
 		step: ensure_visible_header
 	}
 
-header = null
+header = container = null
 # If the header is off the page, set its position to static to keep it on the
 # page.
 window.ensure_visible_header = ->
-	next = header.prev('.page')
+	next = container.find('.page:not(#header)').last()
 	if next.length && !next.is('.fullscreen') && next.offset().left < 200
-		header.addClass('stuck')
+		header.addClass('stuck').prependTo('#meta_container')
 	else
-		header.removeClass('stuck')
+		header.removeClass('stuck').appendTo('#container')
 
 $ ->
 	# Handle window resize.
@@ -83,3 +83,4 @@ $ ->
 	$(window).focus ensure_visible_header
 	
 	header = $('#header')
+	container = $('#container')

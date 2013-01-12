@@ -9,8 +9,9 @@
 		= tag :meta, name: :initial_path, content: flash[:initial_path] || '/'
 		%style#export_list_styles= export_list_styles if current_user
 	%body
-		#container
-			#header.page.current{data: { path: '/' }}
-				%h1=link_to 'Shoob Photography School Support', root_path
-				= render('navigation') if current_user
-			= yield
+		#meta_container
+			#container
+				#header.page.current{data: { path: '/' }}
+					%h1=link_to 'Shoob Photography School Support', root_path
+					= render('navigation') if current_user
+				= yield
