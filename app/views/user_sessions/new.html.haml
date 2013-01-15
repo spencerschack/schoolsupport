@@ -1,4 +1,5 @@
 = semantic_form_for @user_session, url: login_path, html: { class: 'scroller' } do |f|
+	= image_tag asset_path('login_screen.jpg')
 	- if params[:stale]
 		%p You have been logged out due to 10 minutes of inactivity.
 	= f.semantic_errors
@@ -11,10 +12,13 @@
 		%li.radio
 			= f.radio_button 'login_as_guest', true
 			= f.label 'login_as_guest_true', 'Login as guest'
+		%li.guest_hint
+			To view a demonstration, enter your email address and select
+			"Login as guest".
 	= f.actions do
 		= f.action :submit, label: 'Login'
 	
-	- cache 'Login Page Text' do
+	-# cache 'Login Page Text' do
 		%p= convert_newlines_to_breaks(auto_link(Setting.value_of('Login Page Text')))
 	
 		.exit_button

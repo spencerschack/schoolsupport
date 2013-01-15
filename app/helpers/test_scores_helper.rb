@@ -2,14 +2,29 @@ module TestScoresHelper
   
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
+  def full_level_name abbr
+    case abbr
+    when 'fbb'
+      'Far Below Basic'
+    when 'bbasic'
+      'Below Basic'
+    when 'prof'
+      'Proficient'
+    when 'adv'
+      'Advanced'
+    else
+      abbr.titleize
+    end
+  end
+  
   def teacher_options
 	  @teacher_options ||= if controller_model == TestScore || controller_model == Student
 	    scope = find_first_parent ? find_first_parent.students : Student
 	    scope = scope.with_permissions_to(:show)
-	    sql = scope.joins(:users).order('users.last_name').uniq.select('users.*').to_sql
-	    teachers = User.find_by_sql(sql).map { |t| [t.name, t.id]}
-      selected = params[:teacher].present? ? params[:teacher] : 'All Teachers'
-	    options_for_select([['All Teachers', 'All']] + teachers, selected)
+	    sql = scope.joins(:periods).order('periods.name').uniq.select('periods.*').to_sql
+	    teachers = Period.find_by_sql(sql).map { |t| [t.name, t.id]}
+      selected = params[:teacher].present? ? params[:teacher] : 'All'
+	    options_for_select([['All Classes', 'All']] + teachers, selected)
    end
 	end
 	

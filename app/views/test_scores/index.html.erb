@@ -43,7 +43,9 @@
             <% terms_and_keys.each do |term, keys| %>
               <% keys.each do |key| %>
                 <% if matches_current_order(test_name, term, key) %>
-                  <span><%= level.titleize %></span>
+                  <span>
+                    <em><%= full_level_name level %></em>
+                  </span>
                 <% else %>
                   <span></span>
                 <% end %>

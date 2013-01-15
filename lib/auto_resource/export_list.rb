@@ -5,10 +5,12 @@ module ExportList
   end
   
   def export_list_styles
-    current_user.export_list_items.pluck(:student_id).map do |id|
+    selectors = current_user.export_list_items.pluck(:student_id).map do |id|
       ".#{student_select_class(id)}"
-    end.join(', ') <<
-    " { background-position: 10px -2118px !important; }"
+    end.join(', ')
+    if selectors.present?
+      "#{selectors} { background-position: 10px -2118px !important; }"
+    end
   end
   
   def student_select_class id

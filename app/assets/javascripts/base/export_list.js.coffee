@@ -31,7 +31,12 @@ update_export_list_count = (count) ->
   $('#navigation .export span').text(count)
 
 window.update_export_list_styles = (styles) ->
-  $('#export_list_styles').text(styles)
+  style = $('#export_list_styles')[0]
+  style.innerHTML = ''
+  if style.styleSheet # IE
+    style.styleSheet.cssText = styles
+  else
+    style.appendChild(document.createTextNode(styles))
 
 handle_export_all = (event) ->
   event.preventDefault()
