@@ -121,9 +121,6 @@ class TestScoresController < ApplicationController
           term: order_match[:term],
           key: order_match[:key]
         }).group('test_scores.student_id').to_sql
-      }) OR students.id NOT IN (#{
-        super(Student).reorder(nil).offset(nil).limit(nil)
-        .joins(:test_scores).select('students.id').to_sql
       })))
       
       # default.where(%((test_scores.id IN (#{
