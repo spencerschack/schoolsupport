@@ -28,6 +28,14 @@ module TestScoresHelper
    end
 	end
 	
+	def intervention_options
+		[
+			['With and Without Interventions', 'All'],
+			['With Interventions', true],
+			['Without Interventions', false]
+		]
+	end
+	
 	def grade_options
 	 @grade_options ||= if controller_model == Student || controller_model == TestScore
 	   grades = if controller_model == Student

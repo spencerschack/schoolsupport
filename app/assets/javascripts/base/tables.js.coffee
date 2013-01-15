@@ -139,17 +139,9 @@ load_more_records = (wrapper, table, callback) ->
   data = search_and_sort_data(wrapper, table)
   data['offset'] = table.attr('data-offset')
   
-  term = wrapper.find('select.term_filter').val()
-  data['term'] = term if term
-  
-  grade = wrapper.find('select.grade_filter').val()
-  data['grade'] = grade if grade
-  
-  teacher = wrapper.find('select.teacher_filter').val()
-  data['teacher'] = teacher if teacher
-  
-  subject = wrapper.find('select.subject_filter').val()
-  data['subject'] = subject if subject
+  more_data = wrapper.find('.options_filter select').serialize()
+  data = $.param data
+  data = [data, more_data].join('&')
   
   infiniscroll_loading.insertAfter(table)
   $.get table.closest('.page').attr('data-path'), data, (data) ->
@@ -174,6 +166,6 @@ $ ->
 	$('#container').delegate 'a.search', 'click.search', handle_search_click
 
 	# Prepare term filter.
-	$('#container').delegate 'select.term_filter, select.grade_filter, select.subject_filter, select.teacher_filter', 'change.options_filter', handle_options_filter_change
+	$('#container').delegate '.options_filter select', 'change.options_filter', handle_options_filter_change
 	
 	$('#container').delegate '.index.wrapper', 'loaded.prepare_infiniscroll', handle_index_loaded

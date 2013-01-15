@@ -50,6 +50,7 @@ class Student < ActiveRecord::Base
   after_initialize :set_school
   
   before_save :reject_notes
+  before_save :add_intervened
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier, scope: :school_id
@@ -274,4 +275,9 @@ class Student < ActiveRecord::Base
       end
     end
   end
+  
+  def add_intervened
+    self.intervened = interventions.count > 0
+  end
+  
 end

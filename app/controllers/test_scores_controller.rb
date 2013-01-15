@@ -44,6 +44,10 @@ class TestScoresController < ApplicationController
     if teacher = option_filter_value(:teacher)
       default = default.where('periods.id' => teacher)
     end
+
+    if intervened = option_filter_value(:intervention)
+      default = default.where('students.intervened' => intervened)
+    end
     
     if params[:order].blank?
       auto_sort_column = @selected_subject == 'Math' ? 'math' : 'ela'

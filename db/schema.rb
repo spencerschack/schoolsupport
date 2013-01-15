@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130115003333) do
+ActiveRecord::Schema.define(:version => 20130115012954) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -214,6 +214,7 @@ ActiveRecord::Schema.define(:version => 20130115003333) do
     t.text     "note_2"
     t.text     "note_3"
     t.text     "note_4"
+    t.boolean  "intervened"
   end
 
   create_table "templates", :force => true do |t|
