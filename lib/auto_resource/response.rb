@@ -82,8 +82,6 @@ module Response
       success ? 'show' : 'edit'
     when 'create'
       success ? 'show' : 'new'
-    when 'new_intervention'
-      success ? 'show' : 'new_intervention'
     end
   end
   

@@ -47,7 +47,8 @@ module Parents
   # Add parents to record and call polymorphic_path for those records.
   def parent_path record, options = {}
     options.reverse_merge!(action: :new) if new_record?(Array(record).first)
-    polymorphic_path(resource_with_parents(record), options)
+    parents = resource_with_parents(record)
+    polymorphic_path(parents, options)
   end
   
   # Prepend parents of the given record to the array or record given and

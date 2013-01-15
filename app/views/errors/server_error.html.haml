@@ -1,5 +1,6 @@
 .error
 	.title
+		= link_for :back, Error
 		%h2= @exception.class.to_s.titleize
 		%h1= @exception.message
 	
