@@ -81,7 +81,7 @@ module TestScoresHelper
       test_scores.sort_by!(&:term).each_with_index do |score, index|
         score.data.each do |key, value|
           if !level_column?(key) && (index == test_scores.length - 1 || key !~ /_rc/)
-            header = key.gsub(/#{test_name}_?/, '')
+            header = key.gsub(/#{test_name}_?/i, '')
             header = "#{header.titleize}<br />#{Term.shorten(score.term)}"
             hash[test_name][header] = {
               level: score.data[level_column_for(key)],
