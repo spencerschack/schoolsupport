@@ -121,7 +121,7 @@ class TestScoresController < ApplicationController
           term: order_match[:term],
           key: order_match[:key]
         }).group('test_scores.student_id').to_sql
-      })))
+      }) OR test_scores.id IS NULL))
       
       # default.where(%((test_scores.id IN (#{
       #   default.reorder(nil).limit(nil).offset(nil)
