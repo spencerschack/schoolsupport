@@ -4,26 +4,26 @@
     <div class="table">
       <div>
         <span>Name</span>
-        <span>Start</span>
-        <span>Stop</span>
+        <span class="start">Start</span>
+        <span class="stop">Stop</span>
         <span>Notes</span>
       </div>
       <% sort_interventions(@student.interventions).each do |intervention| %>
         <%= f.fields_for :interventions, intervention do |i| %>
           <a class="intervention">
-            <span class="name">
+            <span>
               <%= i.text_area :name %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.name) %></em>
             </span>
-            <span class="start">
+            <span>
               <%= i.text_area :start %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.start) %></em>
             </span>
-            <span class="stop">
+            <span>
               <%= i.text_area :stop %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.stop) %></em>
             </span>
-            <span class="notes">
+            <span>
               <%= i.text_area :notes %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.notes) %></em>
             </span>
