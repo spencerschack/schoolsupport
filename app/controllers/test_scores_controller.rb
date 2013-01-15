@@ -107,7 +107,6 @@ class TestScoresController < ApplicationController
     # present here because duplicates are handled by the join restriction
     # below and uniq breaks the code below if included beforehand.
     if order_match
-      default
     
       #Restrict the join to only one row when ordering by a test_score
       #otherwise the query will return a student for each test_score row.
@@ -123,7 +122,7 @@ class TestScoresController < ApplicationController
           key: order_match[:key]
         }).group('test_scores.student_id').to_sql
       }) OR students.id NOT IN (#{
-        default.reorder(nil).offset(nil).limit(nil)
+        super(Student).reorder(nil).offset(nil).limit(nil)
         .joins(:test_scores).select('students.id').to_sql
       })))
       
