@@ -14,7 +14,7 @@ module ApplicationHelper
     if find_first_parent.respond_to?(:name)
       find_first_parent.name
     else
-      'Your'
+      'All'
     end
   end
   

@@ -1,5 +1,6 @@
 <div class="title">
   <%= link_for :back, controller_model %>
+  <h2><%= subtitle %></h2>
   <h1>Test Scores</h1>
   <%= select_tag 'subject', options_for_select(subject_options), class: 'subject_filter test_filter' %>
   <%= select_tag 'grade', options_for_select(grade_options), class: 'grade_filter test_filter' %>
