@@ -16,7 +16,7 @@
         <%= field_content @student, field %>
       <% end %>
     </div>
-    <h2>Cooperative Review</h2>
+    <h2><%= @student.school.default_note_header %></h2>
     <%= render 'notes' %>
   </div>
   <div class="right_col">

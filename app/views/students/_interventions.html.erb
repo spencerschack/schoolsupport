@@ -11,19 +11,19 @@
       <% sort_interventions(@student.interventions).each do |intervention| %>
         <%= f.fields_for :interventions, intervention do |i| %>
           <a class="intervention">
-            <span>
+            <span class="name">
               <%= i.text_area :name %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.name) %></em>
             </span>
-            <span>
+            <span class="start">
               <%= i.text_area :start %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.start) %></em>
             </span>
-            <span>
+            <span class="stop">
               <%= i.text_area :stop %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.stop) %></em>
             </span>
-            <span>
+            <span class="notes">
               <%= i.text_area :notes %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.notes) %></em>
             </span>

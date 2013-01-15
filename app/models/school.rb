@@ -7,7 +7,7 @@ class School < ActiveRecord::Base
   attr_accessible :name, :period_ids, :student_ids, as: [:developer,
     :superintendent]
   attr_accessible :district_id, :user_ids, :identifier, :mascot_image, :city,
-    :type_ids, as: [:developer]
+    :type_ids, :default_note_header, :default_note_content, as: [:developer]
 
   belongs_to :district
   has_many :users, dependent: :destroy, extend: WithTermExtension
@@ -30,6 +30,22 @@ class School < ActiveRecord::Base
   
   def to_label
     "#{identifier} #{name}"
+  end
+  
+  def default_note_content
+    if (value = super).present?
+      value
+    else
+      Setting.value_of('Default Note Content')
+    end
+  end
+  
+  def default_note_header
+    if (value = super).present?
+      value
+    else
+      Setting.value_of('Default Note Header')
+    end
   end
 
 end

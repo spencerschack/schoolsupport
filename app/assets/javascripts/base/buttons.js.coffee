@@ -114,6 +114,7 @@ handle_direction_click = (event) ->
 		wrapper.remove()
 		page.append(loading_message)
 		$.get url, (data) ->
+		  loading_message.remove()
 			push_state(url)
 			page.attr('data-path', url)
 			select_path(index)

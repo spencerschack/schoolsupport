@@ -20,7 +20,6 @@ class StudentsController < ApplicationController
   end
   
   def test_scores
-    @student.initialize_notes
     @student.initialize_interventions
   end
 

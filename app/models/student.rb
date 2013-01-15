@@ -49,6 +49,8 @@ class Student < ActiveRecord::Base
   
   after_initialize :set_school
   
+  before_save :reject_notes
+  
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier, scope: :school_id
   validate :periods_in_school
@@ -59,17 +61,12 @@ class Student < ActiveRecord::Base
     super(options.reverse_merge(only: [:id, :identifier], methods: [:name]))
   end
   
-  def initialize_notes
-    %w(note_1 note_2 note_3 note_4).each do |note|
-      unless self.send(note).present?
-        self.send("#{note}=", default_note)
-      end
+  def note_value_for method
+    if (value = send(method)).present?
+      value
+    else
+      school.default_note_content
     end
-  end
-  
-  def default_note
-    @default_note ||= (Setting.value_of("SST #{district.identifier}") ||
-      "Date: \nStrengths: \nConcerns: \nModifications/Strategies: \nActions to be taken: \nNext steps: ")
   end
   
   def initialize_interventions
@@ -267,6 +264,14 @@ class Student < ActiveRecord::Base
     end
     if bus_route && bus_route.district_id != district.id
       errors.add(:bus_route, 'must be in the same district as the student')
+    end
+  end
+  
+  def reject_notes
+    1.upto(4).each do |n|
+      if self.send("note_#{n}") == school.default_note_content
+        self.send("note_#{n}=", nil)
+      end
     end
   end
 end

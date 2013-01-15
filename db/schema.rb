@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130112215146) do
+ActiveRecord::Schema.define(:version => 20130115003333) do
 
   create_table "bus_routes", :force => true do |t|
     t.string   "name"
@@ -176,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20130112215146) do
     t.datetime "mascot_image_updated_at"
     t.string   "identifier"
     t.string   "city"
+    t.string   "default_note_header"
+    t.string   "default_note_content"
   end
 
   create_table "schools_types", :id => false, :force => true do |t|
