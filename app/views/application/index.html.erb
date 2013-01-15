@@ -1,15 +1,19 @@
 <div class="title">
   <h2><%= subtitle %></h2>
   <h1><%= plural_title %></h1>
-  <%= render 'term_filter' if controller_model == Period %>
   <%= link_for :new, new_resource %>
   <%= link_for :import, controller_model %>
   <%= link_for :search, controller_model %>
   <%= link_for :print, controller_model %>
   <%= link_for :back, controller_model %>
 </div>
-  
+
 <div class="scroller">
+  <% if controller_model == Period %>
+    <div class="options_filter">
+      <%= render 'term_filter' %>
+    </div>
+  <% end %>
   <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>
       <span class="spacer"></span>
