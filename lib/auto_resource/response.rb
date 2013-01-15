@@ -35,16 +35,11 @@ module Response
       hash[:success] = true
       hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
       hash[:path] = parent_path(record) unless record.is_a?(Intervention)
-      
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
           ['All', record.term]
         elsif [Student, User].include?(record.class)
           ['All', 'With No Period'] + record.periods.pluck(:term)
-        end
-        
-        if [Period, Student, User].include?(record.class)
-          hash[:term_filter] = ERB::Util.html_escape render_to_string('_term_filter', layout: false)
         end
         hash[:row] = ERB::Util.html_escape(render_to_string('_row', layout: false))
       end

@@ -52,20 +52,10 @@ handle_form_submit = (event) ->
 					push_state(data.path)
 
 				unless index.is('.destroyed')
-					if data.term_filter
-						term_filter = index.find('.title h2')
-						prev_value = term_filter.find('select').val()
-						term_filter.html(data.term_filter)
-						term_filter.find('select').val(prev_value)
-
 					if data.row
-						if !data.terms || prev_value in data.terms
-							insert_row(index.find('div.table'), data.row)
-							select_path(index)
-							index.find('.scroller').scrollTo('.selected')
-						else
-							term = data.terms.sort()[data.terms.length - 1]
-							term_filter.find('select').val(term).trigger('change')
+						insert_row(index.find('div.table'), data.row)
+						select_path(index)
+						index.find('.scroller').scrollTo('.selected')
 
 					if data.page
 						wrapper.next('.show.wrapper').trigger('unloaded').remove()
