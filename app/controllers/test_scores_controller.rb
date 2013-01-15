@@ -106,23 +106,23 @@ class TestScoresController < ApplicationController
     
       # Restrict the join to only one row when ordering by a test_score
       # otherwise the query will return a student for each test_score row.
-      # default.where(%((test_scores.id IN (#{
-      #   TestScore.select('MAX(test_scores.id)')
-      #   .where(
-      #     'test_scores.test_name = :test_name AND ' +
-      #     'test_scores.term = :term AND ' +
-      #     'test_scores.data ? :key',
-      #   {
-      #     test_name: order_match[:test_name],
-      #     term: order_match[:term],
-      #     key: order_match[:key]
-      #   }).group('test_scores.student_id').to_sql
-      # }) OR test_scores.id IS NULL)))
-      
       default.where(%((test_scores.id IN (#{
-        default.reorder(nil).limit(nil).offset(nil)
-        .group('test_scores.student_id').select('MAX(test_scores.id)').to_sql
+        TestScore.select('MAX(test_scores.id)')
+        .where(
+          'test_scores.test_name = :test_name AND ' +
+          'test_scores.term = :term AND ' +
+          'test_scores.data ? :key',
+        {
+          test_name: order_match[:test_name],
+          term: order_match[:term],
+          key: order_match[:key]
+        }).group('test_scores.student_id').to_sql
       }) OR test_scores.id IS NULL)))
+      
+      # default.where(%((test_scores.id IN (#{
+      #   default.reorder(nil).limit(nil).offset(nil)
+      #   .group('test_scores.student_id').select('MAX(test_scores.id)').to_sql
+      # }) OR test_scores.id IS NULL)))
     else
       
       # Add order values to select because for DISTINCT, postgres requires

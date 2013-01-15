@@ -10,6 +10,14 @@ module ApplicationHelper
   
   ::SORTS = {}
   
+  def subtitle
+    if find_first_parent.respond_to?(:name)
+      find_first_parent.name
+    else
+      'Your'
+    end
+  end
+  
   # Title to display on collection pages.
   def plural_title model = controller_model
     singular_title(model).pluralize
