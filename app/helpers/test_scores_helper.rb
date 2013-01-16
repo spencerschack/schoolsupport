@@ -59,6 +59,7 @@ module TestScoresHelper
   def group_levels students
     if @leveled
       students.group_by do |student|
+        Rails.logger.info "GROUPED: #{student.id} #{student.name}"
         grouper = nil
         student.test_scores.each do |score|
           if @ordered && score.test_name == @ordered[:test_name] && score.term == @ordered[:term]
