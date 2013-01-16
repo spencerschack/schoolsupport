@@ -28,7 +28,7 @@ module LinkHelper
         
     when :edit
       return unless permitted_to? action, model_or_record
-        link_to 'Edit', parent_path(model_or_record, action: :edit), options
+        link_to 'Edit', js_link, options
       
     when :update
       link_to 'Save', js_link, options
@@ -85,6 +85,9 @@ module LinkHelper
     
     when :fullscreen
       link_to 'Fullscreen', js_link, options
+    
+    when :help
+      link_to 'Help', js_link, options
     end
 	end
   

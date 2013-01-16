@@ -1,17 +1,5 @@
 handle_import_click = ->
-	button = $(this)
-	unless button.is('.loading')
-		button.display_loading_message()
-		page = button.closest('.page')
-		wrapper = page.children('.wrapper')
-		url = [page.attr('data-path'), 'import'].join('/')
-		
-		$.get url, (data) ->
-			button.hide_loading_message()
-			data = $(data)
-			data.css(marginTop: "-#{$('#container').height()}px")
-			$(data).prependTo(page).trigger('loaded').animate {
-				marginTop: 0 }, MEDIUM_DURATION
+	animate_in_new_content($(this), 'import')
 
 handle_import_load = (event) ->
 	update_jobs_tables($(this))

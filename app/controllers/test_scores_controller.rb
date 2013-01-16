@@ -161,6 +161,10 @@ class TestScoresController < ApplicationController
     50
   end
   
+  def help
+    
+  end
+  
   private
   
   # Return false if the parameter is not present or equal to 'All' or return

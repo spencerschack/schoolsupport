@@ -37,22 +37,13 @@ handle_print_click = (event) ->
 			window.print()
 			button.hide_loading_message()
 
+handle_help_click = ->
+	animate_in_new_content($(this), 'help')
+
 # When an edit button is clicked, display a loading message within that
 # button, load the form, and animate it in to replace the show wrapper.
 handle_edit_click = (event) ->
-	event.preventDefault()
-	button = $(this)
-	
-	unless button.is('.loading')
-		button.display_loading_message()
-		page = button.closest('.page')
-		url = button.attr('href')
-		
-		$.get url, (data) ->
-			button.hide_loading_message()
-			data = $(data)
-			data.css(marginTop: "-#{$('#container').height()}px")
-			$(data).prependTo(page).trigger('loaded').animate { marginTop: 0 }, MEDIUM_DURATION
+	animate_in_new_content($(this), 'edit')
 
 # After clicking the delete button, show a confirmation message in the
 # button. After a second click, destroy the record and remove the page. If
@@ -145,6 +136,8 @@ $ ->
 	
 	# Handle edit button clicks.
 	$('#container').delegate 'a.edit', 'click.edit', handle_edit_click
+	
+	$('#container').delegate 'a.help', 'click.help', handle_help_click
 	
 	$('#container').delegate 'a.previous, a.next', 'click.direction', handle_direction_click
 	

@@ -36,6 +36,7 @@ Schoolsupport::Application.routes.draw do
   def test_scores
     helper :test_scores, only: :index do
       collection do
+        match 'help' => 'test_scores#help'
         match ':student_id/new_intervention' => 'students#new_intervention'
         match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
         match ':student_id/new_student_note' => 'students#new_student_note'

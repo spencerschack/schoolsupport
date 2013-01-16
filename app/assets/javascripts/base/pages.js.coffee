@@ -36,6 +36,20 @@ window.create_page = (path, data, method = 'GET') ->
 	else
 		page.load path, load_callback
 
+window.animate_in_new_content = (button, path) ->
+	unless button.is('.loading')
+		button.display_loading_message()
+		page = button.closest('.page')
+		wrapper = page.children('.wrapper')
+		url = [page.attr('data-path'), path].join('/')
+
+		$.get url, (data) ->
+			button.hide_loading_message()
+			data = $(data)
+			data.css(marginTop: "-#{$('#container').height()}px")
+			$(data).prependTo(page).trigger('loaded').animate {
+				marginTop: 0 }, MEDIUM_DURATION
+
 # Animates the page out and removes once completed.
 # {jQuery} page the page to destroy.
 window.destroy_page = (page) ->
