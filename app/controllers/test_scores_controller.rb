@@ -108,8 +108,8 @@ class TestScoresController < ApplicationController
     # below and uniq breaks the code below if included beforehand.
     if order_match
     
-      #Restrict the join to only one row when ordering by a test_score
-      #otherwise the query will return a student for each test_score row.
+      # Restrict the join to only one row when ordering by a test_score
+      # otherwise the query will return a student for each test_score row.
       default.where(%(test_scores.id IN (#{
         TestScore.select('MAX(test_scores.id)')
         .where(
@@ -121,12 +121,14 @@ class TestScoresController < ApplicationController
           term: order_match[:term],
           key: order_match[:key]
         }).group('test_scores.student_id').to_sql
-      }) OR test_scores.id IS NULL))
+      })))
       
-      # default.where(%((test_scores.id IN (#{
+      # default.where(%(test_scores.id IN (#{
       #   default.reorder(nil).limit(nil).offset(nil)
       #   .group('test_scores.student_id').select('MAX(test_scores.id)').to_sql
-      # }) OR test_scores.id IS NULL)))
+      # }) OR students.id NOT IN (#{
+      #   super(Student).joins(:test_scores).select('students.id').to_sql
+      # })))
     else
       
       # Add order values to select because for DISTINCT, postgres requires
