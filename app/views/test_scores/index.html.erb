@@ -61,6 +61,7 @@
         </a>
       <% end %>
       <% students.each do |student| %>
+        <% Rails.logger.info "WROTE: #{student.id} #{student.name}" %>
         <a href="<%= "#{request.path}/#{student.id}" %>" data-id="<%= student.id %>">
           <span class="spacer"></span>
           <span class="image">
