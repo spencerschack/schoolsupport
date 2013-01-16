@@ -22,7 +22,7 @@ handle_clear_export_list_click = ->
     button.hide_loading_message()
 
 window.update_export_list_count_and_styles = (data) ->
-  if data.export_list_styles
+  if data.export_list_styles isnt undefined
     update_export_list_styles(data.export_list_styles)
   if data.export_list_count isnt undefined
     update_export_list_count(data.export_list_count)
