@@ -71,7 +71,7 @@ module LinkHelper
     
     when :export
       if permitted_to?(action, model_or_record) && model_or_record.is_a?(Student)
-        link_to 'Export', "#{request.path}/export", options
+        link_to 'Export', "#{parent_path(model_or_record)}/export", options
       end
       
     when :upload

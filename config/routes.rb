@@ -48,7 +48,6 @@ Schoolsupport::Application.routes.draw do
   end
   def students
     helper :students do
-      post 'export', on: :collection
       helper :periods do
         helper :users
         test_scores
@@ -62,7 +61,6 @@ Schoolsupport::Application.routes.draw do
   def periods
     helper :periods do
       helper :students do
-        post 'export', on: :collection
         helper :users
         test_scores
         exportable
@@ -77,7 +75,6 @@ Schoolsupport::Application.routes.draw do
     helper :users do
       helper :periods do
         helper :students do
-          post 'export', on: :collection
           exportable
           intervenable
           notable
@@ -85,7 +82,6 @@ Schoolsupport::Application.routes.draw do
         test_scores
       end
       helper :students do
-        post 'export', on: :collection
         helper :periods
         exportable
         intervenable
