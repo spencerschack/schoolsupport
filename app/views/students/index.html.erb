@@ -26,10 +26,8 @@
     <% collection.each do |row| %>
       <a href="<%= "#{request.path}/#{row.id}" %>" data-id="<%= row.id %>">
         <span class="spacer"></span>
-        <span title="Add to export list" class="export_list_button <%= student_select_class(row.id) %>"></span>
-        <span class="image">
-          <%= image_tag(row.image(:index), width: 28, height: 35) if row.image? %>
-        </span>
+        <span title="Add to export list" class="export_list_button <%= student_select_class(row.id) %>"><%= image_tag('transparent.gif') if browser.ie? %></span>
+        <span class="image"><%= image_tag(row.image(:index), width: 28, height: 35) if row.image? %></span>
         <% fields(:index).each do |field| %>
           <span><%= cell_content(row, field) %></span>
         <% end %>
