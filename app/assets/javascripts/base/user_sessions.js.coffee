@@ -8,7 +8,8 @@ handle_login_form_submit = (event) ->
 	$.post this.action, $(this).serialize(), (data) ->
 		page = $(data.page)
 		if page.is('#navigation') # Form success.
-			update_export_list_styles(data.export_list_styles)
+			try # IE barfs here
+				update_export_list_styles(data.export_list_styles)
 			$('#header').append(page).animate({width: '200px'}, SHORT_DURATION)
 			animate_container_width_to(200, true)
 			navigation_height = $('#header #navigation').outerHeight()
