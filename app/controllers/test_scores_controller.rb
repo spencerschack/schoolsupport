@@ -97,21 +97,6 @@ class TestScoresController < ApplicationController
     # present here because duplicates are handled by the join restriction
     # below and uniq breaks the code below if included beforehand.
     if order_match
-    
-      # Restrict the join to only one row when ordering by a test_score
-      # otherwise the query will return a student for each test_score row.
-      # default.where(%(test_scores.id IN (#{
-      #   TestScore.select('MAX(test_scores.id)')
-      #   .where(
-      #     'test_scores.test_name = :test_name AND ' +
-      #     'test_scores.term = :term AND ' +
-      #     'test_scores.data ? :key',
-      #   {
-      #     test_name: order_match[:test_name],
-      #     term: order_match[:term],
-      #     key: order_match[:key]
-      #   }).group('test_scores.student_id').to_sql
-      # })))
       
       default.joins("LEFT OUTER JOIN (#{
         TestScore.select('test_scores.*')
@@ -130,6 +115,7 @@ class TestScoresController < ApplicationController
       # all values in ORDER BY to also be present in the SELECT clause.
       order_values = default.order_values.join(', ').gsub(/ (asc|desc)/, '')
       default.uniq.select('students.*').select(order_values)
+      .joins('LEFT OUTER JOIN test_scores ON students.id = test_scores.student_id')
     end
   end
   
