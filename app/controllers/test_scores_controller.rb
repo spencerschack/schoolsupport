@@ -9,7 +9,6 @@ class TestScoresController < ApplicationController
     # in this method to work properly, otherwise only the ordered by test
     # score will be loaded.
     default = super(Student).preload(:test_scores).preload(:users)
-      .joins('LEFT OUTER JOIN test_scores ON students.id = test_scores.student_id')
 
     if default.to_sql !~ /periods_students/
       default = default
@@ -103,25 +102,30 @@ class TestScoresController < ApplicationController
     
       # Restrict the join to only one row when ordering by a test_score
       # otherwise the query will return a student for each test_score row.
-      default.where(%(test_scores.id IN (#{
-        TestScore.select('MAX(test_scores.id)')
+      # default.where(%(test_scores.id IN (#{
+      #   TestScore.select('MAX(test_scores.id)')
+      #   .where(
+      #     'test_scores.test_name = :test_name AND ' +
+      #     'test_scores.term = :term AND ' +
+      #     'test_scores.data ? :key',
+      #   {
+      #     test_name: order_match[:test_name],
+      #     term: order_match[:term],
+      #     key: order_match[:key]
+      #   }).group('test_scores.student_id').to_sql
+      # })))
+      
+      default.joins("LEFT OUTER JOIN (#{
+        TestScore.select('test_scores.*')
         .where(
           'test_scores.test_name = :test_name AND ' +
-          'test_scores.term = :term AND ' +
-          'test_scores.data ? :key',
+          'test_scores.term = :term',
         {
           test_name: order_match[:test_name],
           term: order_match[:term],
           key: order_match[:key]
-        }).group('test_scores.student_id').to_sql
-      })))
-      
-      # default.where(%(test_scores.id IN (#{
-      #   default.reorder(nil).limit(nil).offset(nil)
-      #   .group('test_scores.student_id').select('MAX(test_scores.id)').to_sql
-      # }) OR students.id NOT IN (#{
-      #   super(Student).joins(:test_scores).select('students.id').to_sql
-      # })))
+        }).to_sql
+      }) AS test_scores ON students.id = test_scores.student_id")
     else
       
       # Add order values to select because for DISTINCT, postgres requires

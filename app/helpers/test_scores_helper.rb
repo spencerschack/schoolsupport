@@ -130,6 +130,7 @@ module TestScoresHelper
   
   def data_columns_cache_key
     sql = find_collection(true)
+      .joins('LEFT OUTER JOIN test_scores ON students.id = test_scores.student_id')
       .group('test_scores.id, test_scores.updated_at')
       .limit(nil).offset(nil).reorder(nil)
       .select('test_scores.id, test_scores.updated_at').to_sql
