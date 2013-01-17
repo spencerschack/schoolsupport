@@ -107,10 +107,18 @@ class ImportJob
             raise ArgumentError, "To find a #{model.name.titleize.downcase} by" <<
               " #{identifier}, you must also enter a #{scope.to_s.humanize.downcase}"
           else
-            finder = finder.where(scope => hash[scope])
+            finder = if options[:case_insensitive_identify]
+              finder.where('? ILIKE ?', scope, hash[scope])
+            else
+              finder.where(scope => hash[scope])
+            end
           end
         end
-        record = finder.where(identifier => hash[identifier]).first
+        record = if options[:case_insensitive_identify]
+          finder.where('? ILIKE ?', identifier, hash[identifier])
+        else
+          finder.where(identifier => hash[identifier])
+        end.first
         return record if record
       end
     end
