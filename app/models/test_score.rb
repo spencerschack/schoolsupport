@@ -26,6 +26,6 @@ class TestScore < ActiveRecord::Base
         [school.to_label, school.identifier]
       end ]] },
     processor: TestScoreProcessor,
-    case_insensitive_identify: true
+    case_insensitive_identify: [:test_name]
   
 end

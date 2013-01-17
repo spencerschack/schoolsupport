@@ -24,8 +24,6 @@ class TestScoresController < ApplicationController
     # order clauses are not necessary.
     return default if without
     
-    @selected_subject = false
-    
     if grade = option_filter_value(:grade)
       default = default.where('students.grade' => grade)
     end
@@ -42,7 +40,7 @@ class TestScoresController < ApplicationController
     @selected_subject = subject == 'Math' ? 'Math' : 'ELA'
     
     if params[:order].blank?
-      auto_sort_column = @selected_subject == 'Math' ? 'math' : 'ela'
+      auto_sort_column = @selected_subject.downcase
       params[:order] = "#{auto_sort_column} #{Term.previous} #{level_column_for(auto_sort_column)} asc"
     end
     

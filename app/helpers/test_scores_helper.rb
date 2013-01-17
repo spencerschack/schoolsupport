@@ -143,11 +143,9 @@ module TestScoresHelper
       score_columns = {}
       data_columns.each do |test_name, terms_and_keys|
         
-        if @selected_subject
-          if (@selected_subject == 'ELA' && test_name =~ /math/i) ||
-            (@selected_subject == 'Math' && test_name !~ /math/i)
-              next
-          end
+        if (@selected_subject == 'ELA' && test_name =~ /math/i) ||
+          (@selected_subject == 'Math' && test_name !~ /math/i)
+            next
         end
         
         terms_and_keys = terms_and_keys.to_a.sort_by do |(term, keys)|
