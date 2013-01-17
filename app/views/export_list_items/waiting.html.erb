@@ -24,8 +24,13 @@
   <body>
     <div id="container">
       <% if @pending %>
-				Your export will appear shortly. You can start another export while
-				this one is being created.
+				<p>
+					Your export will appear shortly.
+					You can start another export while this one is being created.
+				</p>
+				<p>
+					Elapsed time: <%= (Time.now.utc - @export_data.created_at.to_i).strftime('%T') %>
+				</p>
 			<% elsif @link %>
 				<%= link_to 'View Export', @link %>
 			<% else %>
