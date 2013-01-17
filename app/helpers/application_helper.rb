@@ -87,7 +87,12 @@ module ApplicationHelper
 	def fields action, controller = nil
 	  action = :index if action == :import
 	  controller ||= controller_name.to_sym
-	  FIELDS[controller][action]
+	  fields = FIELDS[controller][action]
+	  if hide_teacher
+	    fields - [:teacher]
+    else
+      fields
+    end
 	end
 	
 	# If there is nothing, this is what is displayed.
@@ -161,12 +166,31 @@ module ApplicationHelper
 	
 	private
 	
+	def hide_teacher
+		if defined?(@hide_teacher)
+			@hide_teacher
+		else
+			@hide_teacher = if controller_model == Student
+				School.find(options_scope.uniq.pluck(:school_id)).all?{|school| school.hide_teacher }
+			elsif controller_model == TestScore
+				scope = if find_first_parent
+					find_first_parent.students
+				else
+					Student
+				end.with_permissions_to(:show)
+				School.find(scope.uniq.pluck(:school_id)).all?{|school| school.hide_teacher }
+			else
+				false
+			end
+		end
+	end
+	
 	def options_scope
-	 @options_scope ||= if find_first_parent
-	   find_first_parent.send(controller_name)
-	  else
-	    controller_model
-    end.with_permissions_to(:show)
+		@options_scope ||= if find_first_parent
+			find_first_parent.send(controller_name)
+		else
+			controller_model
+		end.with_permissions_to(:show)
 	end
 	
 end

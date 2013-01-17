@@ -11,7 +11,7 @@ module SchoolsHelper
     show: { fields: [:identifier, :name],
       relations: [:district, :users, :periods, :students, :test_scores] },
     form: { fields: [:identifier, :name, :mascot_image,
-      :default_note_header, :default_note_content, :display_teacher],
+      :default_note_header, :default_note_content, :hide_teacher],
       relations: [:district] }
   }
   

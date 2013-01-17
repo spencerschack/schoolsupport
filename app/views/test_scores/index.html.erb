@@ -21,7 +21,9 @@
       <span class="spacer"></span>
       <span class="image"></span>
       <span data-order-by="students.last_name" class="sortable">Student</span>
-      <span data-order-by="users.last_name" class="sortable">Teacher</span>
+      <% unless hide_teacher %>
+        <span data-order-by="users.last_name" class="sortable">Teacher</span>
+      <% end %>
       <% score_columns.each do |test_name, terms_and_keys| %>
         <% terms_and_keys.each do |term, keys| %>
           <% keys.each do |key| %>
@@ -43,7 +45,7 @@
           <span class="spacer"></span>
           <span></span>
           <span></span>
-          <span></span>
+          <% unless hide_teacher %><span></span><% end %>
           <% score_columns.each do |test_name, terms_and_keys| %>
             <% terms_and_keys.each do |term, keys| %>
               <% keys.each do |key| %>
@@ -70,9 +72,11 @@
             <%= student.name %> -
             <%= pretty_grade(student.grade) %>
           </span>
-          <span class="stacked">
-            <%= student.teacher.try(:name) || none %>
-          </span>
+          <% unless hide_teacher %>
+            <span class="stacked">
+              <%= student.teacher.try(:name) || none %>
+            </span>
+          <% end %>
           <% associated_test_scores(student.test_scores) do |association| %>
             <% score_columns.each do |test_name, terms_and_keys| %>
               <% terms_and_keys.each do |term, keys| %>
