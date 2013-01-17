@@ -30,16 +30,6 @@ class TestScoresController < ApplicationController
     if grade = option_filter_value(:grade)
       default = default.where('students.grade' => grade)
     end
-    
-    subject = option_filter_value(:subject)
-    if subject == 'Math'
-      @selected_subject = 'Math'
-      inverter = ''
-    else
-      @selected_subject = 'ELA'
-      inverter = ' NOT'
-    end
-    default = default.where("test_scores.test_name#{inverter} ILIKE '%math%'")
 
     if teacher = option_filter_value(:teacher)
       default = default.where('periods.id' => teacher)
@@ -48,6 +38,9 @@ class TestScoresController < ApplicationController
     if intervened = option_filter_value(:intervention)
       default = default.where('students.intervened' => intervened)
     end
+    
+    subject = option_filter_value(:subject)
+    @selected_subject = subject == 'Math' ? 'Math' : 'ELA'
     
     if params[:order].blank?
       auto_sort_column = @selected_subject == 'Math' ? 'math' : 'ela'
