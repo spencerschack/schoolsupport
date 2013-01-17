@@ -21,7 +21,9 @@
 			display: block
 			background: $blue url(image-path("logo.gif")) no-repeat center center
 	
-	ul#navigation
+	ul#navigation.scroller
+		overflow-x: hidden
+	
 		li:nth-child(even)
 			a
 				background-color: $gray-stripe
