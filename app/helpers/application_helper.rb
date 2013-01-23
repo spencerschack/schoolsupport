@@ -84,10 +84,13 @@ module ApplicationHelper
 	end
 	
 	# The fields to show for the action and the controller.
-	def fields action, controller = nil
+	def fields action, type = nil
 	  action = :index if action == :import
 	  controller ||= controller_name.to_sym
 	  fields = FIELDS[controller][action]
+	  if type
+	    fields = fields[type]
+    end
 	  if hide_teacher
 	    fields - [:teacher]
     else

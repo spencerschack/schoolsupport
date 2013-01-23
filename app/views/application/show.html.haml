@@ -13,9 +13,9 @@
 				%li= message
 	
 	.fields
-		- fields(:show)[:fields].each do |field|
+		- fields(:show, :fields).each do |field|
 			= field_content resource, field
 			
 	.relations
-		- fields(:show)[:relations].each do |field|
+		- fields(:show, :relations).each do |field|
 			= relation_content resource, field
