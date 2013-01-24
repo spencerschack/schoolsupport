@@ -15,7 +15,7 @@ class TestScore < ActiveRecord::Base
   serialize :data, ActiveRecord::Coders::Hstore
   
   validates_presence_of :student, :term, :test_name
-  validates_uniqueness_of :test_name, scope: [:student_id, :term], case_sensitive: false
+  validates_uniqueness_of :test_name, scope: [:student_id, :term]
   validates_with Term
   
   searches student: [:first_name, :last_name, :identifier]
@@ -25,7 +25,6 @@ class TestScore < ActiveRecord::Base
       [:school, collection: School.with_permissions_to(:show).order('name').map do |school|
         [school.to_label, school.identifier]
       end ]] },
-    processor: TestScoreProcessor,
-    case_insensitive_identify: [:test_name]
+    processor: TestScoreProcessor
   
 end

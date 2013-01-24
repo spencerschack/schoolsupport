@@ -280,7 +280,7 @@ class Student < ActiveRecord::Base
   
   def add_intervened
     interventions.each do |intervention|
-      if %(name start stop notes).all?{|col| intervention.send(col).blank?}
+      if %w(name start stop notes).all?{|col| intervention.send(col).blank?}
         intervention.destroy
       end
     end
