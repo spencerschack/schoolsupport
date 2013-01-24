@@ -279,13 +279,19 @@ class Student < ActiveRecord::Base
   end
   
   def add_intervened
+    self.intervened = false
+    count = 0
     interventions.each do |intervention|
-      unless intervention.content_blank?
+      if intervention.content_blank?
+        if count > 10
+          intervention.destroy
+        else
+          count += 1
+        end
+      else
         self.intervened = true
-        return true
       end
     end
-    self.intervened = false
     true
   end
   
