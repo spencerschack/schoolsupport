@@ -74,7 +74,7 @@ class Student < ActiveRecord::Base
   def initialize_interventions
     count = 10
     interventions.each do |intervention|
-      if %w(name start stop notes).map{|c| intervention.send(c) }.all?(&:blank?)
+      if intervention.content_blank?
         if count.zero?
           intervention.destroy
         else
@@ -83,7 +83,7 @@ class Student < ActiveRecord::Base
       end
     end
     count.times do
-      interventions.build
+      interventions.create
     end
   end
   
@@ -280,11 +280,12 @@ class Student < ActiveRecord::Base
   
   def add_intervened
     interventions.each do |intervention|
-      if %w(name start stop notes).all?{|col| intervention.send(col).blank?}
-        intervention.destroy
+      unless intervention.content_blank?
+        self.intervened = true
+        return true
       end
     end
-    self.intervened = interventions.count > 0
+    self.intervened = false
     true
   end
   

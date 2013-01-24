@@ -9,4 +9,8 @@ class Intervention < ActiveRecord::Base
   
   validates_presence_of :student
   
+  def content_blank?
+    name.blank? && start.blank? && stop.blank? && notes.blank?
+  end
+  
 end
