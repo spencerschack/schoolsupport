@@ -10,9 +10,7 @@
 
 <div class="scroller">
   <% if controller_model == Period %>
-    <div class="options_filter">
-      <%= render 'term_filter' %>
-    </div>
+    <%= options_filters_for('term') %>
   <% end %>
   <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>

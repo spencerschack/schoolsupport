@@ -10,12 +10,7 @@
 </div>
   
 <div class="scroller">
-  <div class="options_filter">
-    <%= select_tag 'subject', options_for_select(subject_options), class: 'subject_filter test_filter' %>
-    <%= select_tag 'grade', options_for_select(grade_options), class: 'grade_filter test_filter' %>
-    <%= select_tag 'teacher', options_for_select(teacher_options), class: 'teacher_filter test_filter' %>
-    <%= select_tag 'intervention', options_for_select(intervention_options), class: 'intervention_filter test_filter' %>
-  </div>
+  <%= options_filters_for(*%w(subject grade teacher intervention english_learner hispanic socioeconomically_disadvantaged)) %>
   <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>
       <span class="spacer"></span>

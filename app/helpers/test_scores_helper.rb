@@ -24,16 +24,8 @@ module TestScoresHelper
 	    sql = scope.joins(:periods).order('periods.name').uniq.select('periods.*').to_sql
 	    teachers = Period.find_by_sql(sql).map { |t| [t.name, t.id]}
       selected = params[:teacher].present? ? params[:teacher] : 'All'
-	    options_for_select([['All Classes', 'All']] + teachers, selected)
+	    options_for_select(['All'] + teachers, selected)
    end
-	end
-	
-	def intervention_options
-		[
-			['With and Without Interventions', 'All'],
-			['With Interventions', true],
-			['Without Interventions', false]
-		]
 	end
 	
 	def grade_options
@@ -48,12 +40,12 @@ module TestScoresHelper
 	   grades.map! do |grade|
 	     [pretty_grade(grade), grade]
      end
-	   options_for_select([['All Grades', 'All']] + grades, selected)
+	   options_for_select(['All'] + grades, selected)
    end
 	end
 	
 	def subject_options
-	  %w(ELA Math)
+	  options_for_select(%w(ELA Math))
 	end
   
   def group_levels students

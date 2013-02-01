@@ -4,9 +4,15 @@ class UsersController < ApplicationController
   
   def find_collection
     default = super.includes(:role, school: [:district]).order('users.last_name')
-    return default if params[:term] == 'All' || params[:term].blank?
-    return default.with_no_period if params[:term] == 'With No Period'
-    default.joins(:periods).where(periods: { term: params[:term] })
+    if term = option_filter_value('term')
+      if term == 'With No Period'
+        default.with_no_period
+      else
+        default.joins(:periods).where(periods: { term: term })
+      end
+    else
+      default
+    end
   end
     
   # When there is no id passed in, check presence of current user. If

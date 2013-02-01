@@ -8,15 +8,21 @@ class StudentsController < ApplicationController
   
   def find_collection
     default = super.includes(:users).order('students.last_name')
-    if params[:grade].present? && params[:grade] != 'All'
-      default = default.where(grade: params[:grade])
+    if grade = option_filter_value('grade')
+      default = default.where(grade: grade)
     end
-    if params[:teacher].present? && params[:teacher] != 'All'
-      default = default.joins(:periods).where('periods.id' => params[:teacher])
+    if teacher = option_filter_value('teacher')
+      default = default.joins(:periods).where('periods.id' => teacher)
     end
-    return default if params[:term] == 'All' || params[:term].blank?
-    return default.with_no_period if params[:term] == 'With No Period'
-    default.joins(:periods).where(periods: { term: params[:term] })
+    if term = option_filter_value('term')
+      if term == 'With No Period'
+        default.with_no_period
+      else
+        default.joins(:periods).where(periods: { term: term })
+      end
+    else
+      default
+    end
   end
   
   def test_scores

@@ -27,6 +27,30 @@ module ApplicationHelper
   def singular_title model = controller_model
     (model.respond_to?(:display_name) ? model.display_name : model.model_name).titleize
   end
+  
+  def options_filters_for *filters
+    filters = Array.wrap(filters)
+    content_tag(:div, class: 'options_filter') do
+      filters.map do |filter|
+        content_tag(:div) do
+          label_tag("#{filter}_filter", filter.titleize) <<
+          select_tag("#{filter}_filter", filter_options_for(filter))
+        end
+      end.join("\n").html_safe
+    end
+  end
+  
+  def filter_options_for filter
+    if respond_to?("#{filter}_options")
+      send("#{filter}_options")
+    else
+      options_for_select([
+        'All',
+        ['With', true],
+        ['Without', false]
+      ])
+    end
+  end
 	
 	# Which terms can be selected.
 	def term_options
@@ -62,7 +86,7 @@ module ApplicationHelper
      end
      selected = params[:grade].present? ? params[:grade] : 'All'
 	   grades.sort_by!(&:to_i)
-	   options_for_select([['All Grades', 'All']] + grades, selected)
+	   options_for_select(['All'] + grades, selected)
    end
 	end
 	

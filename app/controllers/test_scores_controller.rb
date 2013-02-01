@@ -31,9 +31,12 @@ class TestScoresController < ApplicationController
     if teacher = option_filter_value(:teacher)
       default = default.where('periods.id' => teacher)
     end
-
-    if intervened = option_filter_value(:intervention)
-      default = default.where('students.intervened' => intervened)
+    
+    %w(intervention english_learner hispanic socioeconomically_disadvantaged).each do |filter|
+      if filter_value = option_filter_value(filter)
+        filter = 'intervened' if filter == 'intervention'
+        default = default.where("students.#{filter}" => filter_value)
+      end
     end
     
     subject = option_filter_value(:subject)
@@ -149,12 +152,6 @@ class TestScoresController < ApplicationController
   end
   
   private
-  
-  # Return false if the parameter is not present or equal to 'All' or return
-  # the parameter's value.
-  def option_filter_value option
-    params[option].present? && params[option] != 'All' && params[option]
-  end
   
   # Tests order by values in the form:
   #   Cst 2012-2013 math asc

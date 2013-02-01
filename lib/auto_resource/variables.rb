@@ -4,7 +4,7 @@ module Variables
   
   # When included, add the methods as helper methods.
   def self.included base
-    base.helper_method :controller_model, :resource, :collection
+    base.helper_method :controller_model, :resource, :collection, :option_filter_value
   end
   
   private
@@ -39,6 +39,13 @@ module Variables
   end
   
   private
+  
+  # Return false if the parameter is not present or equal to 'All' or return
+  # the parameter's value.
+  def option_filter_value option
+    option = "#{option}_filter"
+    params[option].present? && params[option] != 'All' && params[option]
+  end
   
   # Return the name for resource variable.
   def resource_name
