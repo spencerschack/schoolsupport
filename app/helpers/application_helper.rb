@@ -10,6 +10,11 @@ module ApplicationHelper
   
   ::SORTS = {}
   
+  def skip_form_field field
+    field = field.first if field.respond_to?(:first)
+    field == :socioeconomically_disadvantaged && hide_socioeconomic_status
+  end
+  
   def subtitle
     if find_first_parent.respond_to?(:name)
       find_first_parent.name
@@ -152,6 +157,7 @@ module ApplicationHelper
 	
 	# Wrap cell_content in a paragraph with a bold title of the field.
 	def field_content record, field
+	  return '' if field == :socioeconomically_disadvantaged && hide_socioeconomic_status
 	  content = auto_link(cell_content(record, field))
 	  content_tag(:p, content_tag(:b, field.to_s.titleize) << content)
 	end
@@ -197,19 +203,37 @@ module ApplicationHelper
 		if defined?(@hide_teacher)
 			@hide_teacher
 		else
-			@hide_teacher = if controller_model == Student
-				School.find(options_scope.uniq.pluck(:school_id)).all?{|school| school.hide_teacher }
-			elsif controller_model == TestScore
-				scope = if find_first_parent
-					find_first_parent.students
-				else
-					Student
-				end.with_permissions_to(:show)
-				School.find(scope.uniq.pluck(:school_id)).all?{|school| school.hide_teacher }
-			else
-				false
-			end
+			@hide_teacher = begin
+			  scope = if controller_model == Student
+  				options_scope
+  			elsif controller_model == TestScore
+  				test_scores_school_scope
+				end
+  			if scope
+  			  school_ids = scope.uniq.pluck(:school_id)
+  			  School.where(hide_teacher: false, id: school_ids).none?
+			  else
+  				false
+  			end
+		  end
 		end
+	end
+	
+	def hide_socioeconomic_status
+	  if defined?(@hide_socioeconomic_status)
+	    @hide_socioeconomic_status
+    else
+      @hide_socioeconomic_status = begin
+        if controller_model == TestScore
+          schools_ids = test_scores_school_scope.uniq.pluck(:school_id)
+          School.where(hide_socioeconomic_status: true, id: school_ids).any?
+        elsif controller_model == Student
+          @student.school.hide_socioeconomic_status
+        else
+          false
+        end
+      end
+    end
 	end
 	
 	def options_scope
@@ -218,6 +242,13 @@ module ApplicationHelper
 		else
 			controller_model
 		end.with_permissions_to(:show)
+	end
+	
+	private
+	
+	def test_scores_school_scope
+	  scope = find_first_parent ? find_first_parent.students : Student
+    scope = scope.with_permissions_to(:show)
 	end
 	
 end

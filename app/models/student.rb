@@ -242,6 +242,10 @@ class Student < ActiveRecord::Base
     end
   end
   
+  def socioeconomically_disadvantaged
+    !school.hide_socioeconomic_status && super
+  end
+  
   private
   
   # For principals that cannot edit school_id, add school for them.

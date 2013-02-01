@@ -223,6 +223,13 @@ module TestScoresHelper
     grade =~ /\d+/ ? grade.to_i.ordinalize : grade
   end
   
+  def test_scores_option_filters
+    filters = %w(subject grade teacher intervention english_learner hispanic socioeconomically_disadvantaged)
+    filters -= ['socioeconomically_disadvantaged'] if hide_socioeconomic_status
+    filters -= ['teacher'] if hide_teacher
+    filters
+  end
+  
   private
   
   def test_name_sort

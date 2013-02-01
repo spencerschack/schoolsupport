@@ -4,7 +4,7 @@ class School < ActiveRecord::Base
   
   searches :name, :identifier
 
-  attr_accessible :hide_teacher, as: :developer
+  attr_accessible :hide_teacher, :hide_socioeconomic_status, as: :developer
   attr_accessible :name, :period_ids, :student_ids, as: [:developer,
     :superintendent]
   attr_accessible :district_id, :user_ids, :identifier, :mascot_image, :city,

@@ -10,7 +10,7 @@
 </div>
   
 <div class="scroller">
-  <%= options_filters_for(*%w(subject grade teacher intervention english_learner hispanic socioeconomically_disadvantaged)) %>
+  <%= options_filters_for(*test_scores_option_filters) %>
   <div class="table" data-limit="<%= offset_amount.to_i %>" data-offset="<%= params[:offset].to_i + offset_amount.to_i %>">
     <div>
       <span class="spacer"></span>
