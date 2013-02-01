@@ -288,7 +288,7 @@ class Student < ActiveRecord::Base
         else
           count += 1
         end
-      else
+      elsif !intervention.completed
         self.intervened = true
       end
     end

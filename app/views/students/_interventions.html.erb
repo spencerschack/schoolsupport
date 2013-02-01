@@ -7,6 +7,7 @@
         <span class="start">Start</span>
         <span class="stop">Stop</span>
         <span>Notes</span>
+        <span>Done</span>
       </div>
       <% sort_interventions(@student.interventions).each do |intervention| %>
         <%= f.fields_for :interventions, intervention do |i| %>
@@ -26,6 +27,9 @@
             <span>
               <%= i.text_area :notes %>
               <em class="holder"><%= convert_newlines_to_breaks(intervention.notes) %></em>
+            </span>
+            <span class="completed">
+              <%= i.check_box :completed %>
             </span>
           </a>
         <% end %>
