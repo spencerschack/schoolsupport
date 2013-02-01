@@ -50,8 +50,7 @@ class Student < ActiveRecord::Base
   
   after_initialize :set_school
   
-  before_save :reject_notes
-  before_save :add_intervened
+  before_save :reject_notes_and_add_intervened
   
   validates_presence_of :first_name, :last_name, :grade, :identifier, :school
   validates_uniqueness_of :identifier, scope: :school_id
@@ -269,17 +268,21 @@ class Student < ActiveRecord::Base
     end
   end
   
-  def reject_notes
+  # Necessary to ensure that reject_notes comes before add_intervened.
+  # The order is necessary because a student will be marked as intervened if
+  # he or she has any non default notes.
+  def reject_notes_and_add_intervened
+    self.intervened = false
+    
     1.upto(4).each do |n|
-      if self.send("note_#{n}") == school.default_note_content
+      note_content = self.send("note_#{n}")
+      if note_content == school.default_note_content
         self.send("note_#{n}=", nil)
+      elsif note_content.present?
+        self.intervened = true
       end
     end
-    true
-  end
-  
-  def add_intervened
-    self.intervened = false
+    
     count = 0
     interventions.each do |intervention|
       if intervention.content_blank?
@@ -292,7 +295,8 @@ class Student < ActiveRecord::Base
         self.intervened = true
       end
     end
-    true
+    
+    true # Return true otherwise the before_save filter will abort the save.
   end
   
 end
