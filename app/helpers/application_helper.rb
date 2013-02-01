@@ -225,7 +225,7 @@ module ApplicationHelper
     else
       @hide_socioeconomic_status = begin
         if controller_model == TestScore
-          schools_ids = test_scores_school_scope.uniq.pluck(:school_id)
+          school_ids = test_scores_school_scope.uniq.pluck(:school_id)
           School.where(hide_socioeconomic_status: true, id: school_ids).any?
         elsif controller_model == Student
           @student.school.hide_socioeconomic_status
