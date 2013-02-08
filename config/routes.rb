@@ -36,8 +36,10 @@ Schoolsupport::Application.routes.draw do
   def test_scores
     # The following to calls to helper are necessary to preference
     # "/test_scores/new" over "/test_scores/:id".
-    match 'test_scores/:student_id/new' => 'test_scores#new', via: 'GET', as: 'new_student_test_score'
-    match 'test_scores/new' => 'test_scores#new', via: 'GET', as: 'new_test_score'
+    helper :test_scores, only: :new
+    scope as: 'new' do
+      match 'test_scores/:student_id/new' => 'test_scores#new', via: 'GET', as: 'student_test_score'
+    end
     helper :test_scores, only: [:index, :create] do
       collection do
         match 'help' => 'test_scores#help'
