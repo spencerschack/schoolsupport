@@ -17,3 +17,7 @@ $ ->
   
   $('#container').delegate('.wrapper.students .interventions input',
     'change.blur_submit', handle_blur_submit)
+
+  $('#container').delegate('.wrapper.students .tests a', 'click.edit_test_score', (event) ->
+    event.preventDefault()
+  )

@@ -42,7 +42,11 @@ module LinkHelper
       
     when :destroy
       return unless permitted_to? action, model_or_record
-      link_to 'Delete', parent_path(model_or_record), options
+      if model_or_record.is_a?(TestScore)
+        link_to 'Delete', "/test_scores/#{model_or_record.student_id}/#{model_or_record.id}", options
+      else
+        link_to 'Delete', parent_path(model_or_record), options
+      end
       
     when :cancel
       link_to 'Cancel', js_link, options

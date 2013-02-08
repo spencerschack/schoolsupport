@@ -33,8 +33,17 @@ module Response
   def success_hash record
     {}.tap do |hash|
       hash[:success] = true
-      hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
-      hash[:path] = parent_path(record) unless record.is_a?(Intervention)
+      if record.is_a?(TestScore)
+        @student = @test_score.student
+        hash[:test_scores] = ERB::Util.html_escape(render_to_string('students/_tests'))
+        if action_name == 'create'
+          hash[:skip_path_reload] = true
+          hash[:path] = "#{request.path}/#{@test_score.student_id}"
+        end
+      else
+        hash[:page] = ERB::Util.html_escape(render_to_string(view_for(true)))
+        hash[:path] = parent_path(record) unless record.is_a?(Intervention)
+      end
       if (action_name == 'update' || action_name == 'create') && controller_name != 'test_scores'
         hash[:terms] = if record.class == Period
           ['All', record.term]

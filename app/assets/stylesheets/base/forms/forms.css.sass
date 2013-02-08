@@ -1,4 +1,5 @@
 @import select
+@import key_value_pair
 
 ul.errors li
 	height: auto
@@ -10,7 +11,7 @@ ul.errors li
 
 form
 
-	label
+	label, legend
 		padding-bottom: 6px
 		display: block
 		font-size: 14px
@@ -20,6 +21,10 @@ form
 		abbr
 			font-weight: normal
 			color: $gray-text
+	
+	legend
+		margin: 0 $spacing
+		padding: $spacing 0 0 0
 	
 	.relations li
 		margin-left: $spacing/2
@@ -33,6 +38,10 @@ form
 		
 		fieldset
 			margin-top: 10px
+			
+			legend
+				margin: 0
+				padding: 0
 			
 			.choice input
 				width: auto

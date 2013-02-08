@@ -130,11 +130,15 @@ class TestScoresController < ApplicationController
   # controller_name is "application", so declarative authorization calls
   # "load_application".
   def load_controller_object context
-    @student ||= begin
-      id = params[find_first_parent.is_a?(Student) ? :student_id : :id ]
-      Student.find(id)
+    if action_name == 'edit' || action_name == 'destroy' || action_name == 'update'
+      super
+    else
+      @student ||= begin
+        id = params[find_first_parent.is_a?(Student) ? :student_id : :id ]
+        Student.find(id)
+      end
+      @test_score = TestScore.new({student_id: @student.id}, as: current_role)
     end
-    @test_score = TestScore.new({student_id: @student.id}, as: current_role)
   end
   
   def show
@@ -149,6 +153,14 @@ class TestScoresController < ApplicationController
   
   def help
     
+  end
+  
+  def new
+    if params[:student_id]
+      @test_score.student_id = params[:student_id]
+    end
+    @student = @test_score.student
+    respond_with @test_score
   end
   
   private

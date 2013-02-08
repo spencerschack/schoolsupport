@@ -34,13 +34,20 @@ Schoolsupport::Application.routes.draw do
   
   # Districts, Schools, Periods, Students, Users, Tests
   def test_scores
-    helper :test_scores, only: :index do
+    # The following to calls to helper are necessary to preference
+    # "/test_scores/new" over "/test_scores/:id".
+    match 'test_scores/:student_id/new' => 'test_scores#new', via: 'GET', as: 'new_student_test_score'
+    match 'test_scores/new' => 'test_scores#new', via: 'GET', as: 'new_test_score'
+    helper :test_scores, only: [:index, :create] do
       collection do
         match 'help' => 'test_scores#help'
         match ':student_id/new_intervention' => 'students#new_intervention'
         match ':student_id/destroy_intervention' => 'students#destroy_intervention', via: 'POST'
         match ':student_id/new_student_note' => 'students#new_student_note'
         match ':student_id/destroy_student_note' => 'students#destroy_student_note', via: 'POST'
+        match ':student_id/:id' => 'test_scores#edit', via: 'GET'
+        match ':student_id/:id' => 'test_scores#update', via: 'PUT'
+        match ':student_id/:id' => 'test_scores#destroy', via: 'DELETE'
         match ':id' => 'students#test_scores'
       end
       exportable

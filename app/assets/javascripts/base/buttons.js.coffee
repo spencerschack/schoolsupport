@@ -6,13 +6,7 @@ handle_cancel_click = (event) ->
 		push_state $(this).closest('.page').next('.page').attr('data-path')
 	else if wrapper.is('.import')
 		$(this).display_loading_message();
-		url = wrapper.closest('.page').attr('data-path')
-		wrapper.next('.wrapper').trigger('unloaded').remove()
-		$.get url, (data) ->
-			$(data).insertAfter(wrapper).trigger('loaded')
-			wrapper.animate {
-				marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
-					$(this).remove()
+		reload_old_content(wrapper)
 	else
 		wrapper.trigger('unloaded')
 			.animate { marginTop: "-#{$('#container').height()}px" }, SHORT_DURATION, ->
@@ -53,9 +47,13 @@ handle_destroy_click = (event) ->
 	self = $(this)
 	destroy_confirm.apply(this, [(data) ->
 		if data.success
-			index = self.closest('.page').next('.page')
-			push_state index.attr('data-path')
-			remove_row(index.find('div.table'), data.id)
+			wrapper = self.closest('.wrapper')
+			if wrapper.is('.test_scores')
+				reload_old_content(wrapper)
+			else
+				index = self.closest('.page').next('.page')
+				push_state index.attr('data-path')
+				remove_row(index.find('div.table'), data.id)
 			
 		else
 			page = $(data.page)

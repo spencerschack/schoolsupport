@@ -1,25 +1,36 @@
-<div class="table tests">
+<table class="tests">
   <% group_tests(@student.test_scores).each do |(test_name, scores)| %>
-    <div>
-      <span class="test_name"><%= test_name.titleize %></span>
-      <% scores.keys.each do |key| %>
-        <span class="small">
-          <%= key.html_safe %>
-        </span>
+    <tr>
+      <th class="test_name"><%= test_name.titleize %></span>
+      <% scores.each do |key, value| %>
+        <th class="small link">
+          <a href="/test_scores/<%= @student.id %>/<%= value[:id] %>" class="edit">
+            <%= key.html_safe %>
+          </a>
+        </th>
       <% end %>
-    </div>
-    <a>
-      <span></span>
+    </tr>
+    <tr>
+      <td></td>
       <% scores.each_value do |value| %>
-        <% if level = value[:level] %>
-          <span class="<%= level %> small">
-            <%= value[:score].blank? ? none : value[:score].titleize %><br />
-            <em><%= level.titleize %></em>
-          </span>
+        <% if value[:score].blank? %>
+          <td><%= none %></td>
         <% else %>
-          <span><%= value[:score].blank? ? none : value[:score].titleize %></span>
+          <td class="<%= value[:level] %> small link">
+            <a href="/test_scores/<%= @student.id %>/<%= value[:id] %>" class="edit">
+              <% if value[:score].present? %>
+                <%= value[:score].titleize %>
+              <% else %>
+                <%= none %>
+              <% end %>
+              <% if value[:level].present? %>
+                <br />
+                <em><%= value[:level].titleize %></em>
+              <% end %>
+            </a>
+          </td>
         <% end %>
       <% end %>
-    </a>
+    </tr>
   <% end %>
-</div>
+</table>

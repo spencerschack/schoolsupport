@@ -2,7 +2,6 @@
 	= f.semantic_errors
 	= f.inputs class: 'fields' do
 		- fields(:form, :fields).each do |field|
-			- next if skip_form_field(field)
 			= f.input *field
 	= f.inputs class: 'relations' do
 		- fields(:form, :relations).each do |field|

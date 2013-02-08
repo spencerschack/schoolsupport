@@ -2,6 +2,13 @@ module TestScoresHelper
   
   PARENTS[:test_scores] = [Student, Period, User, School, District]
   
+  FIELDS[:test_scores] = {
+    form: {
+      fields: [:test_name, [:term, collection: Term.choices]],
+      relations: [[:student, as: :search_select, include_blank: true]]
+    }
+  }
+  
   def full_level_name abbr
     case abbr
     when 'fbb'
@@ -77,7 +84,8 @@ module TestScoresHelper
             header = "#{header.titleize}<br />#{Term.shorten(score.term)}"
             hash[test_name][header] = {
               level: score.data[level_column_for(key)],
-              score: value
+              score: value,
+              id: score.id
             }
           end
         end
@@ -228,6 +236,14 @@ module TestScoresHelper
     filters -= ['socioeconomically_disadvantaged'] if hide_socioeconomic_status
     filters -= ['teacher'] if hide_teacher
     filters
+  end
+  
+  def test_scores_form_path
+    if action_name == 'new'
+      '/test_scores'
+    else
+      request.path
+    end
   end
   
   private

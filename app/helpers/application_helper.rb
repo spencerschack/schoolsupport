@@ -12,7 +12,8 @@ module ApplicationHelper
   
   def skip_form_field field
     field = field.first if field.respond_to?(:first)
-    field == :socioeconomically_disadvantaged && hide_socioeconomic_status
+    (field == :socioeconomically_disadvantaged && hide_socioeconomic_status) ||
+    (field == :student && controller_model == TestScore && params[:student_id])
   end
   
   def subtitle
@@ -121,9 +122,10 @@ module ApplicationHelper
 	    fields = fields[type]
     end
 	  if hide_teacher
-	    fields - [:teacher]
-    else
-      fields
+	    fields -= [:teacher]
+    end
+    fields.reject do |field|
+      skip_form_field(field)
     end
 	end
 	
@@ -204,13 +206,16 @@ module ApplicationHelper
 			@hide_teacher
 		else
 			@hide_teacher = begin
-			  scope = if controller_model == Student
-  				options_scope
+			  school_ids = if controller_model == Student
+				  options_scope.uniq.pluck(:school_id)
   			elsif controller_model == TestScore
-  				test_scores_school_scope
+  			  if action_name == 'edit' || action_name == 'update' || params[:student_id]
+  			    @test_score.student.school_id
+				  else
+				    test_scores_school_scope.uniq.pluck(:school_id)
+			    end
 				end
-  			if scope
-  			  school_ids = scope.uniq.pluck(:school_id)
+  			if school_ids
   			  School.where(hide_teacher: false, id: school_ids).none?
 			  else
   				false

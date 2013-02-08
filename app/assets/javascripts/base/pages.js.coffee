@@ -41,7 +41,10 @@ window.animate_in_new_content = (button, path) ->
 		button.display_loading_message()
 		page = button.closest('.page')
 		wrapper = page.children('.wrapper')
-		url = [page.attr('data-path'), path].join('/')
+		if button.attr('href').indexOf('/') isnt -1
+			url = button.attr('href')
+		else
+			url = [page.attr('data-path'), path].join('/')
 
 		$.get url, (data) ->
 			button.hide_loading_message()
@@ -49,6 +52,15 @@ window.animate_in_new_content = (button, path) ->
 			data.css(marginTop: "-#{$('#container').height()}px")
 			$(data).prependTo(page).trigger('loaded').animate {
 				marginTop: 0 }, MEDIUM_DURATION
+
+window.reload_old_content = (wrapper) ->
+	url = wrapper.closest('.page').attr('data-path')
+	wrapper.next('.wrapper').trigger('unloaded').remove()
+	$.get url, (data) ->
+		$(data).insertAfter(wrapper).trigger('loaded')
+		wrapper.animate {
+			marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+				$(this).remove()
 
 # Animates the page out and removes once completed.
 # {jQuery} page the page to destroy.

@@ -44,11 +44,24 @@ handle_form_submit = (event) ->
 			if data.success == true
 				page = wrapper.parent()
 				index = page.next('.page')
+				
+				if data.test_scores
+					if data.skip_path_reload
+						if !index.find('.wrapper.index').length
+							index.find('.tests').replaceWith(data.test_scores)
+							index = index.next('.page')
+					else
+						wrapper.next().find('.tests').replaceWith(data.test_scores)
+						wrapper.animate {
+							marginTop: "-#{$('#container').height()}px" }, MEDIUM_DURATION, ->
+								$(this).remove()
+					load_results(index.find('.wrapper'))
 
 				if data.path
-					old_path = page.attr('data-path').split('/')[0..-2].join('/')
-					if old_path == data.path.split('/')[0..-2].join('/')
-						page.attr('data-path', data.path)
+					unless data.skip_path_reload
+						old_path = page.attr('data-path').split('/')[0..-2].join('/')
+						if old_path == data.path.split('/')[0..-2].join('/')
+							page.attr('data-path', data.path)
 					push_state(data.path)
 
 				unless index.is('.destroyed')

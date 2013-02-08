@@ -27,4 +27,26 @@ class TestScore < ActiveRecord::Base
       end ]] },
     processor: TestScoreProcessor
   
+  def test_name= value
+    super(normalize_value(value))
+  end
+  
+  def data= old_hash
+    new_hash = {}
+    old_hash.each do |key, value|
+      new_hash[normalize_value(key)] = normalize_value(value)
+    end
+    super(new_hash)
+  end
+  
+  def name
+    test_name.titleize
+  end
+  
+  private
+  
+  def normalize_value value
+    value.try(:downcase).try(:strip)
+  end
+  
 end

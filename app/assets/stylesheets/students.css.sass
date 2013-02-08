@@ -120,33 +120,52 @@
 			font-weight: bold
 			line-height: 35px
 
-		div.table
+		table
 	
 			&.tests
+				min-width: 100%
+				margin-top: $spacing
 				text-align: center
+				
+				.small
+					text-align: center
+				
+				a
+					text-decoration: none
+					
+					&:hover
+						text-decoration: underline
 			
-				span
+				td
 					vertical-align: middle
-	
-				div
+		
+				tr
 					height: 30px
 					
-					span.test_name
+					th, td
+						min-width: 50px
+						padding: 0 10px
+					
+					th.test_name
 						background-color: #FFF
 						text-align: right
 			
-					span
+					th
 						background-color: $gray-stripe
-		
-				a
-					height: 30px
+						font-weight: bold
+						
+						a
+							color: #000
 				
-					span
+					td
 						top: 0
 						background-color: #FFF
 						color: #000
+						
+						a
+							color: #000
 					
-						&.adv, &.prof, &.basic, &.bbasic, &.fbb
+						&.adv a, &.prof a, &.basic a, &.bbasic a, &.fbb a
 							color: #FFF
 					
 						&.adv

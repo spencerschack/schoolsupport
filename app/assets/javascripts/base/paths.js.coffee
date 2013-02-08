@@ -80,7 +80,7 @@ window.select_path = (page) ->
 
 $ ->
 	# Handle internal link clicks.
-	$('#container').delegate 'a:urlInternal:not([data-xhr="false"], .edit)', 'click.link', handle_link_click
+	$('#container').delegate 'a:urlInternal:not([data-xhr="false"], .edit, .destroy)', 'click.link', handle_link_click
 	
 	# Go back when a page is clicked.
 	$('#container').delegate '.page', 'click.page', handle_page_click

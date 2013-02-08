@@ -1,6 +1,7 @@
 <div class="title">
   <h2>Student</h2>
   <h1><%= @student.name %></h1>
+  <%= link_for :new, TestScore %>
   <%= link_for :fullscreen, @student %>
   <%= link_for :print, @student %>
   <%= link_for :next, controller_model %>
