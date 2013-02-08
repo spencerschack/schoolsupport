@@ -147,6 +147,7 @@ class User < ActiveRecord::Base
   # If the periods are not in the specified school, then add an error.
   def periods_in_school
     if periods.map(&:school_id).any?{|id| id != school_id }
+      Rails.logger.debug "PERIODS NOT IN SCHOOL (#{inspect}) [#{periods.map(&:school_id).inspect}] != #{school_id}"
       errors.add(:periods, 'must be in the school specified')
     end
   end
