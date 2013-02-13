@@ -15,6 +15,8 @@ class TestScoreProcessor
     raise "Could not find the student in #{school.name} where identifier = '#{identifier}'" unless student
     hash[:student_id] = student.id
     
+    hash[:test_name].try(:downcase!)
+    
     # Put all columns present in the hash but not present in the model in
     # the serialized data column. Also ensure that all keys are lowercase
     # to prevent duplicate keys like 'Ela' and 'ela'.
@@ -22,7 +24,7 @@ class TestScoreProcessor
     hash.each do |key, value|
       unless model.column_names.include?(key.to_s)
         hash.delete(key)
-        hash[:data][key] = value
+        hash[:data][key.downcase] = value.try(:downcase)
       end
     end
   end
