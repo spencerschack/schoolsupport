@@ -13,9 +13,7 @@ class ImportJob
   def initialize id
     @import_data = ImportData.find(id)
     Authorization.current_user = user
-    import_data.model.transaction do
-      create_records
-    end
+    create_records
     import_data.destroy
   rescue => error
     Rails.logger.info "[import file error] #{error.message}"

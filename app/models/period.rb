@@ -34,7 +34,6 @@ class Period < ActiveRecord::Base
   validate :school_in_district
   
   def as_json options = {}
-    { name: to_label, id: id }
     super(options.reverse_merge(only: [:id])).reverse_merge(name: to_label)
   end
   
