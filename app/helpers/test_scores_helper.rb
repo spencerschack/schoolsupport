@@ -234,7 +234,6 @@ module TestScoresHelper
   def test_scores_option_filters
     filters = %w(subject grade class intervention english_learner hispanic socioeconomically_disadvantaged)
     filters -= ['socioeconomically_disadvantaged'] if hide_socioeconomic_status
-    filters -= ['class']
     filters
   end
   
