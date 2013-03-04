@@ -11,7 +11,7 @@ class StudentsController < ApplicationController
     if grade = option_filter_value('grade')
       default = default.where(grade: grade)
     end
-    if teacher = option_filter_value('teacher')
+    if teacher = option_filter_value('class')
       default = default.joins(:periods).where('periods.id' => teacher)
     end
     if term = option_filter_value('term')

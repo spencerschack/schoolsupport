@@ -28,8 +28,8 @@ class TestScoresController < ApplicationController
       default = default.where('students.grade' => grade)
     end
 
-    if teacher = option_filter_value(:teacher)
-      default = default.where('periods.id' => teacher)
+    if period = option_filter_value(:class)
+      default = default.where('periods.id' => period)
     end
     
     %w(intervention english_learner hispanic socioeconomically_disadvantaged).each do |filter|

@@ -24,13 +24,13 @@ module TestScoresHelper
     end
   end
   
-  def teacher_options
+  def class_options
 	  @teacher_options ||= if controller_model == TestScore || controller_model == Student
 	    scope = find_first_parent ? find_first_parent.students : Student
 	    scope = scope.with_permissions_to(:show)
 	    sql = scope.joins(:periods).order('periods.name').uniq.select('periods.*').to_sql
 	    teachers = Period.find_by_sql(sql).map { |t| [t.name, t.id]}
-      selected = params[:teacher].present? ? params[:teacher] : 'All'
+      selected = params[:class].present? ? params[:class] : 'All'
 	    options_for_select(['All'] + teachers, selected)
    end
 	end
@@ -232,9 +232,9 @@ module TestScoresHelper
   end
   
   def test_scores_option_filters
-    filters = %w(subject grade teacher intervention english_learner hispanic socioeconomically_disadvantaged)
+    filters = %w(subject grade class intervention english_learner hispanic socioeconomically_disadvantaged)
     filters -= ['socioeconomically_disadvantaged'] if hide_socioeconomic_status
-    filters -= ['teacher'] if hide_teacher
+    filters -= ['class'] if hide_teacher
     filters
   end
   
