@@ -61,7 +61,11 @@ module TestScoresHelper
         grouper = nil
         student.test_scores.each do |score|
           if @ordered && score.test_name == @ordered[:test_name] && score.term == @ordered[:term]
-            grouper = score.data[level_column_for(@ordered[:key])]
+            key = @ordered[:key]
+            unless @ordered[:test_name].downcase == 'celdt'
+              key = level_column_for(key)
+            end
+            grouper = score.data[key]
             break
           end
         end
@@ -157,7 +161,8 @@ module TestScoresHelper
           # If there is a key named the same as the test, return only that key.
           # Set @leveled to whether the data is ordered by that single key.
           score_columns[test_name][term] = if key = keys.grep(/^#{test_name}$/i).first
-            if matches_current_order(test_name, term, key) && keys.include?(level_column_for(key))
+            if matches_current_order(test_name, term, key) &&
+              (keys.include?(level_column_for(key)) || test_name == 'celdt')
               @leveled = true
             end
             [key]
@@ -168,7 +173,8 @@ module TestScoresHelper
             keys.reject do |key|
               
               # Check to see if the current ordered column is leveled.
-              if matches_current_order(test_name, term, key) && keys.include?(level_column_for(key))
+              if matches_current_order(test_name, term, key) && (
+                keys.include?(level_column_for(key)) || test_name == 'celdt')
                 @leveled = true
               end
               level_column?(key) || key =~ /_rc/
