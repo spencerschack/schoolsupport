@@ -1,7 +1,7 @@
 class TestScoresController < ApplicationController
   
   def find_collection without = false
-    # Pass super to Student so it uses that instead of the inferred model
+    # Pass Student to super so it uses that instead of the inferred model
     # TestScore from the controller_name. Outer join with test_scores to be
     # able to order and select by those fields. Preload must be called
     # instead of includes or eager_load because rails must load the students
@@ -62,7 +62,11 @@ class TestScoresController < ApplicationController
         # adv, prof, basic, bbasic, fbb or the opposite. If not ordering by a
         # level just order by the score key.
         score_order_statement = if level_column?(order_match[:key])
-          levels = TestScore.levels
+          levels = if order_match[:test_name] == 'celdt'
+            TestScore::CELDT_LEVELS
+          else
+            TestScore::CST_LEVELS
+          end
           levels.reverse! if order_match[:direction] == 'desc'
           levels.map do |level|
             "(test_scores.data -> :key) = '#{level}'"

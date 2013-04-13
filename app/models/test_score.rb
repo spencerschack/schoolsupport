@@ -1,8 +1,8 @@
 class TestScore < ActiveRecord::Base
   
-  def self.levels
-    %w(adv prof basic bbasic fbb)
-  end
+  CST_LEVELS = %w(adv prof basic bbasic fbb)
+  
+  CELDT_LEVELS = %w(adv ea int ei beg)
   
   using_access_control
   
