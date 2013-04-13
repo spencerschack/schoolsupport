@@ -61,7 +61,7 @@ class TestScoresController < ApplicationController
         # If ordering by a level, create an order statement to order by
         # adv, prof, basic, bbasic, fbb or the opposite. If not ordering by a
         # level just order by the score key.
-        score_order_statement = if level_column?(order_match[:key])
+        score_order_statement = if level_column?(order_match[:key]) || order_match[:test_name].downcase == 'celdt'
           levels = if order_match[:test_name].downcase == 'celdt'
             TestScore::CELDT_LEVELS
           else
