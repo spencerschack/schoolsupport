@@ -18,16 +18,16 @@
 			.adv
 				color: $advanced
 		
-			.prof
+			.prof, .ea
 				color: $proficient
 		
-			.basic
+			.basic, .int
 				color: $basic
 		
-			.bbasic
+			.bbasic, .ei
 				color: $below-basic
 		
-			.fbb
+			.fbb, .beg
 				color: $far-below-basic
 		
 			div.table
@@ -47,7 +47,7 @@
 					vertical-align: middle
 					text-align: center
 					
-					&.unknown, &.adv, &.prof, &.basic, &.bbasic, &.fbb
+					&.unknown, &.adv, &.prof, &.ea, &.basic, &.int, &.bbasic, &.ei, &.fbb, &.beg
 						color: #FFF
 					
 					&.unknown
@@ -56,23 +56,23 @@
 					&.adv
 						background-color: $advanced
 					
-					&.prof
+					&.prof, .ea
 						background-color: $proficient
 					
-					&.basic
+					&.basic, .int
 						background-color: $basic
 					
-					&.bbasic
+					&.bbasic, .ei
 						background-color: $below-basic
 					
-					&.fbb
+					&.fbb, .beg
 						background-color: $far-below-basic
 			
 				div span.small i
 					top: 0
 			
 				a:active, a.selected
-					.adv, .prof, .basic, .bbasic, .fbb
+					.adv, .prof, .ea, .basic, .int, .bbasic, .ei, .fbb, .beg
 						color: #FFF
 		
 				a.level_breaker
@@ -92,14 +92,14 @@
 					&.adv span
 						background-color: $advanced
 				
-					&.prof span
+					&.prof span, &.ea span
 						background-color: $proficient
 				
-					&.basic span
+					&.basic span, &.int span
 						background-color: $basic
 				
-					&.bbasic span
+					&.bbasic span, &.ei span
 						background-color: $below-basic
 				
-					&.fbb span
+					&.fbb span, &.beg span
 						background-color: $far-below-basic
