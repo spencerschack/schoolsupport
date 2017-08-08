@@ -1,5 +1,6 @@
 class CreateTestScores < ActiveRecord::Migration
   def change
+    execute 'create extension hstore'
     create_table :test_scores do |t|
       t.integer :student_id
       t.string :test_name

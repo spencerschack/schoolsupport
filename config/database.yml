@@ -1,6 +1,6 @@
 development:
   adapter: postgresql
-  database: development
+  database: shoobphotography
   host: localhost
   pool: 20
 
@@ -12,6 +12,6 @@ test:
 
 production:
   adapter: postgresql
-  database: production
+  database: shoobphotography
   host: localhost
   pool: 20

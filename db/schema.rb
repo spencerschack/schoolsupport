@@ -60,8 +60,8 @@ ActiveRecord::Schema.define(:version => 20130201040446) do
   end
 
   create_table "export_data_students", :id => false, :force => true do |t|
-    t.integer "export_data_id"
     t.integer "student_id"
+    t.integer "export_data_id"
   end
 
   create_table "export_list_items", :force => true do |t|
@@ -239,8 +239,6 @@ ActiveRecord::Schema.define(:version => 20130201040446) do
     t.datetime "updated_at", :null => false
   end
 
-  add_index "test_scores", ["data"], :name => "test_scores_gist_data"
-
   create_table "types", :force => true do |t|
     t.string   "name"
     t.integer  "pdf_id"
@@ -253,21 +251,21 @@ ActiveRecord::Schema.define(:version => 20130201040446) do
     t.string   "crypted_password"
     t.string   "password_salt"
     t.string   "persistence_token"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.string   "perishable_token"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
     t.integer  "school_id"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "role_id"
-    t.datetime "user_updated_at"
-    t.string   "perishable_token"
-    t.integer  "login_count"
-    t.integer  "failed_login_count"
+    t.integer  "login_count",        :default => 0
+    t.integer  "failed_login_count", :default => 0
+    t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
-    t.string   "last_login_ip"
     t.string   "current_login_ip"
-    t.datetime "last_request_at"
+    t.string   "last_login_ip"
+    t.datetime "user_updated_at"
   end
 
 end

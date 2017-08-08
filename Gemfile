@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '1.9.3'
-
 gem 'rails', '3.2.11'
 
 gem 'pg'
@@ -9,12 +7,14 @@ gem 'activerecord-postgres-hstore'
 
 gem 'unicorn'
 
+gem 'test-unit'
+
 gem 'resque'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'compass-rails'
-  
+
   gem 'coffee-rails', '~> 3.2.1'
 
   gem 'therubyracer', :platforms => :ruby
