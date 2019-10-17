@@ -111,7 +111,7 @@ GEM
     prawnto (0.1.1)
       prawn
       rails (>= 2.1)
-    rack (1.4.3)
+    rack (1.4.7)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-protection (1.2.0)
